@@ -17,12 +17,13 @@ def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
 
-class MainPage(Frame):
+class MainPage(Frame):    
     def __init__(self, parent, controller):
-        super().__init__(parent)
-        
-        print(type(self))
-                                               
+        super().__init__(self, parent)
+        self.photoList = []
+        self.loadWidgets(controller)
+                     
+    def loadWidgets(self, controller):
         canvas = Canvas(
             controller,
             bg = "#153246",
@@ -33,28 +34,32 @@ class MainPage(Frame):
             relief = "ridge"
         )
 
-        #canvas.place(x = 0, y = 0)
         canvas.pack(fill="both", expand=True)
         
         image_image_1 = PhotoImage(
             file=relative_to_assets("image_1.png"))
         
-        self.image_1 = canvas.create_image(
+        self.photoList.append(image_image_1)
+        
+        image_1 = canvas.create_image(
             640.0,
             360.0,
             image=image_image_1
         )
 
-        """
+        
         image_image_2 = PhotoImage(
             file=relative_to_assets("image_2.png"))
-        self.image_2 = self.canvas.create_image(
+        
+        self.photoList.append(image_image_2)
+        
+        image_2 = canvas.create_image(
             639.333984375,
             359.3330078125,
             image=image_image_2
         )
 
-        self.canvas.create_text(
+        canvas.create_text(
             502.0,
             614.0,
             anchor="nw",
@@ -63,7 +68,7 @@ class MainPage(Frame):
             font=("Montserrat", 26 * -1)
         )
 
-        self.canvas.create_text(
+        canvas.create_text(
             67.0,
             270.0,
             anchor="nw",
@@ -72,7 +77,7 @@ class MainPage(Frame):
             font=("Montserrat", 113 * -1)
         )
 
-        self.canvas.create_text(
+        canvas.create_text(
             67.0,
             372.6669921875,
             anchor="nw",
@@ -83,7 +88,10 @@ class MainPage(Frame):
 
         image_image_3 = PhotoImage(
             file=relative_to_assets("image_3.png"))
-        self.image_3 = self.canvas.create_image(
+        
+        self.photoList.append(image_image_3)
+        
+        image_3 = canvas.create_image(
             88.0,
             90.0,
             image=image_image_3
@@ -91,9 +99,12 @@ class MainPage(Frame):
 
         image_image_4 = PhotoImage(
             file=relative_to_assets("image_4.png"))
-        self.image_4 = self.canvas.create_image(
+        
+        self.photoList.append(image_image_4)
+        
+        image_4 = canvas.create_image(
             88.0,
             90.0,
             image=image_image_4
         )
-        """
+    

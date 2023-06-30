@@ -19,9 +19,12 @@ def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
 class AccountNoWaiver(Frame):
-    def __init__(self, root, controller):
-        Frame.__init__(self, root)
-                                
+    def __init__(self, parent, controller):
+        super().__init__(self, parent)
+        self.photoList = []
+        self.loadWidgets(controller)
+        
+    def loadWidgets(self, controller):        
         canvas = Canvas(
             controller,
             bg = "#153246",
@@ -32,12 +35,14 @@ class AccountNoWaiver(Frame):
             relief = "ridge"
         )
 
-        canvas.place(x = 0, y = 0)
+        canvas.pack(fill="both", expand=True)
+        
         image_image_1 = PhotoImage(
             file=Path(relative_to_assets("image_1.png")))
         
+        self.photoList.append(image_image_1)
         
-        self.image_1 = canvas.create_image(
+        image_1 = canvas.create_image(
             640.0,
             360.0,
             image=image_image_1
@@ -45,8 +50,10 @@ class AccountNoWaiver(Frame):
 
         image_image_2 = PhotoImage(
             file=Path(relative_to_assets("image_2.png")))
+        
+        self.photoList.append(image_image_2)
 
-        self.image_2 = canvas.create_image(
+        image_2 = canvas.create_image(
             807.33203125,
             424.6669921875,
             image=image_image_2
@@ -54,7 +61,10 @@ class AccountNoWaiver(Frame):
 
         image_image_3 = PhotoImage(
             file=Path(relative_to_assets("image_3.png")))
-        self.image_3 = canvas.create_image(
+        
+        self.photoList.append(image_image_3)
+        
+        image_3 = canvas.create_image(
             174.33203125,
             426.666015625,
             image=image_image_3
@@ -89,7 +99,10 @@ class AccountNoWaiver(Frame):
 
         image_image_4 = PhotoImage(
             file=Path(relative_to_assets("image_4.png")))
-        self.image_4 = canvas.create_image(
+        
+        self.photoList.append(image_image_4)
+        
+        image_4 = canvas.create_image(
             808.0,
             386.0,
             image=image_image_4
@@ -97,7 +110,10 @@ class AccountNoWaiver(Frame):
 
         image_image_5 = PhotoImage(
             file=Path(relative_to_assets("image_5.png")))
-        self.image_5 = canvas.create_image(
+        
+        self.photoList.append(image_image_5)
+        
+        image_5 = canvas.create_image(
             252.0,
             507.0,
             image=image_image_5
@@ -105,7 +121,10 @@ class AccountNoWaiver(Frame):
 
         image_image_6 = PhotoImage(
            file=Path(relative_to_assets("image_6.png")))
-        self.image_6 = canvas.create_image(
+        
+        self.photoList.append(image_image_6)
+        
+        image_6 = canvas.create_image(
             252.0,
             571.0,
             image=image_image_6
@@ -113,7 +132,10 @@ class AccountNoWaiver(Frame):
 
         image_image_7 = PhotoImage(
            file=Path(relative_to_assets("image_7.png")))
-        self.image_7 = canvas.create_image(
+        
+        self.photoList.append(image_image_7)
+        
+        image_7 = canvas.create_image(
             174.3359375,
             73.333984375,
             image=image_image_7
@@ -139,7 +161,11 @@ class AccountNoWaiver(Frame):
 
         button_image_1 = PhotoImage(
             file=Path(relative_to_assets("button_1.png")))
+        
+        self.photoList.append(button_image_1)
+        
         button_1 = Button(
+            self,
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
@@ -155,7 +181,10 @@ class AccountNoWaiver(Frame):
 
         image_image_8 = PhotoImage(
             file=Path(relative_to_assets("image_8.png")))
-        self.image_8 = canvas.create_image(
+        
+        self.photoList.append(image_image_8)
+        
+        image_8 = canvas.create_image(
             807.0,
             73.0,
             image=image_image_8
