@@ -30,7 +30,6 @@ class gui(tk.Tk):
                 
     def show_frame(self, cont):
         frame = self.frames[cont]
-        print(type(frame))
         self.curr_frame = cont
         frame.tkraise()
 

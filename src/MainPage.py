@@ -19,7 +19,7 @@ def relative_to_assets(path: str) -> Path:
 
 class MainPage(Frame):    
     def __init__(self, parent, controller):
-        super().__init__(self, parent)
+        super().__init__(parent)
         self.photoList = []
         self.loadWidgets(controller)
                      
