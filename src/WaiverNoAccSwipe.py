@@ -22,11 +22,11 @@ class WaiverNoAccSwipe(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.photoList = []
-        self.loadWidgets(controller)
+        self.loadWidgets()
         
-    def loadWidgets(self, controller):  
+    def loadWidgets(self):  
         canvas = Canvas(
-            controller,
+            self,
             bg = "#153246",
             height = 720,
             width = 1280,
@@ -73,7 +73,7 @@ class WaiverNoAccSwipe(Frame):
             236.0,
             207.0,
             anchor="nw",
-            text="Please swipe your ID where the swipe sign is located or fill your information manually by tapping the screen",
+            text="Please swipe your ID where the\nswipe sign is located or fill your\ninformation manually by tapping\nthe screen",
             fill="#F5F0E6",
             font=("Montserrat", 48 * -1)
         )
@@ -123,14 +123,14 @@ class WaiverNoAccSwipe(Frame):
         
         self.photoList.append(button_image_1)
         
-        button_1 = Button(
+        self.button_1 = Button(
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_1 clicked"),
             relief="flat"
         )
-        button_1.place(
+        self.button_1.place(
             x=465.0,
             y=554.0,
             width=349.0,

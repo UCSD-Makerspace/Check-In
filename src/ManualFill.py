@@ -21,11 +21,11 @@ class ManualFill(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.photoList = []
-        self.loadWidgets(controller)
+        self.loadWidgets()
         
-    def loadWidgets(self, controller):   
+    def loadWidgets(self):   
         canvas = Canvas(
-            controller,
+            self,
             bg = "#153246",
             height = 720,
             width = 1280,
@@ -193,14 +193,14 @@ class ManualFill(Frame):
         
         self.photoList.append(button_image_1)
         
-        button_1 = Button(
+        self.button_1 = Button(
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_1 clicked"),
             relief="flat"
         )
-        button_1.place(
+        self.button_1.place(
             x=465.0,
             y=598.0,
             width=349.0,

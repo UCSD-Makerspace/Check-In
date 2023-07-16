@@ -36,7 +36,7 @@ class gui(tk.Tk):
             frame.grid(row=0, column=0, sticky="nsew")
         
         self.show_frame(MainPage)
-                
+             
     def show_frame(self, cont):
         frame = self.frames[cont]
         self.curr_frame = cont

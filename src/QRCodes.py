@@ -22,11 +22,11 @@ class QRCodes(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.photoList = []
-        self.loadWidgets(controller)
+        self.loadWidgets()
         
-    def loadWidgets(self, controller):  
+    def loadWidgets(self):  
         canvas = Canvas(
-            controller,
+            self,
             bg = "#153246",
             height = 720,
             width = 1280,
