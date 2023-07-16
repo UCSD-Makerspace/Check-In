@@ -5,6 +5,15 @@ from pathlib import Path
 from tkinter import ttk
 from AccNoWaiver import AccNoWaiver
 from MainPage import MainPage
+from AccNoWaiverSwipe import AccNoWaiverSwipe
+from ManualFill import ManualFill
+from NoAccNoWaiver import NoAccNoWaiver
+from NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
+from QRCodes import QRCodes
+from UserThank import UserThank
+from UserWelcome import UserWelcome
+from WaiverNoAcc import WaiverNoAcc
+from WaiverNoAccSwipe import WaiverNoAccSwipe
 
 
 
@@ -21,7 +30,7 @@ class gui(tk.Tk):
         self.frames = {}
         self.curr_frame = None        
                 
-        for F in (MainPage, AccNoWaiver):
+        for F in (MainPage, AccNoWaiver, AccNoWaiverSwipe, ManualFill, NoAccNoWaiver, NoAccNoWaiverSwipe, QRCodes, UserThank, UserWelcome, WaiverNoAcc, WaiverNoAccSwipe):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
