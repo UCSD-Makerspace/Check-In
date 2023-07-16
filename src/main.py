@@ -8,7 +8,6 @@ if __name__ == "__main__":
     app.geometry("1280x720")
     
     app.bind("1", lambda i: app.show_frame(MainPage))
-    app.bind("2", lambda i: app.show_frame(AccountNoWaiver))
     #app.configure(bg = "#153246")
 
     #app.defaultFont = font.nametofont("TkDefaultFont")

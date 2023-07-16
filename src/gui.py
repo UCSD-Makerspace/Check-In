@@ -3,7 +3,7 @@ import tkinter
 import tkinter as tk
 from pathlib import Path
 from tkinter import ttk
-from AccountNoWaiver import AccountNoWaiver
+from AccNoWaiver import AccNoWaiver
 from MainPage import MainPage
 
 
@@ -21,7 +21,7 @@ class gui(tk.Tk):
         self.frames = {}
         self.curr_frame = None        
                 
-        for F in (MainPage, AccountNoWaiver):
+        for F in (MainPage, AccNoWaiver):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")

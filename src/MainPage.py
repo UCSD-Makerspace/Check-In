@@ -10,7 +10,7 @@ from pathlib import Path
 from tkinter import *
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\logan\source\repos\Check-In\frames\assets\mainpage")
+ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\logan\source\repos\Check-In\src\assets\main_page_assets")
 
 
 def relative_to_assets(path: str) -> Path:
@@ -34,8 +34,7 @@ class MainPage(Frame):
             relief = "ridge"
         )
 
-        canvas.pack(fill="both", expand=True)
-        
+        canvas.place(x = 0, y = 0)
         image_image_1 = PhotoImage(
             file=relative_to_assets("image_1.png"))
         
@@ -47,7 +46,6 @@ class MainPage(Frame):
             image=image_image_1
         )
 
-        
         image_image_2 = PhotoImage(
             file=relative_to_assets("image_2.png"))
         
@@ -55,17 +53,17 @@ class MainPage(Frame):
         
         image_2 = canvas.create_image(
             639.333984375,
-            359.3330078125,
+            359.333984375,
             image=image_image_2
         )
 
         canvas.create_text(
-            502.0,
-            614.0,
+            336.0,
+            602.0,
             anchor="nw",
-            text="Please tap ID to start",
+            text="Please tap ID on the black box to start",
             fill="#F5F0E6",
-            font=("Montserrat", 26 * -1)
+            font=("Montserrat", 32 * -1)
         )
 
         canvas.create_text(
@@ -79,7 +77,7 @@ class MainPage(Frame):
 
         canvas.create_text(
             67.0,
-            372.6669921875,
+            372.66796875,
             anchor="nw",
             text="Welcome Desk",
             fill="#F5F0E6",
