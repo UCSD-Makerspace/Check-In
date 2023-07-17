@@ -133,13 +133,13 @@ class ManualFill(Frame):
         image_image_8 = PhotoImage(
             file=relative_to_assets("image_8.png"))
         
-        self.photoList.append(image_image_8)
+        self.photoList.append(image_image_8)    
         
         image_8 = canvas.create_image(
             640.0,
             339.0,
             image=image_image_8
-        )
+        )  
 
         image_image_9 = PhotoImage(
             file=relative_to_assets("image_9.png"))
@@ -150,7 +150,7 @@ class ManualFill(Frame):
             640.0,
             239.0,
             image=image_image_9
-        )
+        ) 
 
         canvas.create_text(
             501.0,
@@ -207,3 +207,48 @@ class ManualFill(Frame):
             width=349.0,
             height=71.0
         )
+        
+        first_name_entry=Entry(
+            self,
+            width=40,
+            font=48
+        )
+        
+        first_name_entry.place(
+            x=420.0,
+            y=227.0
+        )   
+        
+        last_name_entry=Entry(
+            self,
+            width=40,
+            font=48
+        )
+        
+        last_name_entry.place(
+            x=420.0,
+            y=327.0
+        )  
+        
+        email_entry=Entry(
+            self,
+            width=40,
+            font=48
+        )
+        
+        email_entry.place(
+            x=420.0,
+            y=428.0
+        )
+        
+        pid_entry=Entry(
+            self,
+            width=40,
+            font=48
+        )
+        
+        pid_entry.place(
+            x=420.0,
+            y=530.0
+        )
+        
