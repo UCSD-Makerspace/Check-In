@@ -86,6 +86,7 @@ class AccNoWaiverSwipe(Frame):
         self.photoList.append(button_image_1)
         
         self.button_1 = Button(
+            self,
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
@@ -150,11 +151,13 @@ class AccNoWaiverSwipe(Frame):
             image=image_image_7
         )
 
+        
         canvas.create_text(
             78.0,
             219.0,
             anchor="nw",
-            text="Please scan the QR code on the right, once scanned you can click the Done Scanning button and sign the waiver inside",
+            text="Please scan the QR code\non the right, once scanned\nyou can click the Done\nScanning button and sign\nthe waiver inside",
             fill="#F5F0E6",
             font=("Montserrat", 48 * -1)
         )
+    

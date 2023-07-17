@@ -194,6 +194,7 @@ class ManualFill(Frame):
         self.photoList.append(button_image_1)
         
         self.button_1 = Button(
+            self,
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,

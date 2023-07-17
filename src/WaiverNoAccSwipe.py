@@ -8,6 +8,7 @@ from pathlib import Path
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import *
+from gui import *
 
 
 OUTPUT_PATH = Path(__file__).parent
@@ -22,9 +23,9 @@ class WaiverNoAccSwipe(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.photoList = []
-        self.loadWidgets()
+        self.loadWidgets(controller)
         
-    def loadWidgets(self):  
+    def loadWidgets(self, controller):  
         canvas = Canvas(
             self,
             bg = "#153246",
@@ -62,6 +63,7 @@ class WaiverNoAccSwipe(Frame):
             file=relative_to_assets("image_3.png"))
         
         self.photoList.append(image_image_3)
+        
         
         image_3 = canvas.create_image(
             640.0,
@@ -101,11 +103,14 @@ class WaiverNoAccSwipe(Frame):
         
         self.photoList.append(image_image_4)
         
+        
+        
         image_4 = canvas.create_image(
             585.0,
             77.0,
             image=image_image_4
         )
+        
 
         image_image_5 = PhotoImage(
             file=relative_to_assets("image_5.png"))
@@ -124,6 +129,7 @@ class WaiverNoAccSwipe(Frame):
         self.photoList.append(button_image_1)
         
         self.button_1 = Button(
+            self,
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,

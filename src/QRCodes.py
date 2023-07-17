@@ -8,7 +8,7 @@ from pathlib import Path
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import *
-
+from gui import *
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\logan\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\Scripts\build\assets\frame6")
@@ -22,9 +22,10 @@ class QRCodes(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.photoList = []
-        self.loadWidgets()
+        self.loadWidgets(controller)
         
-    def loadWidgets(self):  
+    def loadWidgets(self, controller):  
+        from MainPage import MainPage
         canvas = Canvas(
             self,
             bg = "#153246",
@@ -109,6 +110,7 @@ class QRCodes(Frame):
             font=("Montserrat", 40 * -1)
         )
 
+        """
         image_image_6 = PhotoImage(
             file=relative_to_assets("image_6.png"))
         
@@ -119,3 +121,22 @@ class QRCodes(Frame):
             90.0,
             image=image_image_6
         )
+        """
+        
+        button_image_1 = PhotoImage(
+            file=relative_to_assets("image_6.png"))
+        
+        self.photoList.append(button_image_1)
+        
+        button_1 = Button(
+            self,
+            image=button_image_1,
+            bg="#153246",
+            command= lambda: controller.show_frame(MainPage),
+            relief="flat"
+        )
+        
+        button_1.place(
+            x=53.0,
+            y=55.0
+        )    

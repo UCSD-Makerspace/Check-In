@@ -37,6 +37,9 @@ class NoAccNoWaiverSwipe(Frame):
         canvas.place(x = 0, y = 0)
         image_image_1 = PhotoImage(
             file=relative_to_assets("image_1.png"))
+        
+        self.photoList.append(image_image_1)
+        
         image_1 = canvas.create_image(
             640.0,
             360.0,
@@ -45,6 +48,9 @@ class NoAccNoWaiverSwipe(Frame):
 
         image_image_2 = PhotoImage(
             file=relative_to_assets("image_2.png"))
+        
+        self.photoList.append(image_image_2)
+        
         image_2 = canvas.create_image(
             640.0,
             76.0,
@@ -53,6 +59,9 @@ class NoAccNoWaiverSwipe(Frame):
 
         image_image_3 = PhotoImage(
             file=relative_to_assets("image_3.png"))
+        
+        self.photoList.append(image_image_3)
+        
         image_3 = canvas.create_image(
             640.0,
             430.0,
@@ -88,6 +97,9 @@ class NoAccNoWaiverSwipe(Frame):
 
         image_image_4 = PhotoImage(
             file=relative_to_assets("image_4.png"))
+        
+        self.photoList.append(image_image_4)
+        
         image_4 = canvas.create_image(
             585.0,
             77.0,
@@ -96,6 +108,9 @@ class NoAccNoWaiverSwipe(Frame):
 
         image_image_5 = PhotoImage(
             file=relative_to_assets("image_5.png"))
+        
+        self.photoList.append(image_image_5)
+        
         image_5 = canvas.create_image(
             884.0,
             77.0,
@@ -104,14 +119,18 @@ class NoAccNoWaiverSwipe(Frame):
 
         button_image_1 = PhotoImage(
             file=relative_to_assets("button_1.png"))
-        self.button_1 = Button(
+        
+        self.photoList.append(button_image_1)
+        
+        button_1 = Button(
+            self,
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
             command=lambda: print("button_1 clicked"),
             relief="flat"
         )
-        self.button_1.place(
+        button_1.place(
             x=465.0,
             y=554.0,
             width=349.0,

@@ -1,8 +1,6 @@
 import gspread
 import tkinter
 import tkinter as tk
-from pathlib import Path
-from tkinter import ttk
 from AccNoWaiver import AccNoWaiver
 from MainPage import MainPage
 from AccNoWaiverSwipe import AccNoWaiverSwipe
