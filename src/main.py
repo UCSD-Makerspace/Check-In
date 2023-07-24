@@ -6,8 +6,9 @@ if __name__ == "__main__":
     app = gui()
     app.title("Check-In")
     app.geometry("1280x720")
+    #TODO: Screen is gonna need to be set to 720p  
+    #app.attributes("-fullscreen", True)
     
-    #app.bind("1", app.show_frame(MainPage))
     app.bind("1", lambda i: app.show_frame(MainPage))
     app.bind("2", lambda i: app.show_frame(AccNoWaiver))
     app.bind("3", lambda i: app.show_frame(AccNoWaiverSwipe))
@@ -19,13 +20,7 @@ if __name__ == "__main__":
     app.bind("9", lambda i: app.show_frame(UserWelcome))
     app.bind("0", lambda i: app.show_frame(WaiverNoAcc))
     app.bind("-", lambda i: app.show_frame(WaiverNoAccSwipe))
-    #app.configure(bg = "#153246")
 
-    #app.defaultFont = font.nametofont("TkDefaultFont")
-    #app.defaultFont.configure(size=24)
-
-    #app_style = ttk.Style(app)
-    #app_style.theme_use("classic")
     #readerThread = Reader()
     #readerThread.start()
     #monitor(app, readerThread)

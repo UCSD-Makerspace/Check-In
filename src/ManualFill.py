@@ -21,6 +21,12 @@ class ManualFill(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.photoList = []
+        self.entryList = []
+        self.first_name = StringVar()
+        self.last_name = StringVar()
+        self.email = StringVar()
+        self.pid = StringVar()
+        
         self.loadWidgets()
         
     def loadWidgets(self):   
@@ -153,7 +159,7 @@ class ManualFill(Frame):
         ) 
 
         canvas.create_text(
-            501.0,
+            565.0,
             177.0,
             anchor="nw",
             text="First Name",
@@ -162,7 +168,7 @@ class ManualFill(Frame):
         )
 
         canvas.create_text(
-            503.0,
+            565.0,
             278.0,
             anchor="nw",
             text="Last Name",
@@ -171,7 +177,7 @@ class ManualFill(Frame):
         )
 
         canvas.create_text(
-            566.0,
+            595.0,
             379.0,
             anchor="nw",
             text="Email",
@@ -180,7 +186,7 @@ class ManualFill(Frame):
         )
 
         canvas.create_text(
-            594.0,
+            605.0,
             480.0,
             anchor="nw",
             text="PID",
@@ -198,7 +204,7 @@ class ManualFill(Frame):
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_1 clicked"),
+            command=lambda: self.createAccount(),
             relief="flat"
         )
         self.button_1.place(
@@ -210,6 +216,7 @@ class ManualFill(Frame):
         
         first_name_entry=Entry(
             self,
+            textvariable=self.first_name,
             width=40,
             font=48
         )
@@ -221,6 +228,7 @@ class ManualFill(Frame):
         
         last_name_entry=Entry(
             self,
+            textvariable=self.last_name,
             width=40,
             font=48
         )
@@ -232,6 +240,7 @@ class ManualFill(Frame):
         
         email_entry=Entry(
             self,
+            textvariable=self.email,
             width=40,
             font=48
         )
@@ -243,6 +252,7 @@ class ManualFill(Frame):
         
         pid_entry=Entry(
             self,
+            textvariable=self.pid,
             width=40,
             font=48
         )
@@ -251,4 +261,17 @@ class ManualFill(Frame):
             x=420.0,
             y=530.0
         )
-        
+    
+    def getEntries(self):
+        del self.entryList[:]
+        self.entryList.append(self.first_name.get())
+        self.entryList.append(self.last_name.get())
+        self.entryList.append(self.email.get())
+        self.entryList.append(self.pid.get())
+        return self.entryList
+            
+    def createAccount(self):
+        from UserThank import UserThank
+        data = self.getEntries()
+        print(data[0])
+        print(data[1])
