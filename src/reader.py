@@ -3,6 +3,8 @@ from os.path import exists
 from datetime import datetime
 
 from sheets import sheets
+from utils import *
+from MainPage import MainPage
 
 import tkinter
 import serial
@@ -62,17 +64,19 @@ class Reader(Thread):
 
                 
                 infoLabel = tkinter.Label(
-                    self.app.get_frame(mainPage),
+                    self.app.get_frame(MainPage),
                     text="Card read, please wait...",
                     font=("", 24),
                 )
                 infoLabel.pack(pady=20)
 
                 # Get a list of all records
+                user_db = sheets.getUserDB()
                 user_data = user_db.get_all_records(numericise_ignore=["all"])
 
                 # Get a list of all waiver signatures
-                w_data = w_db.get_all_records(numericise_ignore=["all"])
+                waiver_db = sheets.getWaiverDB
+                waiver_data = waiver_db.get_all_records(numericise_ignore=["all"])
 
                 curr_user = "None"
 
@@ -85,10 +89,10 @@ class Reader(Thread):
                     print("User was not found in the database")
                     global need_tag
                     need_tag = str(self.tag)
-                    self.app.show_frame(swipePage)
+                    #self.app.show_frame(swipePage)
                 else:
                     new_row = [
-                        get_datetime(),
+                        utils.getDatetime(),
                         int(time.time()),
                         curr_user["Name"],
                         str(self.tag),
@@ -103,7 +107,7 @@ class Reader(Thread):
 
                     print(curr_user)
 
-                    for i in w_data:
+                    for i in waiver_data:
                         if str(i["A_Number"])[1:] == str(curr_user["Student ID"])[1:]:
                             found = True
                             print("User " + curr_user["Name"] + " was found")
@@ -113,14 +117,17 @@ class Reader(Thread):
                         no_id = True
 
                     if not found:
+                        #TODO:
+                        #I don't think this is needed anymore
                         infoLabel.destroy()
-                        displayQRCode(curr_user["Name"])
+                        #displayQRCode(curr_user["Name"])
                     elif no_id:
                         infoLabel.destroy()
                         self.displayNoID(curr_user["Name"])
                     else:
                         infoLabel.destroy()
-                        a_log.append_row(new_row)
+                        activity_log = sheets.getActivityLog()
+                        activity_log.append_row(new_row)
                         self.displayThankYou(curr_user["Name"])
 
                 self.newFob = True
@@ -136,9 +143,6 @@ class Reader(Thread):
         RFID = tagBytes.decode().replace("\r\n", "")
         print("Parsed tag: " + RFID)
         return str(RFID)
-    
-    def getDatetime():
-        return datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
     
     def checkWifi():
         try:

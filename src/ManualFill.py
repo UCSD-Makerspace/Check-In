@@ -269,7 +269,19 @@ class ManualFill(Frame):
         self.entryList.append(self.email.get())
         self.entryList.append(self.pid.get())
         return self.entryList
-            
+         
+    def clearEntries(self):
+        self.first_name.delete(0, END)
+        self.last_name.delete(0, END)
+        self.email.delete(0, END)
+        self.pid.delete(0, END)
+        
+    def updateEntries(self, fn, ln, e, p):
+        self.first_name.insert(0, fn)
+        self.last_name.insert(0, ln)
+        self.email.insert(0, e)
+        self.pid.insert(0, p)
+    
     def createAccount(self):
         from UserThank import UserThank
         data = self.getEntries()

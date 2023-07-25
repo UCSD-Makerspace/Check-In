@@ -1,5 +1,6 @@
 from tkinter import *
 from gui import *
+from swipe import *
 
 
 if __name__ == "__main__":
@@ -24,5 +25,5 @@ if __name__ == "__main__":
     #readerThread = Reader()
     #readerThread.start()
     #monitor(app, readerThread)
-    #app.bind("<Key>", lambda i: keyboardPress(i))
+    app.bind("<Key>", lambda i: swipe.keyboardPress(i))
     app.start()
