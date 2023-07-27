@@ -3,9 +3,8 @@ from typing import Any
 import time
 import datetime
 from authlib.integrations.requests_client import OAuth2Session
-#import obf as oAuth
 import imp
-oAuth = imp.load_compiled("oAuth","obf.pyc")
+oAuth = imp.load_compiled("oAuth","src/obf.pyc")
 api_url = "https://api.ucsd.edu:8243/"
 
 ### Use a UCSD student or staff member ID# (a.k.a.) PID

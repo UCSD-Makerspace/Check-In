@@ -1,10 +1,10 @@
 from tkinter import * 
 import tkinter
-from ManualFill import ManualFill
+from ManualFill import *
 from NoAccNoWaiverSwipe import *
 from WaiverNoAccSwipe import *
 from AccNoWaiverSwipe import *
-from gui import gui
+from gui import *
 from get_info_from_pid import *
 from utils import *
 
@@ -60,7 +60,7 @@ class swipe():
             10000, lambda: type_label.destroy()
         )  # This line is a test and will not be in the final
 
-        return ["Logan", "Corrente", ["logan6656@gmail.com", "locorrente@ucsd.edu"]]
+        #return ["Logan", "Corrente", ["logan6656@gmail.com", "locorrente@ucsd.edu"]]
 
         contact = contact_client()
         try:

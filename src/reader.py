@@ -20,7 +20,7 @@ expected_characters = 14
 timeout = 1
 
 class Reader(Thread):
-    def __init__(self, app):
+    def __init__(self):
         super().__init__()
         self.newFob = False
         self.tag = ""

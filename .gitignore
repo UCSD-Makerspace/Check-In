@@ -1,2 +1,4 @@
 *.pyc
 obf.pyc
+*.txt
+*.json
