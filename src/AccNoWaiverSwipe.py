@@ -9,6 +9,9 @@ from pathlib import Path
 # Explicit imports to satisfy Flake8
 from tkinter import *
 
+from MainPage import *
+from gui import *
+
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"assets\acc_no_waiver_swipe_assets")
@@ -90,7 +93,7 @@ class AccNoWaiverSwipe(Frame):
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: print("button_1 clicked"),
+            command=lambda: gui.show_frame(MainPage),
             relief="flat"
         )
         self.button_1.place(

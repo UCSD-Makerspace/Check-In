@@ -3,8 +3,12 @@ from os.path import exists
 from datetime import datetime
 
 from sheets import sheets
+from gui import *
 from utils import *
 from MainPage import MainPage
+from NoAccNoWaiver import *
+from UserThank import *
+from AccNoWaiver import *
 
 import tkinter
 import serial
@@ -18,7 +22,6 @@ timeout = 1
 class Reader(Thread):
     def __init__(self, app):
         super().__init__()
-        self.app = app
         self.newFob = False
         self.tag = ""
         self.lastTag = ""
@@ -62,13 +65,14 @@ class Reader(Thread):
                 else:
                     print("RFID Check Succeeded")
 
-                
+                """
                 infoLabel = tkinter.Label(
                     self.app.get_frame(MainPage),
                     text="Card read, please wait...",
                     font=("", 24),
                 )
                 infoLabel.pack(pady=20)
+                """
 
                 # Get a list of all records
                 user_db = sheets.getUserDB()
@@ -79,56 +83,37 @@ class Reader(Thread):
                 waiver_data = waiver_db.get_all_records(numericise_ignore=["all"])
 
                 curr_user = "None"
+                curr_user_w = "None"
 
                 for i in user_data:
                     if i["Card UUID"] == self.tag:
                         curr_user = i
+                        
+                for i in waiver_data:
+                    if i["Name"] == curr_user["Name"]:
+                        curr_user_w = i
 
-                if curr_user == "None":
-                    infoLabel.destroy()
+                if curr_user == "None" and curr_user_w == "None":
                     print("User was not found in the database")
-                    global need_tag
-                    need_tag = str(self.tag)
-                    #self.app.show_frame(swipePage)
+                    gui.show_frame(NoAccNoWaiver)
+                    gui.after(2000, lambda: gui.show_frame(NoAccNoWaiverSwipe))
+                    #global need_tag
+                    #need_tag = str(self.tag)
+                elif curr_user_w == "None":
+                    print("User does not have waiver")
+                    gui.show_frame(AccNoWaiver)
+                    gui.after(2000, lambda: gui.show_frame(AccNoWaiverSwipe))
+                elif curr_user == "None":
+                    print("User has a waiver but no account")
+                    gui.show_frame(WaiverNoAcc)
+                    gui.after(2000, lambda: gui.show_frame(WaiverNoAccSwipe))
                 else:
-                    new_row = [
-                        utils.getDatetime(),
-                        int(time.time()),
-                        curr_user["Name"],
-                        str(self.tag),
-                        "User Checkin",
-                        "",
-                        "",
-                        "",
-                    ]
+                    new_row = [utils.getDatetime(), int(time.time()), curr_user["Name"], str(self.tag), "User Checkin", "", "", ""]
 
-                    no_id = False
-                    found = False
-
-                    print(curr_user)
-
-                    for i in waiver_data:
-                        if str(i["A_Number"])[1:] == str(curr_user["Student ID"])[1:]:
-                            found = True
-                            print("User " + curr_user["Name"] + " was found")
-
-                    if curr_user["Student ID"] == "":
-                        print(f"Error: {curr_user['Name']}, does not have an ID")
-                        no_id = True
-
-                    if not found:
-                        #TODO:
-                        #I don't think this is needed anymore
-                        infoLabel.destroy()
-                        #displayQRCode(curr_user["Name"])
-                    elif no_id:
-                        infoLabel.destroy()
-                        self.displayNoID(curr_user["Name"])
-                    else:
-                        infoLabel.destroy()
-                        activity_log = sheets.getActivityLog()
-                        activity_log.append_row(new_row)
-                        self.displayThankYou(curr_user["Name"])
+                    #infoLabel.destroy()
+                    activity_log = sheets.getActivityLog()
+                    activity_log.append_row(new_row)
+                    UserWelcome.displayName(curr_user["Name"])
 
                 self.newFob = True
                 self.lastTime = time.time()
@@ -166,34 +151,3 @@ class Reader(Thread):
     
     def canScanAgain(lastTime):
         return time.time() - lastTime > 3
-    
-    def displayThankYou(name):
-        #TODO: Needs to switch frames
-        #      display the name of the user 
-        #      then switch back to main page
-        
-        #OLD CODE
-        """
-        thank_check = Label(
-            app.get_frame(mainPage),
-            text=name + ", thank you for checking in!",
-            font=("", 36),
-        )
-        thank_check.pack()
-        thank_check.after(3000, lambda: thank_check.destroy())
-        """
-    
-    def displayNoID(name):
-        #TODO
-        #Not sure if this is still needed
-        
-        #OLD CODE
-        """
-        need_id = Label(
-            app.get_frame(mainPage),
-            text=name + ", Please let a staff know that your account has no PID!",
-            font=("", 24),
-        )
-        need_id.pack()
-        need_id.after(8000, lambda: need_id.destroy())
-        """

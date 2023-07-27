@@ -25,7 +25,7 @@ class UserThank(Frame):
         self.loadWidgets()
         
     def loadWidgets(self):  
-        canvas = Canvas(
+        self.canvas = Canvas(
             self,
             bg = "#153244",
             height = 720,
@@ -35,13 +35,13 @@ class UserThank(Frame):
             relief = "ridge"
         )
 
-        canvas.place(x = 0, y = 0)
+        self.canvas.place(x = 0, y = 0)
         image_image_1 = PhotoImage(
             file=relative_to_assets("image_1.png"))
 
         self.photoList.append(image_image_1)
 
-        image_1 = canvas.create_image(
+        image_1 = self.canvas.create_image(
             640.0,
             360.0,
             image=image_image_1
@@ -52,13 +52,13 @@ class UserThank(Frame):
         
         self.photoList.append(image_image_2)
         
-        image_2 = canvas.create_image(
+        image_2 = self.canvas.create_image(
             639.33203125,
             359.333984375,
             image=image_image_2
         )
 
-        canvas.create_text(
+        self.canvas.create_text(
             99.33203125,
             259.33203125,
             anchor="nw",
@@ -67,7 +67,7 @@ class UserThank(Frame):
             font=("Montserrat", 45 * -1)
         )
 
-        canvas.create_text(
+        self.canvas.create_text(
             429.0,
             550.0,
             anchor="nw",
@@ -76,7 +76,7 @@ class UserThank(Frame):
             font=("Montserrat", 45 * -1)
         )
 
-        canvas.create_text(
+        self.canvas.create_text(
             99.0,
             323.0,
             anchor="nw",
@@ -84,3 +84,16 @@ class UserThank(Frame):
             fill="#F5F0E6",
             font=("Montserrat", 73 * -1)
         )
+        
+    def displayName(self, name):
+        u_name = self.canvas.create_text(
+            99.0,
+            323.0,
+            anchor="nw",
+            text=name,
+            fill="#F5F0E6",
+            font=("Montserrat", 73 * -1)
+        )
+        
+        u_name.after(4000, lambda: u_name.destroy())
+        

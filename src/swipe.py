@@ -5,6 +5,9 @@ from NoAccNoWaiverSwipe import *
 from WaiverNoAccSwipe import *
 from AccNoWaiverSwipe import *
 from gui import gui
+from get_info_from_pid import *
+from utils import *
+
 
 class swipe():
     def __init__(self) -> None:
@@ -12,16 +15,16 @@ class swipe():
     
     def keyboardPress(self, key):
         global id_string, swipe_error_shown
-        if (gui.get_curr_frame() != NoAccNoWaiverSwipe) or (gui.get_curr_frame() != AccNoWaiverSwipe) or (gui.get_curr_frame() != WaiverNoAccSwipe):
+        if (gui.get_curr_frame() != NoAccNoWaiverSwipe) or (gui.get_curr_frame() != WaiverNoAccSwipe):
             # If one of the swipe pages is not on top
             # Then don't do anything
             return
 
-        check = self.IDVet(id_string)
+        check = utils.IDVet(id_string)
         if check == "bad":
             id_string = ""
-            if not swipe_error_shown:
-                swipe_error_shown = True
+            #if not swipe_error_shown:
+            #    swipe_error_shown = True
                 #id_error = tkinter.Label(
                 #    gui.get_frame(swipePage), text="Error, please swipe again"
                 #)
@@ -89,16 +92,14 @@ class swipe():
         u_id = u_info[1]
 
         # u_data is a list containing the user type and their ID
-        # u_data = pullUser(u_id, u_type)
+        u_data = self.pullUser(u_id, u_type)
         if u_type == "Student":
             u_id = "A" + u_id
-        # e1.insert(0, u_data[0])  # fname
-        # e2.insert(0, u_data[1])  # lname
-        # e3.insert(0, u_data[2][0])  # email
-        ManualFill.clearEntries()
-        ManualFill.updateEntries("", "", "", u_id)
 
-        #gui.show_frame(accountPage)
+        ManualFill.clearEntries()
+        ManualFill.updateEntries(u_data[0], u_data[1], u_data[2][0], u_id)
+
+        gui.show_frame(ManualFill)
 
         id_string = ""
             

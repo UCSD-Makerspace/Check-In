@@ -80,9 +80,9 @@ class sheets:
                 invalidID.after(3000, lambda: invalidID.destroy())
                 return
         #TODO: This probably shouldn't happen
-        inProgress = tkinter.Label(
-            gui.get_frame(ManualFill), text="Account creation in progress!"
-        )
+        #inProgress = tkinter.Label(
+        #    gui.get_frame(ManualFill), text="Account creation in progress!"
+        #)
         inProgress.pack(pady=20)
         gui.update()
         ManualFill.clearEntries()
