@@ -83,7 +83,7 @@ class sheets:
         #inProgress = tkinter.Label(
         #    gui.get_frame(ManualFill), text="Account creation in progress!"
         #)
-        inProgress.pack(pady=20)
+        #inProgress.pack(pady=20)
         gui.update()
         ManualFill.clearEntries()
         

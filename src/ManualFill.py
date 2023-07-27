@@ -8,7 +8,8 @@ from pathlib import Path
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import *
-
+from sheets import *
+from reader import *
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"assets\manual_fill_assets")
@@ -285,5 +286,4 @@ class ManualFill(Frame):
     def createAccount(self):
         from UserThank import UserThank
         data = self.getEntries()
-        print(data[0])
-        print(data[1])
+        sheets.createAccount(data[0], data[1], data[2], data[3], Reader.getRFID())
