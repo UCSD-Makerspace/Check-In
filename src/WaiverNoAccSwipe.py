@@ -12,7 +12,7 @@ from gui import *
 
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\logan\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\Scripts\build\assets\frame10")
+ASSETS_PATH = OUTPUT_PATH / Path(r"assets\waiver_no_acc_swipe_assets")
 
 
 def relative_to_assets(path: str) -> Path:

@@ -12,7 +12,8 @@ from gui import *
 
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\logan\source\repos\Check-In\src\assets\main_page_assets")
+#ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\logan\source\repos\Check-In\src\assets\main_page_assets")
+ASSETS_PATH = OUTPUT_PATH / Path(r"assets\main_page_assets")
 
 
 def relative_to_assets(path: str) -> Path:
