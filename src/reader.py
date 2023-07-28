@@ -75,11 +75,13 @@ class Reader(Thread):
                 """
 
                 # Get a list of all records
-                user_db = sheets.getUserDB()
+                goomba = sheets()
+
+                user_db = goomba.getUserDB()
                 user_data = user_db.get_all_records(numericise_ignore=["all"])
 
                 # Get a list of all waiver signatures
-                waiver_db = sheets.getWaiverDB
+                waiver_db = goomba.getWaiverDB()
                 waiver_data = waiver_db.get_all_records(numericise_ignore=["all"])
 
                 curr_user = "None"
