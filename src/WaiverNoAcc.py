@@ -11,7 +11,7 @@ from tkinter import *
 
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"assets\waiver_no_acc_assets")
+ASSETS_PATH = OUTPUT_PATH / Path(r"assets/waiver_no_acc_assets")
 
 
 def relative_to_assets(path: str) -> Path:

@@ -129,7 +129,7 @@ class Reader(Thread):
         print("Parsed tag: " + RFID)
         return str(RFID)
     
-    def checkWifi():
+    def checkWifi(self):
         try:
             requests.head("http://www.google.com/", timeout=timeout)
             return 1

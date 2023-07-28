@@ -14,7 +14,7 @@ from gui import *
 
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"assets\acc_no_waiver_swipe_assets")
+ASSETS_PATH = OUTPUT_PATH / Path(r"assets/acc_no_waiver_swipe_assets")
 
 
 def relative_to_assets(path: str) -> Path:

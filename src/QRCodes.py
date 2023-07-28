@@ -11,7 +11,7 @@ from tkinter import *
 from gui import *
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"assets\qr_codes_assets")
+ASSETS_PATH = OUTPUT_PATH / Path(r"assets/qr_codes_assets")
 
 
 def relative_to_assets(path: str) -> Path:

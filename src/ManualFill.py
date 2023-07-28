@@ -12,7 +12,7 @@ from sheets import *
 from reader import *
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"assets\manual_fill_assets")
+ASSETS_PATH = OUTPUT_PATH / Path(r"assets/manual_fill_assets")
 
 
 def relative_to_assets(path: str) -> Path:

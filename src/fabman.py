@@ -2,7 +2,7 @@ import requests
 import json
 import datetime
 
-fab_file = open("src/fabtoken.txt", "r")
+fab_file = open("fabtoken.txt", "r")
 fabman_key = fab_file.readline()[:-1]
 base_url = "https://fabman.io/api/v1"
 fabman_space = 1742
