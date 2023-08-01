@@ -45,6 +45,13 @@ class sheets:
     def getWaiverDB(self):
         return self.waiver_db
     
+    def setUtil(self, util):
+        util.setUserDB(self.user_db)
+        util.setWaiverDB(self.waiver_db)
+        util.setALog(self.activity_log)
+        
+        
+    
     #TODO: Not sure if this is needed still
     #def backToMainFromDoc(self):
         #if gui.get_curr_frame() == docuPage:
