@@ -45,7 +45,7 @@ def myLoop(app, reader):
                 if i["Card UUID"] == tag:
                     curr_user = i
             
-            if curr_user:
+            if curr_user != "None":
                 for i in waiver_data:
                     if i["Name"] == curr_user["Name"]:
                         curr_user_w = i
