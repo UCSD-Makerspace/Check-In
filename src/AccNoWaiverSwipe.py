@@ -10,7 +10,6 @@ from pathlib import Path
 from tkinter import *
 
 from MainPage import *
-from gui import *
 
 
 OUTPUT_PATH = Path(__file__).parent
@@ -93,7 +92,7 @@ class AccNoWaiverSwipe(Frame):
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: gui.show_frame(MainPage),
+            command=lambda: self.controller.show_frame(MainPage),
             relief="flat"
         )
         self.button_1.place(

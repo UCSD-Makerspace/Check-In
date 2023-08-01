@@ -8,7 +8,6 @@ from pathlib import Path
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import *
-from gui import *
 
 
 OUTPUT_PATH = Path(__file__).parent

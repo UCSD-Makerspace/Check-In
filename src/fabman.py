@@ -2,7 +2,7 @@ import requests
 import json
 import datetime
 
-fab_file = open("fabtoken.txt", "r")
+fab_file = open("src/fabtoken.txt", "r")
 fabman_key = fab_file.readline()[:-1]
 base_url = "https://fabman.io/api/v1"
 fabman_space = 1742
@@ -10,8 +10,8 @@ fabman_account = 1046
 fabman_DIBUser = 5657
 
 class fabman:
-    def __init__(self):
-        print("yeet")
+    def __init__(self) -> None:
+        pass
         
     def createFabmanAccount(firstName, lastName, emailAddress, RFIDtag):
         emailAddress = emailAddress.lower()

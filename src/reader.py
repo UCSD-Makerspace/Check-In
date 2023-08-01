@@ -2,13 +2,12 @@ from threading import Thread
 from os.path import exists
 from datetime import datetime
 
-from sheets import sheets
-from gui import *
-from utils import *
-from MainPage import MainPage
-from NoAccNoWaiver import *
-from UserThank import *
-from AccNoWaiver import *
+#from sheets import sheets
+#from utils import *
+#from MainPage import MainPage
+#from NoAccNoWaiver import *
+#from UserThank import *
+#from AccNoWaiver import *
 
 import tkinter
 import serial
@@ -22,18 +21,14 @@ timeout = 1
 class Reader(Thread):
     def __init__(self):
         super().__init__()
-        self.newFob = False
-        self.tag = ""
-        self.lastTag = ""
-        self.counter = 0
-        self.lastTime = 0
+        #self.newFob = False
+        #self.tag = ""
+        #self.lastTag = ""
+        #self.lastTime = 0
         self.tty = ""
         self.loadScanner()
         self.ser = serial.Serial(self.tty, 115200)
         print("reader __init__ finished")
-        
-        if self.checkWifi():
-            self.sheet = sheets()
     
     def loadScanner(self):
         file_exists = exists("/dev/ttyUSB0")
@@ -43,6 +38,14 @@ class Reader(Thread):
             print("Scanner not connected")
             quit()
 
+
+    def getSerInWaiting(self):
+        return self.ser.in_waiting
+    
+    def readSerial(self):
+        self.ser.read(self.ser.in_waiting)
+    
+    """
     def run(self):
         print("starting thread2")
         while True:
@@ -65,23 +68,22 @@ class Reader(Thread):
                 else:
                     print("RFID Check Succeeded")
 
-                """
+                
                 infoLabel = tkinter.Label(
                     self.app.get_frame(MainPage),
                     text="Card read, please wait...",
                     font=("", 24),
                 )
                 infoLabel.pack(pady=20)
-                """
+                
 
                 # Get a list of all records
-                goomba = sheets()
 
-                user_db = goomba.getUserDB()
+                user_db = self.sheet.getUserDB()
                 user_data = user_db.get_all_records(numericise_ignore=["all"])
 
                 # Get a list of all waiver signatures
-                waiver_db = goomba.getWaiverDB()
+                waiver_db = self.sheet.getWaiverDB()
                 waiver_data = waiver_db.get_all_records(numericise_ignore=["all"])
 
                 curr_user = "None"
@@ -97,23 +99,23 @@ class Reader(Thread):
 
                 if curr_user == "None" and curr_user_w == "None":
                     print("User was not found in the database")
-                    gui.show_frame(NoAccNoWaiver)
-                    gui.after(2000, lambda: gui.show_frame(NoAccNoWaiverSwipe))
+                    self.app.show_frame(NoAccNoWaiver)
+                    self.app.after(2000, lambda: self.app.show_frame(NoAccNoWaiverSwipe))
                     #global need_tag
                     #need_tag = str(self.tag)
                 elif curr_user_w == "None":
                     print("User does not have waiver")
-                    gui.show_frame(AccNoWaiver)
-                    gui.after(2000, lambda: gui.show_frame(AccNoWaiverSwipe))
+                    self.app.show_frame(AccNoWaiver)
+                    self.app.after(2000, lambda: self.app.show_frame(AccNoWaiverSwipe))
                 elif curr_user == "None":
                     print("User has a waiver but no account")
-                    gui.show_frame(WaiverNoAcc)
-                    gui.after(2000, lambda: gui.show_frame(WaiverNoAccSwipe))
+                    self.app.show_frame(WaiverNoAcc)
+                    self.app.after(2000, lambda: self.app.show_frame(WaiverNoAccSwipe))
                 else:
                     new_row = [utils.getDatetime(), int(time.time()), curr_user["Name"], str(self.tag), "User Checkin", "", "", ""]
 
                     #infoLabel.destroy()
-                    activity_log = sheets.getActivityLog()
+                    activity_log = self.sheet.getActivityLog()
                     activity_log.append_row(new_row)
                     UserWelcome.displayName(curr_user["Name"])
 
@@ -122,6 +124,7 @@ class Reader(Thread):
                 self.lastTag = self.tag
 
                 self.ser.read(self.ser.in_waiting)
+            """
     
     def grabRFID(self):
         print("RFID data incoming. Bytes in waiting: " + str(self.ser.in_waiting))

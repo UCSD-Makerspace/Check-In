@@ -96,4 +96,3 @@ class UserThank(Frame):
         )
         
         u_name.after(4000, lambda: u_name.destroy())
-        

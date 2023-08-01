@@ -4,23 +4,23 @@ from ManualFill import *
 from NoAccNoWaiverSwipe import *
 from WaiverNoAccSwipe import *
 from AccNoWaiverSwipe import *
-from gui import *
 from get_info_from_pid import *
 from utils import *
 
 
 class swipe():
-    def __init__(self) -> None:
-        pass
+    def __init__(self, app):
+        self.app = app
     
     def keyboardPress(self, key):
+        util = utils()
         global id_string, swipe_error_shown
-        if (gui.get_curr_frame() != NoAccNoWaiverSwipe) or (gui.get_curr_frame() != WaiverNoAccSwipe):
+        if (self.app.get_curr_frame() != NoAccNoWaiverSwipe) or (self.app.get_curr_frame() != WaiverNoAccSwipe):
             # If one of the swipe pages is not on top
             # Then don't do anything
             return
 
-        check = utils.IDVet(id_string)
+        check = util.IDVet(id_string)
         if check == "bad":
             id_string = ""
             #if not swipe_error_shown:
@@ -37,7 +37,7 @@ class swipe():
         if (key.char == "?") and (len(id_string) == 37):
             self.swipeCard(id_string)
             
-    def pullUser(ID, u_type):
+    def pullUser(self, ID, u_type):
         # This function takes in the User's ID and
         # if they are a Student or Staff
         # and runs David's query funciton accordingly
@@ -46,10 +46,10 @@ class swipe():
         print("ID Read is: " + ID)
         print("Trying to pull user...")
         type_label = tkinter.Label(
-            gui.get_frame(ManualFill), text=f"This user is a {u_type}"
+            self.app.get_frame(ManualFill), text=f"This user is a {u_type}"
         )
         correct = tkinter.Label(
-            gui.get_frame(ManualFill), text=f"Is this information correct?"
+            self.get_frame(ManualFill), text=f"Is this information correct?"
         )
 
         correct.pack(pady=40)
@@ -96,10 +96,11 @@ class swipe():
         if u_type == "Student":
             u_id = "A" + u_id
 
-        ManualFill.clearEntries()
-        ManualFill.updateEntries(u_data[0], u_data[1], u_data[2][0], u_id)
+        manfill = self.app.get_frame(ManualFill)
+        manfill.clearEntries()
+        manfill.updateEntries(u_data[0], u_data[1], u_data[2][0], u_id)
 
-        gui.show_frame(ManualFill)
+        self.app.show_frame(ManualFill)
 
         id_string = ""
             

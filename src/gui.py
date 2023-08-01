@@ -1,4 +1,3 @@
-import gspread
 import tkinter
 import tkinter as tk
 from AccNoWaiver import AccNoWaiver
@@ -18,6 +17,9 @@ from WaiverNoAccSwipe import WaiverNoAccSwipe
 class gui(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
+        
+        self.title("Check-In")
+        self.geometry("1280x720")
          
         container = tk.Frame(self)
 
