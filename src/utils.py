@@ -1,13 +1,15 @@
 from datetime import datetime
 from gspread_formatting import *
+import gspread
 import tkinter
-import fabman
+from fabman import *
 import time
 
 
 class utils ():
-    def __init__(self):
+    def __init__(self, sheet):
         self.rfid = 0
+        self.sheet = sheet
         
     def setRFID(self, rfid):
         self.rfid = rfid
@@ -93,15 +95,15 @@ class utils ():
         fab.createFabmanAccount(fname, lname, email, self.rfid)
         new_row = [full_name, self.getDatetime(), self.rfid, pid, "", email, " ", " "]
         new_a = [self.getDatetime(), int(time.time()),full_name, self.rfid, "New User", "", "", "",]
-        self.getUserDB().append_row(new_row)
-        name_cell = self.getUserDB().find(full_name)
+        self.sheet.getUserDB().append_row(new_row)
+        name_cell = self.sheet.getUserDB().find(full_name)
         s_name_cell = str(name_cell.address)
         s_name_cell = s_name_cell[1 : len(s_name_cell)]
         update_range = "I" + s_name_cell + ":AA" + s_name_cell
-        set_data_validation_for_cell_range(self.getUserDB(), update_range, validation_rule)
-        self.getActivityLog().append_row(new_a)    
+        set_data_validation_for_cell_range(self.sheet.getUserDB(), update_range, validation_rule)
+        self.sheet.getActivityLog().append_row(new_a)    
 
-        w_data = self.getWaiverDB().get_all_records(numericise_ignore=["all"])
+        w_data = self.sheet.getWaiverDB().get_all_records(numericise_ignore=["all"])
         #toGoTo = docuPage
         for i in w_data:
             if str(i["A_Number"])[1:] == pid[1:]:
