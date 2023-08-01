@@ -281,11 +281,11 @@ class ManualFill(Frame):
         self.email_entry.delete(0, END)
         self.pid_entry.delete(0, END)
         
-    def updateEntries(self, fn, ln, e, p):
-        self.first_name_entry.insert(0, fn)
-        self.last_name_entry.insert(0, ln)
-        self.email_entry.insert(0, e)
-        self.pid_entry.insert(0, p)
+    def updateEntries(self, fname, lname, email, pid):
+        self.first_name_entry.insert(0, fname)
+        self.last_name_entry.insert(0, lname)
+        self.email_entry.insert(0, email)
+        self.pid_entry.insert(0, pid)
     
     def callAccountCreation(self):
         #from UserThank import UserThank

@@ -16,6 +16,7 @@ class swipe():
         util = utils()
         global id_string, swipe_error_shown
         if (self.app.get_curr_frame() != NoAccNoWaiverSwipe) or (self.app.get_curr_frame() != WaiverNoAccSwipe):
+            print("returning, not on applicable page for swipe")
             # If one of the swipe pages is not on top
             # Then don't do anything
             return

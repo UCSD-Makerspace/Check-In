@@ -3,12 +3,14 @@ from gspread_formatting import *
 import tkinter
 import fabman
 import time
-from reader import *
 
 
 class utils ():
-    def __init__(self, reader=None):
-        self.reader=reader
+    def __init__(self):
+        self.rfid = 0
+        
+    def setRFID(self, rfid):
+        self.rfid = rfid
         
     #TODO: 1 and 0 not good and bad
     def emailCheck(email):
@@ -60,8 +62,6 @@ class utils ():
         return datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
     
     def createAccount(self, fname, lname, email, pid):
-        self.reader = Reader()
-        rfid = self.reader.grabRFID()
         u = utils()
         
         validation_rule = DataValidationRule(
@@ -92,9 +92,9 @@ class utils ():
         fab = fabman()
         full_name = fname+" "+lname
         print(f"Creating user account for {full_name}")
-        fab.createFabmanAccount(fname, lname, email, rfid)
-        new_row = [full_name, self.getDatetime(), rfid, pid, "", email, " ", " "]
-        new_a = [self.getDatetime(), int(time.time()),full_name, rfid, "New User", "", "", "",]
+        fab.createFabmanAccount(fname, lname, email, self.rfid)
+        new_row = [full_name, self.getDatetime(), self.rfid, pid, "", email, " ", " "]
+        new_a = [self.getDatetime(), int(time.time()),full_name, self.rfid, "New User", "", "", "",]
         self.getUserDB().append_row(new_row)
         name_cell = self.getUserDB().find(full_name)
         s_name_cell = str(name_cell.address)

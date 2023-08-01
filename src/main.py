@@ -18,6 +18,7 @@ def myLoop(app, reader):
             # TODO: Wifi check doesn't work
 
             tag = reader.grabRFID()
+            util.setRFID(tag)
             if tag == last_tag and not reader.canScanAgain(last_time):
                 # if not canScanAgain(self.lastTime): #This do not work
                 print("Suppressing repeat scan")
@@ -85,7 +86,7 @@ if __name__ == "__main__":
     sw = swipe(app)
     sheet = sheets()
     reader = Reader()
-    util = utils(reader)
+    util = utils()
     thread = Thread(target=myLoop, args=(app, reader))
     print("Starting thread")
     thread.start()
