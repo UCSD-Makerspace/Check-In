@@ -44,10 +44,11 @@ def myLoop(app, reader):
             for i in user_data:
                 if i["Card UUID"] == tag:
                     curr_user = i
-                            
-            for i in waiver_data:
-                if i["Name"] == curr_user["Name"]:
-                    curr_user_w = i
+            
+            if curr_user:
+                for i in waiver_data:
+                    if i["Name"] == curr_user["Name"]:
+                        curr_user_w = i
 
             if curr_user == "None" and curr_user_w == "None":
                 print("User was not found in the database")
