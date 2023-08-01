@@ -93,7 +93,7 @@ if __name__ == "__main__":
 
     app.bind("<Key>", lambda i: sw.keyboardPress(i))
     
-    app.after(1000, lambda x: myLoop())
+    app.after(1000, lambda: myLoop())
     app.start()
     last_tag = 0
     last_time=0
