@@ -27,9 +27,9 @@ class ManualFill(Frame):
         self.email = StringVar()
         self.pid = StringVar()
         
-        self.loadWidgets()
+        self.loadWidgets(controller)
         
-    def loadWidgets(self):   
+    def loadWidgets(self, controller):   
         canvas = Canvas(
             self,
             bg = "#153246",

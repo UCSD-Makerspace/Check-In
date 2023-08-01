@@ -21,9 +21,9 @@ class NoAccNoWaiverSwipe(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.photoList = []
-        self.loadWidgets()
+        self.loadWidgets(controller)
         
-    def loadWidgets(self):  
+    def loadWidgets(self, controller):  
         canvas = Canvas(
             self,
             bg = "#153246",
@@ -127,7 +127,7 @@ class NoAccNoWaiverSwipe(Frame):
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: self.controller.show_frame(ManualFill),
+            command=lambda: controller.show_frame(ManualFill),
             relief="flat"
         )
         button_1.place(

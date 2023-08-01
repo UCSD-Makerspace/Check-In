@@ -22,9 +22,9 @@ class WaiverNoAcc(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.photoList = []
-        self.loadWidgets()
+        self.loadWidgets(controller)
         
-    def loadWidgets(self):  
+    def loadWidgets(self, controller):  
         canvas = Canvas(
             self,
             bg = "#153244",

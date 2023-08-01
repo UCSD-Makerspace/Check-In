@@ -11,7 +11,6 @@ def myLoop(app, reader):
     last_tag = 0
     last_time = 0
     while True:
-        print("Do I get here?")
         time.sleep(0.1)
         in_waiting = reader.getSerInWaiting()
         tag = 0

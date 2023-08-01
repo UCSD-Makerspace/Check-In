@@ -134,7 +134,7 @@ class WaiverNoAccSwipe(Frame):
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: gui.show_frame(ManualFill),
+            command=lambda: controller.show_frame(ManualFill),
             relief="flat"
         )
         self.button_1.place(

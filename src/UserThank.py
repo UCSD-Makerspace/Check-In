@@ -24,7 +24,7 @@ class UserThank(Frame):
         self.photoList = []
         self.loadWidgets()
         
-    def loadWidgets(self):  
+    def loadWidgets(self, controller):  
         self.canvas = Canvas(
             self,
             bg = "#153244",
