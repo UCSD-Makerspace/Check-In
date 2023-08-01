@@ -219,50 +219,50 @@ class ManualFill(Frame):
             height=71.0
         )
         
-        first_name_entry=Entry(
+        self.first_name_entry=Entry(
             self,
             textvariable=self.first_name,
             width=40,
             font=48
         )
         
-        first_name_entry.place(
+        self.first_name_entry.place(
             x=420.0,
             y=227.0
         )   
         
-        last_name_entry=Entry(
+        self.last_name_entry=Entry(
             self,
             textvariable=self.last_name,
             width=40,
             font=48
         )
         
-        last_name_entry.place(
+        self.last_name_entry.place(
             x=420.0,
             y=327.0
         )  
         
-        email_entry=Entry(
+        self.email_entry=Entry(
             self,
             textvariable=self.email,
             width=40,
             font=48
         )
         
-        email_entry.place(
+        self.email_entry.place(
             x=420.0,
             y=428.0
         )
         
-        pid_entry=Entry(
+        self.pid_entry=Entry(
             self,
             textvariable=self.pid,
             width=40,
             font=48
         )
         
-        pid_entry.place(
+        self.pid_entry.place(
             x=420.0,
             y=530.0
         )
@@ -282,10 +282,10 @@ class ManualFill(Frame):
         self.pid_entry.delete(0, END)
         
     def updateEntries(self, fn, ln, e, p):
-        self.first_name.insert(0, fn)
-        self.last_name.insert(0, ln)
-        self.email.insert(0, e)
-        self.pid.insert(0, p)
+        self.first_name_entry.insert(0, fn)
+        self.last_name_entry.insert(0, ln)
+        self.email_entry.insert(0, e)
+        self.pid_entry.insert(0, p)
     
     def callAccountCreation(self):
         #from UserThank import UserThank
