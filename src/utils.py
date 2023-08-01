@@ -3,6 +3,7 @@ from gspread_formatting import *
 import tkinter
 import fabman
 import time
+from reader import *
 
 
 class utils ():
@@ -59,6 +60,7 @@ class utils ():
         return datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
     
     def createAccount(self, fname, lname, email, pid):
+        self.reader = Reader()
         rfid = self.reader.grabRFID()
         u = utils()
         
@@ -107,7 +109,6 @@ class utils ():
             if str(i["A_Number"])[1:] == pid[1:]:
                 print("User " + full_name + " made an account but had signed the waiver")
                 #toGoTo = mainPage
-        
         """
         inProgress.destroy()
         gui.show_frame(toGoTo)
