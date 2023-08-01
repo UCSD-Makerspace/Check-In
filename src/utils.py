@@ -25,7 +25,6 @@ class utils ():
     def setWaiverDB(self, waiver_db):
         self.waiver_db = waiver_db
         
-    #TODO: 1 and 0 not good and bad
     def emailCheck(self, email):
         # Checks if the email is an @
         # and checks if it has a .
@@ -107,6 +106,9 @@ class utils ():
         new_row = [full_name, self.getDatetime(), self.rfid, pid, "", email, " ", " "]
         new_a = [self.getDatetime(), int(time.time()),full_name, self.rfid, "New User", "", "", "",]
         self.user_db.append_row(new_row)
+        
+        #FIXME: user_db and others are not being used properly
+        
         name_cell = self.sheet.user_db.find(full_name)
         s_name_cell = str(name_cell.address)
         s_name_cell = s_name_cell[1 : len(s_name_cell)]
