@@ -154,7 +154,7 @@ class Reader(Thread):
 
         return reason
     
-    def canScanAgain(lastTime):
+    def canScanAgain(self, lastTime):
         return time.time() - lastTime > 3
     
     def getRFID(self):
