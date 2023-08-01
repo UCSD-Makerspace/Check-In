@@ -204,7 +204,7 @@ class ManualFill(Frame):
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: self.createAccount(),
+            command=lambda: self.callAccountCreation(),
             relief="flat"
         )
         self.button_1.place(
