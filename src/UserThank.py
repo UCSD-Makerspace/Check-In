@@ -22,7 +22,7 @@ class UserThank(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.photoList = []
-        self.loadWidgets()
+        self.loadWidgets(controller)
         
     def loadWidgets(self, controller):  
         self.canvas = Canvas(
