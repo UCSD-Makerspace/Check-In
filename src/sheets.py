@@ -22,7 +22,7 @@ class sheets:
             "https://www.googleapis.com/auth/drive",
         ]
         #TODO: This file path needs to be changed
-        os.chdir("/home/makeradmin/checkin_logan/")
+        #os.chdir("/home/makeradmin/checkin_logan/")
         creds = ServiceAccountCredentials.from_json_keyfile_name(
             os.path.abspath("creds.json"), scope
         )
