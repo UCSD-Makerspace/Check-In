@@ -7,12 +7,11 @@ import time
 
 
 class utils ():
-    def __init__(self, sheet):
+    def __init__(self):
         self.rfid = 0
         self.activity_log = 0
         self.user_db = 0
         self.waiver_db = 0
-        self.sheet = sheet
         
     def setRFID(self, rfid):
         self.rfid = rfid
