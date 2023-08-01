@@ -71,7 +71,7 @@ class utils ():
 
         return "good"
     
-    def getDatetime():
+    def getDatetime(self):
         return datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
     
     def createAccount(self, fname, lname, email, pid):        
