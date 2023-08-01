@@ -4,9 +4,9 @@ from swipe import *
 from reader import *
 from fabman import *
 from sheets import *
+from threading import Thread
 
-
-def myLoop():
+def myLoop(app, reader):
     #time.sleep(0.1)
     in_waiting = reader.getSerInWaiting()
     tag = 0
@@ -81,6 +81,8 @@ if __name__ == "__main__":
     sheet = sheets()
     reader = Reader()
     util = utils(reader)
+    thread = Thread(target=myLoop, args=(app, reader))
+    thread.start()
     #app.title("Check-In")
     #app.geometry("1280x720")
     #TODO: Screen is gonna need to be set to 720p
@@ -93,7 +95,6 @@ if __name__ == "__main__":
 
     app.bind("<Key>", lambda i: sw.keyboardPress(i))
     
-    app.after(1000, lambda: myLoop())
     app.start()
     last_tag = 0
     last_time=0
