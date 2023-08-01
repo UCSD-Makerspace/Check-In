@@ -13,7 +13,7 @@ class fabman:
     def __init__(self) -> None:
         pass
         
-    def createFabmanAccount(firstName, lastName, emailAddress, RFIDtag):
+    def createFabmanAccount(self, firstName, lastName, emailAddress, RFIDtag):
         emailAddress = emailAddress.lower()
         member_data = {
             "firstName": f"{firstName}",
