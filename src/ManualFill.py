@@ -27,6 +27,11 @@ class ManualFill(Frame):
         self.email = StringVar()
         self.pid = StringVar()
         
+        self.first_name_entry = 0
+        self.last_name_entry = 0
+        self.email_entry = 0
+        self.pid_entry = 0
+        
         self.loadWidgets(controller)
         
     def loadWidgets(self, controller):   
@@ -271,10 +276,10 @@ class ManualFill(Frame):
         return self.entryList
          
     def clearEntries(self):
-        self.first_name.delete(0, END)
-        self.last_name.delete(0, END)
-        self.email.delete(0, END)
-        self.pid.delete(0, END)
+        self.first_name_entry.delete(0, END)
+        self.last_name_entry.delete(0, END)
+        self.email_entry.delete(0, END)
+        self.pid_entry.delete(0, END)
         
     def updateEntries(self, fn, ln, e, p):
         self.first_name.insert(0, fn)
