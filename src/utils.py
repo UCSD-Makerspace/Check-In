@@ -13,7 +13,7 @@ class utils ():
         self.rfid = rfid
         
     #TODO: 1 and 0 not good and bad
-    def emailCheck(email):
+    def emailCheck(self, email):
         # Checks if the email is an @
         # and checks if it has a .
         # if not, return invalid
@@ -30,13 +30,13 @@ class utils ():
 
         return "good"
     
-    def nameCheck(fname, lname):
+    def nameCheck(self, fname, lname):
         if len(fname) == 0 or len(lname) == 0:
             return "Name was not entered"
 
         return "good"
     
-    def IDCheck(user_id):
+    def IDCheck(self, user_id):
         if len(user_id) <= 2:
             return "PID was not entered"
         return "good"
@@ -61,16 +61,14 @@ class utils ():
     def getDatetime():
         return datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
     
-    def createAccount(self, fname, lname, email, pid):
-        u = utils()
-        
+    def createAccount(self, fname, lname, email, pid):        
         validation_rule = DataValidationRule(
             BooleanCondition("BOOLEAN", ["TRUE", "FALSE"]),
         )
 
-        idValid = u.IDCheck(pid)
-        emailValid = u.emailCheck(email)
-        nameValid = u.nameCheck(fname, lname)
+        idValid = self.IDCheck(pid)
+        emailValid = self.emailCheck(email)
+        nameValid = self.nameCheck(fname, lname)
         
         
         for validation in (idValid, emailValid, nameValid):
