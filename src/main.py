@@ -22,8 +22,6 @@ def myLoop(app, reader):
 
             tag = reader.grabRFID()
             
-            global_.rfid = tag
-            
             if tag == last_tag and not reader.canScanAgain(last_time):
                 # if not canScanAgain(self.lastTime): #This do not work
                 print("Suppressing repeat scan")
@@ -36,6 +34,7 @@ def myLoop(app, reader):
                 return
             else:
                 print("RFID Check Succeeded")
+                global_.setRFID(tag)
 
             user_db = global_.user_db
             user_data = user_db.get_all_records(numericise_ignore=["all"])

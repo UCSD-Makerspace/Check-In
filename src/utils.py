@@ -99,7 +99,7 @@ class utils ():
         s_name_cell = str(name_cell.address)
         s_name_cell = s_name_cell[1 : len(s_name_cell)]
         update_range = "I" + s_name_cell + ":AA" + s_name_cell
-        set_data_validation_for_cell_range(self.user_db, update_range, validation_rule)
+        set_data_validation_for_cell_range(global_.user_db, update_range, validation_rule)
         global_.activity_log.append_row(new_a)    
 
         w_data = global_.waiver_db.get_all_records(numericise_ignore=["all"])

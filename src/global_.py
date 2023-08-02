@@ -25,3 +25,8 @@ def init():
     print("Activity Log Loaded")
     waiver_db = client.open("Waiver Signatures").sheet1
     print("Waiver Database Loaded")
+
+def setRFID(new_rfid):
+    global rfid
+    rfid = new_rfid
+    
