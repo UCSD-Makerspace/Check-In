@@ -39,7 +39,7 @@ class utils():
             return "PID was not entered"
         return "good"
     
-    def IDVet(id_check):
+    def IDVet(self, id_check):
         for c in id_check:
             if c == "+":
                 return "bad"
