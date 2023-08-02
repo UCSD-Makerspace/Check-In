@@ -26,13 +26,13 @@ def myLoop(app, reader):
             if tag == last_tag and not reader.canScanAgain(last_time):
                 # if not canScanAgain(self.lastTime): #This do not work
                 print("Suppressing repeat scan")
-                return
+                continue
 
             s_reason = reader.checkRFID(tag)
 
             if s_reason != "good":
                 print(s_reason)
-                return
+                continue
             else:
                 print("RFID Check Succeeded")
                 
