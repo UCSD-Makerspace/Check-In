@@ -98,11 +98,11 @@ class swipe():
         if u_type == "Student":
             u_id = "A" + u_id
 
-        manfill = self.app.get_frame(ManualFill)
+        manfill = global_.app.get_frame(ManualFill)
         manfill.clearEntries()
         manfill.updateEntries(u_data[0], u_data[1], u_data[2][0], u_id)
 
-        self.app.show_frame(ManualFill)
+        global_.app.show_frame(ManualFill)
 
         id_string = ""
             

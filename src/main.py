@@ -88,7 +88,7 @@ if __name__ == "__main__":
     global_.init()
     app = gui()
     global_.setApp(app)
-    sw = swipe(app)
+    sw = swipe()
     reader = Reader()
     #sheet = sheets()
     util = utils()
