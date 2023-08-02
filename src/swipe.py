@@ -10,13 +10,13 @@ import global_
 
 
 class swipe():
-    def __init__(self, app):
-        self.app = app
+    def __init__(self)->None:
+        pass
             
     def keyboardPress(self, key):
         util = utils()
         global id_string, swipe_error_shown
-        if (self.app.get_curr_frame() != NoAccNoWaiverSwipe) or (self.app.get_curr_frame() != WaiverNoAccSwipe):
+        if (global_.app.get_curr_frame() != NoAccNoWaiverSwipe) and (global_.app.get_curr_frame() != WaiverNoAccSwipe):
             print("returning, not on applicable page for swipe")
             # If one of the swipe pages is not on top
             # Then don't do anything

@@ -76,8 +76,7 @@ def myLoop(app, reader):
                 #infoLabel.destroy()
                 activity_log = global_.activity_log
                 activity_log.append_row(new_row)
-                welcome = app.get_frame(UserWelcome)
-                welcome.displayName(curr_user["Name"])
+                global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])
 
             last_time = time.time()
             last_tag = tag

@@ -88,4 +88,4 @@ class UserWelcome(Frame):
         )
         
         #u_name.after(4000, lambda: u_name.destroy())
-        global_.app.after(4000, lambda: global_.app.show_frame(MainPage))
+        global_.app.after(2000, lambda: global_.app.show_frame(MainPage))
