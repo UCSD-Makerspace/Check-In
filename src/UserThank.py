@@ -9,6 +9,7 @@ from pathlib import Path
 # Explicit imports to satisfy Flake8
 from tkinter import *
 from MainPage import *
+import global_
 
 
 OUTPUT_PATH = Path(__file__).parent
@@ -78,6 +79,7 @@ class UserThank(Frame):
             font=("Montserrat", 45 * -1)
         )
 
+        """
         self.canvas.create_text(
             99.0,
             323.0,
@@ -86,9 +88,11 @@ class UserThank(Frame):
             fill="#F5F0E6",
             font=("Montserrat", 73 * -1)
         )
+        """
         
     def displayName(self, name):
-        self.controller.show_frame(UserThank)
+        global_.app.show_frame(UserThank)
+        
         u_name = self.canvas.create_text(
             99.0,
             323.0,
@@ -99,4 +103,4 @@ class UserThank(Frame):
         )
         
         u_name.after(4000, lambda: u_name.destroy())
-        self.controller.after(100, lambda: self.controller.show_frame(MainPage))
+        global_.app.after(100, lambda: global_.app.show_frame(MainPage))

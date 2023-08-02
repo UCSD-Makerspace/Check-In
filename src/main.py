@@ -88,6 +88,7 @@ def myLoop(app, reader):
 if __name__ == "__main__":
     global_.init()
     app = gui()
+    global_.setApp(app)
     sw = swipe(app)
     reader = Reader()
     #sheet = sheets()

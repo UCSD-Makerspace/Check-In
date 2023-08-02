@@ -3,7 +3,7 @@ import os
 from oauth2client.service_account import ServiceAccountCredentials
 
 def init():
-    global rfid, user_db, activity_log, waiver_db
+    global rfid, user_db, activity_log, waiver_db, app
     scope = [
         "https://spreadsheets.google.com/feeds",
         "https://www.googleapis.com/auth/spreadsheets",
@@ -28,4 +28,8 @@ def init():
 def setRFID(new_rfid):
     global rfid
     rfid = new_rfid
+    
+def setApp(new_app):
+    global app
+    app = new_app
     

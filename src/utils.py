@@ -5,8 +5,8 @@ import tkinter
 from fabman import *
 import time
 import global_
+#import UserThank
 from UserThank import *
-
 class utils():
     def __init__(self)->None:
         pass
@@ -109,8 +109,7 @@ class utils():
                 print("User " + full_name + " made an account but had signed the waiver")
                 #toGoTo = mainPage
         
-        
-        UserThank.displayName(full_name)
+        global_.app.get_frame(UserThank).displayName(full_name)
         
         
         """
