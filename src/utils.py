@@ -89,8 +89,8 @@ class utils():
         full_name = fname+" "+lname
         print(f"Creating user account for {full_name}")
         fab.createFabmanAccount(fname, lname, email, global_.rfid)
-        new_row = [full_name, self.getDatetime(), self.rfid, pid, "", email, " ", " "]
-        new_a = [self.getDatetime(), int(time.time()),full_name, self.rfid, "New User", "", "", "",]
+        new_row = [full_name, self.getDatetime(), global_.rfid, pid, "", email, " ", " "]
+        new_a = [self.getDatetime(), int(time.time()),full_name, global_.rfid, "New User", "", "", "",]
         global_.user_db.append_row(new_row)
         
         #FIXME: user_db and others are not being used properly
