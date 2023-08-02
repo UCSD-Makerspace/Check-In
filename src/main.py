@@ -37,11 +37,11 @@ def myLoop(app, reader):
             else:
                 print("RFID Check Succeeded")
 
-            user_db = sheet.getUserDB()
+            user_db = global_.user_db
             user_data = user_db.get_all_records(numericise_ignore=["all"])
 
             # Get a list of all waiver signatures
-            waiver_db = sheet.getWaiverDB()
+            waiver_db = global_.waiver_db
             waiver_data = waiver_db.get_all_records(numericise_ignore=["all"])
 
             curr_user = "None"
@@ -74,7 +74,7 @@ def myLoop(app, reader):
                 new_row = [util.getDatetime(), int(time.time()), curr_user["Name"], str(tag), "User Checkin", "", "", ""]
 
                 #infoLabel.destroy()
-                activity_log = sheet.getActivityLog()
+                activity_log = global_.activity_log
                 activity_log.append_row(new_row)
                 welcome = app.get_frame(UserWelcome)
                 welcome.displayName(curr_user["Name"])
@@ -90,7 +90,7 @@ if __name__ == "__main__":
     app = gui()
     sw = swipe(app)
     reader = Reader()
-    sheet = sheets()
+    #sheet = sheets()
     util = utils()
     thread = Thread(target=myLoop, args=(app, reader))
     print("Starting thread")

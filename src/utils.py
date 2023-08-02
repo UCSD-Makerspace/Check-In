@@ -4,6 +4,7 @@ import gspread
 import tkinter
 from fabman import *
 import time
+import global_
 
 
 class utils ():
@@ -90,18 +91,18 @@ class utils ():
         fab.createFabmanAccount(fname, lname, email, self.rfid)
         new_row = [full_name, self.getDatetime(), self.rfid, pid, "", email, " ", " "]
         new_a = [self.getDatetime(), int(time.time()),full_name, self.rfid, "New User", "", "", "",]
-        self.sheet.getUserDB().append_row(new_row)
+        global_.user_db.append_row(new_row)
         
         #FIXME: user_db and others are not being used properly
         
-        name_cell = self.sheet.user_db.find(full_name)
+        name_cell = global_.user_db.find(full_name)
         s_name_cell = str(name_cell.address)
         s_name_cell = s_name_cell[1 : len(s_name_cell)]
         update_range = "I" + s_name_cell + ":AA" + s_name_cell
         set_data_validation_for_cell_range(self.user_db, update_range, validation_rule)
-        self.sheet.getActivityLog().append_row(new_a)    
+        global_.activity_log.append_row(new_a)    
 
-        w_data = self.sheet.getWaiverDB().get_all_records(numericise_ignore=["all"])
+        w_data = global_.waiver_db.get_all_records(numericise_ignore=["all"])
         #toGoTo = docuPage
         for i in w_data:
             if str(i["A_Number"])[1:] == pid[1:]:
