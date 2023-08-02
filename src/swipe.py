@@ -10,8 +10,9 @@ import global_
 
 
 class swipe():
-    def __init__(self)->None:
-        pass
+    def __init__(self):
+        global id_string
+        id_string=""
             
     def keyboardPress(self, key):
         util = utils()

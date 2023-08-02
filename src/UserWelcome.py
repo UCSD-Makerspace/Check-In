@@ -78,6 +78,7 @@ class UserWelcome(Frame):
         )
     
     def displayName(self, name):
+        print("Updating user welcome")
         u_name = self.canvas.create_text(
             99.0,
             323.0,

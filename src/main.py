@@ -5,6 +5,7 @@ from reader import *
 from fabman import *
 from sheets import *
 from threading import Thread
+from UserWelcome import *
 import global_
 
 debug = 0
@@ -60,8 +61,6 @@ def myLoop(app, reader):
                 print("User was not found in the database")
                 app.show_frame(NoAccNoWaiver)
                 app.after(2000, lambda: app.show_frame(NoAccNoWaiverSwipe))
-                #global need_tag
-                #need_tag = str(self.tag)
             elif curr_user_w == "None":
                 print("User does not have waiver")
                 app.show_frame(AccNoWaiver)
@@ -73,7 +72,6 @@ def myLoop(app, reader):
             else:
                 new_row = [util.getDatetime(), int(time.time()), curr_user["Name"], str(tag), "User Checkin", "", "", ""]
 
-                #infoLabel.destroy()
                 activity_log = global_.activity_log
                 activity_log.append_row(new_row)
                 global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])
