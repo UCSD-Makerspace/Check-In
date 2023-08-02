@@ -1,1 +1,5 @@
-rfid = 0
+
+
+def init():
+    global rfid
+    rfid = 0
