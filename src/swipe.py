@@ -68,9 +68,9 @@ class swipe():
         contact = contact_client()
         try:
             if u_type == "Staff":
-                u_info = contact.get_staff_info(ID)
+                u_info = contact.get_staff_info("A"+ID)
             elif u_type == "Student":
-                u_info = contact.get_student_info(ID)
+                u_info = contact.get_student_info("A"+ID)
         except:
             print("An exception has ocurred with pulling user information")
         print("Info pull succeeded:")
@@ -96,6 +96,9 @@ class swipe():
 
         # u_data is a list containing the user type and their ID
         u_data = self.pullUser(u_id, u_type)
+        if u_data == False:
+            print("Student search returned False, returning...")
+            return
         if u_type == "Student":
             u_id = "A" + u_id
 

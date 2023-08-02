@@ -86,8 +86,9 @@ class UserWelcome(Frame):
             anchor="nw",
             text=name,
             fill="#F5F0E6",
-            font=("Montserrat", 73 * -1)
+            font=("Montserrat", 73 * -1),
+            tag="welcome"
         )
         
-        #u_name.after(4000, lambda: u_name.destroy())
+        self.canvas.after(4000, lambda: self.canvas.delete("welcome"))
         global_.app.after(2000, lambda: global_.app.show_frame(MainPage))
