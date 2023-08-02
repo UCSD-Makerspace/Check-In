@@ -72,7 +72,7 @@ class NoAccNoWaiverSwipe(Frame):
             236.0,
             207.0,
             anchor="nw",
-            text="Please swipe your ID where the\n swipe sign is located or fill your\ninformation manually by tapping\n                  the screen",
+            text="Please swipe your ID where the\n swipe sign is located ",
             fill="#F5F0E6",
             font=("Montserrat", 48 * -1)
         )

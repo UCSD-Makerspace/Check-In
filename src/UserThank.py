@@ -9,6 +9,8 @@ from pathlib import Path
 # Explicit imports to satisfy Flake8
 from tkinter import *
 from MainPage import *
+from AccNoWaiver import *
+from AccNoWaiverSwipe import *
 import global_
 
 
@@ -103,5 +105,5 @@ class UserThank(Frame):
             tag="thank"
         )
         
-        self.canvas.after(4000, lambda: self.canvas.delete("thank"))
-        global_.app.after(4000, lambda: global_.app.show_frame(MainPage))
+        self.canvas.after(3000, lambda: self.canvas.delete("thank"))
+        global_.app.after(4000, lambda: global_.app.show_frame(AccNoWaiverSwipe))
