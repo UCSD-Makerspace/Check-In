@@ -6,6 +6,8 @@ from fabman import *
 from sheets import *
 from threading import Thread
 
+debug = 0
+
 def myLoop(app, reader):
     print("Now reading ID Card")
     last_tag = 0

@@ -7,7 +7,7 @@ import time
 
 
 class utils ():
-    def __init__(self, sheet):
+    def __init__(self, sheet=None):
         self.rfid = 0
         self.sheet = sheet
         
