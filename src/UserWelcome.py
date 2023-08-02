@@ -91,4 +91,4 @@ class UserWelcome(Frame):
         )
         
         self.canvas.after(4000, lambda: self.canvas.delete("welcome"))
-        global_.app.after(2000, lambda: global_.app.show_frame(MainPage))
+        global_.app.after(4000, lambda: global_.app.show_frame(MainPage))
