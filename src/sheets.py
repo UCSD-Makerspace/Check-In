@@ -45,13 +45,18 @@ class sheets:
     def getWaiverDB(self):
         return self.waiver_db
     
-    def setUtil(self, util):
-        util.setUserDB(self.user_db)
-        util.setWaiverDB(self.waiver_db)
-        util.setALog(self.activity_log)
-        
-        
+    def appendActivityLog(self, new_a):
+        try:
+            self.user_db.append_row(new_a)
+        except:
+            print("Unable to append row, ACTIVITY")
     
+    def appendUserDB(self, new_row):
+        try:
+            self.user_db.append_row(new_row)
+        except:
+            print("Unable to append row, USERDB")
+        
     #TODO: Not sure if this is needed still
     #def backToMainFromDoc(self):
         #if gui.get_curr_frame() == docuPage:

@@ -7,24 +7,13 @@ import time
 
 
 class utils ():
-    def __init__(self):
+    def __init__(self, sheet):
         self.rfid = 0
-        self.activity_log = 0
-        self.user_db = 0
-        self.waiver_db = 0
+        self.sheet = sheet
         
     def setRFID(self, rfid):
         self.rfid = rfid
-        
-    def setUserDB(self, user_db):
-        self.user_db = user_db
-        
-    def setALog(self, activity_log):
-        self.activity_log = activity_log
-        
-    def setWaiverDB(self, waiver_db):
-        self.waiver_db = waiver_db
-        
+    
     def emailCheck(self, email):
         # Checks if the email is an @
         # and checks if it has a .
@@ -105,7 +94,7 @@ class utils ():
         fab.createFabmanAccount(fname, lname, email, self.rfid)
         new_row = [full_name, self.getDatetime(), self.rfid, pid, "", email, " ", " "]
         new_a = [self.getDatetime(), int(time.time()),full_name, self.rfid, "New User", "", "", "",]
-        self.user_db.append_row(new_row)
+        self.sheet.getUserDB().append_row(new_row)
         
         #FIXME: user_db and others are not being used properly
         
@@ -114,9 +103,9 @@ class utils ():
         s_name_cell = s_name_cell[1 : len(s_name_cell)]
         update_range = "I" + s_name_cell + ":AA" + s_name_cell
         set_data_validation_for_cell_range(self.user_db, update_range, validation_rule)
-        self.activity_log.append_row(new_a)    
+        self.sheet.getActivityLog().append_row(new_a)    
 
-        w_data = self.waiver_db.get_all_records(numericise_ignore=["all"])
+        w_data = self.sheet.getWaiverDB().get_all_records(numericise_ignore=["all"])
         #toGoTo = docuPage
         for i in w_data:
             if str(i["A_Number"])[1:] == pid[1:]:
