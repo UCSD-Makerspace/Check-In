@@ -8,7 +8,8 @@ from pathlib import Path
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import *
-
+from MainPage import *
+import global_
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"assets/user_welcome_assets")
@@ -86,4 +87,5 @@ class UserWelcome(Frame):
             font=("Montserrat", 73 * -1)
         )
         
-        u_name.after(4000, lambda: u_name.destroy())
+        #u_name.after(4000, lambda: u_name.destroy())
+        global_.app.after(4000, lambda: global_.app.show_frame(global_.app.get_frame(MainPage)))

@@ -102,5 +102,5 @@ class UserThank(Frame):
             font=("Montserrat", 73 * -1)
         )
         
-        u_name.after(4000, lambda: u_name.destroy())
-        global_.app.after(100, lambda: global_.app.show_frame(MainPage))
+        #u_name.after(4000, lambda: u_name.destroy())
+        global_.app.after(4000, lambda: global_.app.show_frame(global_.app.get_frame(MainPage)))

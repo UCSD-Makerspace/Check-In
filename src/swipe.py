@@ -6,6 +6,7 @@ from WaiverNoAccSwipe import *
 from AccNoWaiverSwipe import *
 from get_info_from_pid import *
 from utils import *
+import global_
 
 
 class swipe():
@@ -47,10 +48,10 @@ class swipe():
         print("ID Read is: " + ID)
         print("Trying to pull user...")
         type_label = tkinter.Label(
-            self.app.get_frame(ManualFill), text=f"This user is a {u_type}"
+            global_.app.get_frame(ManualFill), text=f"This user is a {u_type}"
         )
         correct = tkinter.Label(
-            self.get_frame(ManualFill), text=f"Is this information correct?"
+            global_.app.get_frame(ManualFill), text=f"Is this information correct?"
         )
 
         correct.pack(pady=40)
