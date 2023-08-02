@@ -54,7 +54,16 @@ def myLoop(app, reader):
             
             if curr_user != "None":
                 for i in waiver_data:
-                    if i["A_Number"] == curr_user["Student ID"]:
+                    user_id = i["A_Number"]
+                    waiver_id = curr_user["Student ID"]
+                    
+                    if (user_id[0] == "A") or (user_id[0] == "a"):
+                        user_id = user_id[1:]
+                    
+                    if (waiver_id[0] == "A") or (waiver_id[0] == "a"):
+                        waiver_id = waiver_id[1:]  
+                        
+                    if user_id == waiver_id:
                         curr_user_w = i
 
             if curr_user == "None" and curr_user_w == "None":
