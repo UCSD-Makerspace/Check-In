@@ -7,8 +7,8 @@ import time
 import global_
 from UserThank import *
 
-class utils ():
-    def __init__()->None:
+class utils():
+    def __init__(self)->None:
         pass
     
     def emailCheck(self, email):
