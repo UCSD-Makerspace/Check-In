@@ -11,7 +11,7 @@ from utils import *
 class swipe():
     def __init__(self, app):
         self.app = app
-    
+            
     def keyboardPress(self, key):
         util = utils()
         global id_string, swipe_error_shown

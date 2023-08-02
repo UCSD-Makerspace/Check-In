@@ -7,12 +7,8 @@ import time
 
 
 class utils ():
-    def __init__(self, sheet=None):
+    def __init__(self):
         self.rfid = 0
-        self.sheet = sheet
-        
-    def setRFID(self, rfid):
-        self.rfid = rfid
     
     def emailCheck(self, email):
         # Checks if the email is an @

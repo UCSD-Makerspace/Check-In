@@ -5,6 +5,7 @@ from reader import *
 from fabman import *
 from sheets import *
 from threading import Thread
+import global_
 
 debug = 0
 
@@ -20,7 +21,9 @@ def myLoop(app, reader):
             # TODO: Wifi check doesn't work
 
             tag = reader.grabRFID()
-            util.setRFID(tag)
+            
+            global_.rfid = tag
+            
             if tag == last_tag and not reader.canScanAgain(last_time):
                 # if not canScanAgain(self.lastTime): #This do not work
                 print("Suppressing repeat scan")
@@ -83,12 +86,12 @@ def myLoop(app, reader):
     
 
 if __name__ == "__main__":
-    fab = fabman()
+    global_.init()
     app = gui()
     sw = swipe(app)
     reader = Reader()
     sheet = sheets()
-    util = utils(sheet)
+    util = utils()
     thread = Thread(target=myLoop, args=(app, reader))
     print("Starting thread")
     thread.start()
