@@ -34,7 +34,8 @@ def myLoop(app, reader):
                 return
             else:
                 print("RFID Check Succeeded")
-                global_.setRFID(tag)
+                
+            global_.setRFID(tag)
 
             user_db = global_.user_db
             user_data = user_db.get_all_records(numericise_ignore=["all"])

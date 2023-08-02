@@ -8,6 +8,7 @@ from pathlib import Path
 # from tkinter import *
 # Explicit imports to satisfy Flake8
 from tkinter import *
+from MainPage import *
 
 
 OUTPUT_PATH = Path(__file__).parent
@@ -21,6 +22,7 @@ def relative_to_assets(path: str) -> Path:
 class UserThank(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
+        self.controller = controller
         self.photoList = []
         self.loadWidgets(controller)
         
@@ -86,6 +88,7 @@ class UserThank(Frame):
         )
         
     def displayName(self, name):
+        self.controller.show_frame(UserThank)
         u_name = self.canvas.create_text(
             99.0,
             323.0,
@@ -96,3 +99,4 @@ class UserThank(Frame):
         )
         
         u_name.after(4000, lambda: u_name.destroy())
+        self.controller.after(100, lambda: self.controller.show_frame(MainPage))

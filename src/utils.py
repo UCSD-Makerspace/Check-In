@@ -5,11 +5,11 @@ import tkinter
 from fabman import *
 import time
 import global_
-
+from UserThank import *
 
 class utils ():
-    def __init__(self):
-        self.rfid = 0
+    def __init__()->None:
+        pass
     
     def emailCheck(self, email):
         # Checks if the email is an @
@@ -88,7 +88,7 @@ class utils ():
         fab = fabman()
         full_name = fname+" "+lname
         print(f"Creating user account for {full_name}")
-        fab.createFabmanAccount(fname, lname, email, self.rfid)
+        fab.createFabmanAccount(fname, lname, email, global_.rfid)
         new_row = [full_name, self.getDatetime(), self.rfid, pid, "", email, " ", " "]
         new_a = [self.getDatetime(), int(time.time()),full_name, self.rfid, "New User", "", "", "",]
         global_.user_db.append_row(new_row)
@@ -108,6 +108,11 @@ class utils ():
             if str(i["A_Number"])[1:] == pid[1:]:
                 print("User " + full_name + " made an account but had signed the waiver")
                 #toGoTo = mainPage
+        
+        
+        UserThank.displayName(full_name)
+        
+        
         """
         inProgress.destroy()
         gui.show_frame(toGoTo)

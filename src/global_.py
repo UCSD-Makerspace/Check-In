@@ -4,7 +4,6 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 def init():
     global rfid, user_db, activity_log, waiver_db
-    rfid = 0
     scope = [
         "https://spreadsheets.google.com/feeds",
         "https://www.googleapis.com/auth/spreadsheets",
