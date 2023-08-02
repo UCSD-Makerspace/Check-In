@@ -79,8 +79,8 @@ class MainPage(Frame):
         )
 
         canvas.create_text(
-            69.0,
-            375.66796875,
+            75.0,
+            377.66796875,
             anchor="nw",
             text="Welcome Desk",
             fill="#F5F0E6",

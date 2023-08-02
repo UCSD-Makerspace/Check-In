@@ -54,7 +54,8 @@ def myLoop(app, reader):
             
             if curr_user != "None":
                 for i in waiver_data:
-                    if i["Name"] == curr_user["Name"]:
+                    
+                    if i["Student ID"] == curr_user["A_Number"]:
                         curr_user_w = i
 
             if curr_user == "None" and curr_user_w == "None":
@@ -94,5 +95,6 @@ if __name__ == "__main__":
     print("Starting thread")
     thread.start()
     app.bind("<Key>", lambda i: sw.keyboardPress(i))
+    app.bind("<Escape>", lambda i: app.show_frame(MainPage))
     print("Made it to app start")
     app.start()
