@@ -69,10 +69,10 @@ class NoAccNoWaiverSwipe(Frame):
         )
 
         canvas.create_text(
-            236.0,
-            207.0,
+            366.0,
+            319.0,
             anchor="nw",
-            text="Please swipe your ID where the\n swipe sign is located ",
+            text="Please swipe your ID",
             fill="#F5F0E6",
             font=("Montserrat", 48 * -1)
         )
@@ -81,7 +81,7 @@ class NoAccNoWaiverSwipe(Frame):
             371.0,
             45.0,
             anchor="nw",
-            text="Account",
+            text="Account Status:",
             fill="#F5F0E6",
             font=("Montserrat", 40 * -1)
         )
@@ -90,7 +90,7 @@ class NoAccNoWaiverSwipe(Frame):
             701.0,
             45.0,
             anchor="nw",
-            text="Waiver",
+            text="Waiver Status:",
             fill="#F5F0E6",
             font=("Montserrat", 40 * -1)
         )

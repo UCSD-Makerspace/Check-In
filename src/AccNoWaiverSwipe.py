@@ -106,7 +106,7 @@ class AccNoWaiverSwipe(Frame):
             140.0,
             46.0,
             anchor="nw",
-            text="Account",
+            text="Account Status:",
             fill="#F5F0E6",
             font=("Montserrat", 40 * -1)
         )
@@ -115,7 +115,7 @@ class AccNoWaiverSwipe(Frame):
             470.0,
             46.0,
             anchor="nw",
-            text="Waiver",
+            text="Waiver Status:",
             fill="#F5F0E6",
             font=("Montserrat", 40 * -1)
         )
@@ -158,8 +158,7 @@ class AccNoWaiverSwipe(Frame):
             78.0,
             219.0,
             anchor="nw",
-            text="Please scan the QR code\non the right, once scanned\nyou can click the Done\nScanning button and sign\nthe waiver inside",
+            text="Please scan the QR code\non the right and the our waiver",
             fill="#F5F0E6",
             font=("Montserrat", 48 * -1)
         )
-    

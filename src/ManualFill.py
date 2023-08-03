@@ -83,7 +83,7 @@ class ManualFill(Frame):
             371.0,
             45.0,
             anchor="nw",
-            text="Account",
+            text="Account Status:",
             fill="#F5F0E6",
             font=("Montserrat", 40 * -1)
         )
@@ -92,7 +92,7 @@ class ManualFill(Frame):
             701.0,
             45.0,
             anchor="nw",
-            text="Waiver",
+            text="Waiver Status:",
             fill="#F5F0E6",
             font=("Montserrat", 40 * -1)
         )
