@@ -153,7 +153,6 @@ class AccNoWaiverSwipe(Frame):
             image=image_image_7
         )
 
-        
         canvas.create_text(
             78.0,
             219.0,

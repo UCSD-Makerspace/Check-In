@@ -57,6 +57,8 @@ def myLoop(app, reader):
                     user_id = i["A_Number"]
                     waiver_id = curr_user["Student ID"]
                     
+                    print(waiver_id + "=" + user_id)
+                    
                     if (user_id[0] == "A") or (user_id[0] == "a"):
                         user_id = user_id[1:]
                     
