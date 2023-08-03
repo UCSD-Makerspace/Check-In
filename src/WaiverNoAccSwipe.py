@@ -91,7 +91,7 @@ class WaiverNoAccSwipe(Frame):
         )
 
         canvas.create_text(
-            560.0,
+            610.0,
             55.0,
             anchor="nw",
             text="Waiver Status:",
@@ -103,8 +103,6 @@ class WaiverNoAccSwipe(Frame):
             file=relative_to_assets("image_4.png"))
         
         self.photoList.append(image_image_4)
-        
-        
         
         image_4 = canvas.create_image(
             585.0,
@@ -119,7 +117,7 @@ class WaiverNoAccSwipe(Frame):
         self.photoList.append(image_image_5)
         
         image_5 = canvas.create_image(
-            884.0,
+            945.0,
             77.0,
             image=image_image_5
         )
