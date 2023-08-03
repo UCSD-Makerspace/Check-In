@@ -78,7 +78,7 @@ class NoAccNoWaiverSwipe(Frame):
         )
 
         canvas.create_text(
-            230.0,
+            220.0,
             55.0,
             anchor="nw",
             text="Account Status:",
@@ -101,7 +101,7 @@ class NoAccNoWaiverSwipe(Frame):
         self.photoList.append(image_image_4)
         
         image_4 = canvas.create_image(
-            645.0,
+            585.0,
             77.0,
             image=image_image_4
         )
