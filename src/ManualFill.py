@@ -80,7 +80,7 @@ class ManualFill(Frame):
         )
 
         canvas.create_text(
-            371.0,
+            300.0,
             45.0,
             anchor="nw",
             text="Account Status:",
@@ -89,7 +89,7 @@ class ManualFill(Frame):
         )
 
         canvas.create_text(
-            701.0,
+            660.0,
             45.0,
             anchor="nw",
             text="Waiver Status:",
