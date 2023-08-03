@@ -73,8 +73,8 @@ class WaiverNoAccSwipe(Frame):
         )
 
         canvas.create_text(
-            366.0,
-            319.0,
+            380.0,
+            300.0,
             anchor="nw",
             text="Please swipe your ID",
             fill="#F5F0E6",
@@ -82,7 +82,7 @@ class WaiverNoAccSwipe(Frame):
         )
 
         canvas.create_text(
-            371.0,
+            300.0,
             45.0,
             anchor="nw",
             text="Account Status:",
@@ -91,7 +91,7 @@ class WaiverNoAccSwipe(Frame):
         )
 
         canvas.create_text(
-            701.0,
+            630.0,
             45.0,
             anchor="nw",
             text="Waiver Status:",

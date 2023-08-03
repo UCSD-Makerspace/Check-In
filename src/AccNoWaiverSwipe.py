@@ -103,7 +103,7 @@ class AccNoWaiverSwipe(Frame):
         )
 
         canvas.create_text(
-            140.0,
+            90.0,
             46.0,
             anchor="nw",
             text="Account Status:",
@@ -112,7 +112,7 @@ class AccNoWaiverSwipe(Frame):
         )
 
         canvas.create_text(
-            470.0,
+            420.0,
             46.0,
             anchor="nw",
             text="Waiver Status:",
