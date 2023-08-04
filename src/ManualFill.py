@@ -9,6 +9,8 @@ from pathlib import Path
 # Explicit imports to satisfy Flake8
 from tkinter import *
 from utils import *
+from ManualFill import *
+import global_
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"assets/manual_fill_assets")
@@ -103,7 +105,7 @@ class ManualFill(Frame):
         self.photoList.append(image_image_4)
         
         image_4 = canvas.create_image(
-            585.0,
+            595.0,
             77.0,
             image=image_image_4
         )
@@ -114,7 +116,7 @@ class ManualFill(Frame):
         self.photoList.append(image_image_5)
         
         image_5 = canvas.create_image(
-            930.0,
+            1010.0,
             77.0,
             image=image_image_5
         )
@@ -125,7 +127,7 @@ class ManualFill(Frame):
         self.photoList.append(image_image_6)
         
         image_6 = canvas.create_image(
-            680.0,
+            640.0,
             542.0,
             image=image_image_6
         )
@@ -289,7 +291,7 @@ class ManualFill(Frame):
 
     def callAccountCreation(self):
         #from UserThank import UserThank
-        waiting = Label(global_.app.get_frame(ManualFill), text="Account Creation in Progress...")
+        waiting = tkinter.Label(global_.app.get_frame(ManualFill), text="Account Creation in Progress...")
         waiting.pack()
         waiting.after(3000, lambda: waiting.destroy())
         util = utils()
