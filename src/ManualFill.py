@@ -288,10 +288,7 @@ class ManualFill(Frame):
         self.email_entry.insert(0, email)
         self.pid_entry.insert(0, pid)
 
-    def callAccountCreation(self):
-        waiting = tkinter.Label(global_.app.get_frame(ManualFill), text="Account Creation in Progress...", font=24)
-        waiting.pack(pady=20)
-        waiting.after(3000, lambda: waiting.destroy())      
+    def callAccountCreation(self):     
         util = utils()
         data = self.getEntries()
         self.clearEntries()

@@ -157,7 +157,7 @@ class AccNoWaiverSwipe(Frame):
             45.0,
             219.0,
             anchor="nw",
-            text="Please scan the QR code\non the right and the our waiver",
+            text="Please scan the QR code\non the right and sign our waiver",
             fill="#F5F0E6",
             font=("Montserrat", 48 * -1)
         )
