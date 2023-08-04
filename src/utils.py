@@ -59,7 +59,7 @@ class utils():
         return datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
     
     def createAccount(self, fname, lname, email, pid):  
-        waiting = tkinter.Label(global_.app.get_curr_frame(), text="Account Creation in Progress...", font=24)
+        waiting = tkinter.Label(global_.app, text="Account Creation in Progress...", font=24)
         waiting.pack(pady=20)
         waiting.after(3000, lambda: waiting.destroy()) 
         
