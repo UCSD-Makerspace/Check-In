@@ -137,7 +137,7 @@ class AccNoWaiverSwipe(Frame):
         self.photoList.append(image_image_6)
         
         image_6 = canvas.create_image(
-            740.0,
+            750.0,
             70.0,
             image=image_image_6
         )

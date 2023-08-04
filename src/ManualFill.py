@@ -9,7 +9,6 @@ from pathlib import Path
 # Explicit imports to satisfy Flake8
 from tkinter import *
 from utils import *
-from ManualFill import *
 import global_
 
 OUTPUT_PATH = Path(__file__).parent
@@ -291,9 +290,9 @@ class ManualFill(Frame):
 
     def callAccountCreation(self):
         #from UserThank import UserThank
-        waiting = tkinter.Label(global_.app.get_frame(ManualFill), text="Account Creation in Progress...")
+        waiting = tkinter.Label(global_.app.get_frame(ManualFill), text="Account Creation in Progress...", font=24)
         waiting.pack(pady=20)
-        waiting.after(3000, lambda: waiting.destroy())
+        waiting.after(3000, lambda: waiting.destroy())      
         util = utils()
         data = self.getEntries()
         self.clearEntries()
