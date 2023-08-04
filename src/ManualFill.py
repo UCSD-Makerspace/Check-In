@@ -289,6 +289,8 @@ class ManualFill(Frame):
     
     def callAccountCreation(self):
         #from UserThank import UserThank
+        waiting = Label(global_.app, text="Account Creation in Progress...")
+        waiting.after(3000, lambda: waiting.destroy())
         util = utils()
         data = self.getEntries()
         self.clearEntries()

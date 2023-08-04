@@ -10,6 +10,9 @@ import global_
 
 debug = 0
 
+
+#This acts as the main loop of the program, ran in a thread
+
 def myLoop(app, reader):
     print("Now reading ID Card")
     last_tag = 0
@@ -82,7 +85,6 @@ def myLoop(app, reader):
                 app.after(4000, lambda: app.show_frame(WaiverNoAccSwipe))
             else:
                 new_row = [util.getDatetime(), int(time.time()), curr_user["Name"], str(tag), "User Checkin", "", "", ""]
-
                 activity_log = global_.activity_log
                 activity_log.append_row(new_row)
                 global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])

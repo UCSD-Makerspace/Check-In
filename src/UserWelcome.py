@@ -70,7 +70,6 @@ class UserWelcome(Frame):
     
     def displayName(self, name):
         print("Updating user welcome")
-        global_.app.show_frame(UserWelcome)
         u_name = self.canvas.create_text(
             99.0,
             323.0,
@@ -81,5 +80,7 @@ class UserWelcome(Frame):
             tag="welcome"
         )
         
-        self.canvas.after(4000, lambda: self.canvas.delete("welcome"))
+        global_.app.show_frame(UserWelcome)
+        
+        self.canvas.after(5000, lambda: self.canvas.delete("welcome"))
         global_.app.after(4000, lambda: global_.app.show_frame(MainPage))

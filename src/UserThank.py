@@ -93,8 +93,6 @@ class UserThank(Frame):
         """
         
     def displayName(self, name):
-        global_.app.show_frame(UserThank)
-        
         u_name = self.canvas.create_text(
             99.0,
             323.0,
@@ -105,5 +103,7 @@ class UserThank(Frame):
             tag="thank"
         )
         
-        self.canvas.after(3000, lambda: self.canvas.delete("thank"))
+        global_.app.show_frame(UserThank)
+        
+        self.canvas.after(5000, lambda: self.canvas.delete("thank"))
         global_.app.after(4000, lambda: global_.app.show_frame(AccNoWaiverSwipe))
