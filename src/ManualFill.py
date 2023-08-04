@@ -290,7 +290,7 @@ class ManualFill(Frame):
 
     def callAccountCreation(self):
         #from UserThank import UserThank
-        waiting = tkinter.Label(global_.app.get_frame(ManualFill), text="Account Creation in Progress...", font=24)
+        waiting = tkinter.Label(global_.app.get_frame(self), text="Account Creation in Progress...", font=24)
         waiting.pack(pady=20)
         waiting.after(3000, lambda: waiting.destroy())      
         util = utils()
