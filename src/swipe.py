@@ -48,6 +48,7 @@ class swipe():
         # [fname, lname, [emails]]
         print("ID Read is: " + ID)
         print("Trying to pull user...")
+        """
         type_label = tkinter.Label(
             global_.app.get_frame(ManualFill), text=f"This user is a {u_type}"
         )
@@ -62,8 +63,7 @@ class swipe():
         type_label.after(
             10000, lambda: type_label.destroy()
         )  # This line is a test and will not be in the final
-
-        #return ["Logan", "Corrente", ["logan6656@gmail.com", "locorrente@ucsd.edu"]]
+        """
 
         contact = contact_client()
         try:

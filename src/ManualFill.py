@@ -80,7 +80,7 @@ class ManualFill(Frame):
         )
 
         canvas.create_text(
-            300.0,
+            250.0,
             45.0,
             anchor="nw",
             text="Account Status:",
@@ -89,7 +89,7 @@ class ManualFill(Frame):
         )
 
         canvas.create_text(
-            660.0,
+            670.0,
             45.0,
             anchor="nw",
             text="Waiver Status:",
@@ -114,7 +114,7 @@ class ManualFill(Frame):
         self.photoList.append(image_image_5)
         
         image_5 = canvas.create_image(
-            884.0,
+            920.0,
             77.0,
             image=image_image_5
         )
@@ -286,10 +286,11 @@ class ManualFill(Frame):
         self.last_name_entry.insert(0, lname)
         self.email_entry.insert(0, email)
         self.pid_entry.insert(0, pid)
-    
+
     def callAccountCreation(self):
         #from UserThank import UserThank
         waiting = Label(global_.app, text="Account Creation in Progress...")
+        waiting.pack()
         waiting.after(3000, lambda: waiting.destroy())
         util = utils()
         data = self.getEntries()

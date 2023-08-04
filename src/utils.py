@@ -111,7 +111,6 @@ class utils():
         
         global_.app.get_frame(UserThank).displayName(full_name)
         
-        
         """
         inProgress.destroy()
         gui.show_frame(toGoTo)

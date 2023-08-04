@@ -112,7 +112,7 @@ class AccNoWaiverSwipe(Frame):
         )
 
         canvas.create_text(
-            442.0,
+            335.0,
             45.0,
             anchor="nw",
             text="Waiver Status:",
@@ -126,8 +126,8 @@ class AccNoWaiverSwipe(Frame):
         self.photoList.append(image_image_5)
         
         image_5 = canvas.create_image(
-            372.0,
-            52.0,
+            380.0,
+            70.0,
             image=image_image_5
         )
 
@@ -137,8 +137,8 @@ class AccNoWaiverSwipe(Frame):
         self.photoList.append(image_image_6)
         
         image_6 = canvas.create_image(
-            730.0,
-            52.0,
+            740.0,
+            70.0,
             image=image_image_6
         )
 
@@ -154,7 +154,7 @@ class AccNoWaiverSwipe(Frame):
         )
 
         canvas.create_text(
-            78.0,
+            65.0,
             219.0,
             anchor="nw",
             text="Please scan the QR code\non the right and the our waiver",
