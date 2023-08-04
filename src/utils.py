@@ -1,14 +1,11 @@
 from datetime import datetime
 from gspread_formatting import *
-import gspread
-import tkinter
 from fabman import *
 import time
 import global_
-from ManualFill import *
+import tkinter
+from gui import *
 from UserThank import *
-
-
 class utils():
     def __init__(self)->None:
         pass
@@ -62,9 +59,10 @@ class utils():
         return datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
     
     def createAccount(self, fname, lname, email, pid):  
-        waiting = tkinter.Label(global_.app.get_frame(ManualFill), text="Account Creation in Progress...")
+        waiting = tkinter.Label(global_.app.get_frame(ManualFill), text="Account Creation in Progress...", font=24)
         waiting.pack(pady=20)
-        waiting.after(3000, lambda: waiting.destroy())      
+        waiting.after(3000, lambda: waiting.destroy()) 
+        
         validation_rule = DataValidationRule(
             BooleanCondition("BOOLEAN", ["TRUE", "FALSE"]),
         )
