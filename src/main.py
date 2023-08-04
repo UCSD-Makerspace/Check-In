@@ -94,7 +94,11 @@ def myLoop(app, reader):
 
             reader.readSerial()
     
-
+    
+def clearAndReturn():
+    global_.app.show_frame(MainPage)
+    global_.app.get_frame(ManualFill).clearEntries()
+    
 if __name__ == "__main__":
     global_.init()
     app = gui()
@@ -107,6 +111,6 @@ if __name__ == "__main__":
     print("Starting thread")
     thread.start()
     app.bind("<Key>", lambda i: sw.keyboardPress(i))
-    app.bind("<Escape>", lambda i: app.show_frame(MainPage))
+    app.bind("<Escape>", lambda i: clearAndReturn())
     print("Made it to app start")
     app.start()
