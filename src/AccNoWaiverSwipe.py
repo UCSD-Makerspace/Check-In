@@ -112,7 +112,7 @@ class AccNoWaiverSwipe(Frame):
         )
 
         canvas.create_text(
-            335.0,
+            385.0,
             45.0,
             anchor="nw",
             text="Waiver Status:",
@@ -154,7 +154,7 @@ class AccNoWaiverSwipe(Frame):
         )
 
         canvas.create_text(
-            65.0,
+            45.0,
             219.0,
             anchor="nw",
             text="Please scan the QR code\non the right and the our waiver",

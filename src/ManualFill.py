@@ -114,7 +114,7 @@ class ManualFill(Frame):
         self.photoList.append(image_image_5)
         
         image_5 = canvas.create_image(
-            920.0,
+            930.0,
             77.0,
             image=image_image_5
         )
@@ -125,7 +125,7 @@ class ManualFill(Frame):
         self.photoList.append(image_image_6)
         
         image_6 = canvas.create_image(
-            640.0,
+            680.0,
             542.0,
             image=image_image_6
         )
@@ -289,7 +289,7 @@ class ManualFill(Frame):
 
     def callAccountCreation(self):
         #from UserThank import UserThank
-        waiting = Label(global_.app, text="Account Creation in Progress...")
+        waiting = Label(global_.app.get_frame(ManualFill), text="Account Creation in Progress...")
         waiting.pack()
         waiting.after(3000, lambda: waiting.destroy())
         util = utils()
