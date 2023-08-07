@@ -58,11 +58,7 @@ class utils():
     def getDatetime(self):
         return datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
     
-    def createAccount(self, fname, lname, email, pid):  
-        #waiting = tkinter.Label(global_.app, text="Account Creation in Progress...", font=24)
-        #waiting.pack(pady=20)
-        #waiting.after(3000, lambda: waiting.destroy()) 
-        
+    def createAccount(self, fname, lname, email, pid): 
         validation_rule = DataValidationRule(
             BooleanCondition("BOOLEAN", ["TRUE", "FALSE"]),
         )
@@ -74,20 +70,18 @@ class utils():
         
         for validation in (idValid, emailValid, nameValid):
             if validation != "good":
-                #TODO: This needs to be done as a function
-                #in the sheets class 
-                #invalidID = tkinter.Label(
-                #    self.app.get_frame(ManualFill), text=validation
-                #)
-                #invalidID.pack(pady=20)
-                #invalidID.after(3000, lambda: invalidID.destroy())
+                invalidID = tkinter.Label(
+                    self.app.get_frame(ManualFill), text=validation
+                )
+                invalidID.pack(pady=20)
+                invalidID.after(3000, lambda: invalidID.destroy())
                 return
         #TODO: This probably shouldn't happen
-        #inProgress = tkinter.Label(
-        #    gui.get_frame(ManualFill), text="Account creation in progress!"
-        #)
-        #inProgress.pack(pady=20)
-        #self.app.update()
+        inProgress = tkinter.Label(
+            gui.get_frame(ManualFill), text="Account creation in progress!"
+        )
+        inProgress.pack(pady=20)
+        global_.app.update()
         fab = fabman()
         full_name = fname+" "+lname
         print(f"Creating user account for {full_name}")
@@ -113,16 +107,4 @@ class utils():
                 #toGoTo = mainPage
         
         global_.app.get_frame(UserThank).displayName(full_name)
-        
-        """
         inProgress.destroy()
-        gui.show_frame(toGoTo)
-        accountMadeLabel = tkinter.Label(
-            gui.get_frame(toGoTo),
-            text="Thank you, " + fn + ", your account has been created",
-        )
-        accountMadeLabel.pack(pady=20)
-        accountMadeLabel.after(5000, lambda: accountMadeLabel.destroy())
-
-        gui.after(20000, lambda: backToMainFromDoc(controller))
-        """
