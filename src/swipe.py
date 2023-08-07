@@ -20,6 +20,7 @@ class swipe():
     def keyboardPress(self, key):
         util = utils()
         global id_string, swipe_error_shown
+        swipe_error_shown = False
         if (global_.app.get_curr_frame() != NoAccNoWaiverSwipe) and (global_.app.get_curr_frame() != WaiverNoAccSwipe):
             # If one of the swipe pages is not on top
             # Then don't do anything
@@ -31,7 +32,7 @@ class swipe():
             if not swipe_error_shown:
                 swipe_error_shown = True
                 id_error = tkinter.Label(
-                    global_.app.get_frame(ManualFill), text="Error, please swipe again"
+                    global_.app.get_curr_frame(), text="Error, please swipe again"
                 )
                 id_error.pack(pady=40)
                 id_error.after(1500, lambda: self.destroySwipeError(id_error))

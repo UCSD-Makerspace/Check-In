@@ -121,7 +121,7 @@ class AccNoWaiverSwipe(Frame):
         self.photoList.append(image_image_5)
         
         image_5 = canvas.create_image(
-            380.0,
+            395.0,
             70.0,
             image=image_image_5
         )
@@ -152,7 +152,7 @@ class AccNoWaiverSwipe(Frame):
             41.0,
             219.0,
             anchor="nw",
-            text="Please scan the QR code\non the right and sign our waiver",
+            text="Please scan the QR code\non the right and sign our \nwaiver",
             fill="#F5F0E6",
             font=("Montserrat", 48 * -1)
         )

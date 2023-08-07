@@ -54,7 +54,7 @@ def myLoop(app, reader):
                     curr_user = i
 
             #TODO
-            print("TESTING: " + curr_user)
+            #print("TESTING: " + curr_user)
             
             if curr_user != "None" :
                 for i in waiver_data:
