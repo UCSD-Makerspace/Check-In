@@ -78,7 +78,7 @@ class utils():
                 return
         #TODO: This probably shouldn't happen
         inProgress = tkinter.Label(
-            gui.get_frame(ManualFill), text="Account creation in progress!"
+            global_.app.get_frame(ManualFill), text="Account creation in progress!"
         )
         inProgress.pack(pady=20)
         global_.app.update()
