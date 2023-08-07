@@ -28,15 +28,15 @@ class swipe():
 
         check = util.IDVet(id_string)
         if check == "bad":
-            id_string = ""
-            if not swipe_error_shown:
-                #FIXME: This will not be the only page that works
-                swipe_error_shown = True
-                id_error = tkinter.Label(
-                    global_.app.get_frame(NoAccNoWaiverSwipe), text="Error, please swipe again"
-                )
-                id_error.pack(pady=40)
-                id_error.after(1500, lambda: self.destroySwipeError(id_error))
+        #    id_string = ""
+        #    if not swipe_error_shown:
+        #        FIXME: This does not work
+        #        swipe_error_shown = True
+        #        id_error = tkinter.Label(
+        #            global_.app.get_frame(NoAccNoWaiverSwipe), text="Error, please swipe again"
+        #        )
+        #        id_error.pack(pady=40)
+        #        id_error.after(1500, lambda: self.destroySwipeError(id_error))
             return
 
         id_string = id_string + key.char
