@@ -101,7 +101,7 @@ class ManualFill(Frame):
         self.photoList.append(image_image_4)
         
         image_4 = canvas.create_image(
-            595.0,
+            605.0,
             77.0,
             image=image_image_4
         )
