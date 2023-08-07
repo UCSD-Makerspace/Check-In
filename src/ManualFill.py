@@ -274,6 +274,7 @@ class ManualFill(Frame):
         return self.entryList
          
     def clearEntries(self):
+        print("Clearing entry boxes")
         self.first_name_entry.delete(0, END)
         self.last_name_entry.delete(0, END)
         self.email_entry.delete(0, END)
@@ -290,4 +291,7 @@ class ManualFill(Frame):
         data = self.getEntries()
         self.clearEntries()
         #FIXME: Is there a better way to do this?
-        util.createAccount(data[0], data[1], data[2], data[3], ManualFill)
+        try:
+            util.createAccount(data[0], data[1], data[2], data[3], ManualFill)
+        except:
+            print("An ERROR has occurred trying to create a user account")
