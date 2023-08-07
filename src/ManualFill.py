@@ -293,4 +293,4 @@ class ManualFill(Frame):
         data = self.getEntries()
         self.clearEntries()
         #FIXME: Is there a better way to do this?
-        util.createAccount(data[0], data[1], data[2], data[3])
+        util.createAccount(data[0], data[1], data[2], data[3], ManualFill)

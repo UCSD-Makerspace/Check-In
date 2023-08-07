@@ -32,4 +32,3 @@ def setRFID(new_rfid):
 def setApp(new_app):
     global app
     app = new_app
-    
