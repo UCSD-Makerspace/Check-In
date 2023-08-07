@@ -1,4 +1,3 @@
-import tkinter
 import tkinter as tk
 from AccNoWaiver import AccNoWaiver
 from MainPage import MainPage
@@ -12,8 +11,9 @@ from UserWelcome import UserWelcome
 from WaiverNoAcc import WaiverNoAcc
 from WaiverNoAccSwipe import WaiverNoAccSwipe
 
-
-
+#################################################
+# Acts as the controller and the user interface #
+#################################################
 class gui(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)

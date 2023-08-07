@@ -10,9 +10,9 @@ import global_
 
 debug = 0
 
-
-#This acts as the main loop of the program, ran in a thread
-
+##############################################################
+# This acts as the main loop of the program, ran in a thread #
+##############################################################
 def myLoop(app, reader):
     print("Now reading ID Card")
     last_tag = 0
@@ -22,10 +22,7 @@ def myLoop(app, reader):
         in_waiting = reader.getSerInWaiting()
         tag = 0
         if in_waiting >= 14:
-            # TODO: Wifi check doesn't work
-
             tag = reader.grabRFID()
-            
             if tag == last_tag and not reader.canScanAgain(last_time):
                 # if not canScanAgain(self.lastTime): #This do not work
                 print("Suppressing repeat scan")
@@ -41,6 +38,7 @@ def myLoop(app, reader):
                 
             global_.setRFID(tag)
 
+            # Get a list of all users
             user_db = global_.user_db
             user_data = user_db.get_all_records(numericise_ignore=["all"])
 
@@ -54,6 +52,8 @@ def myLoop(app, reader):
             for i in user_data:
                 if i["Card UUID"] == tag:
                     curr_user = i
+
+            print("TESTING: " + curr_user)
             
             if curr_user != "None" :
                 for i in waiver_data:
@@ -70,7 +70,10 @@ def myLoop(app, reader):
                             
                     if user_id == waiver_id:
                         curr_user_w = i
-
+                        
+            ############################            
+            # All scenarios for ID tap #
+            ############################
             if curr_user == "None" and curr_user_w == "None":
                 print("User was not found in the database")
                 app.show_frame(NoAccNoWaiver)
@@ -105,7 +108,6 @@ if __name__ == "__main__":
     global_.setApp(app)
     sw = swipe()
     reader = Reader()
-    #sheet = sheets()
     util = utils()
     thread = Thread(target=myLoop, args=(app, reader))
     print("Starting thread")

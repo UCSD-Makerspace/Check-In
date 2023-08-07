@@ -7,6 +7,9 @@ import tkinter
 from gui import *
 from UserThank import *
 
+######################################################
+# Utilities that I couldn't get to fit anywhere else #
+######################################################
 
 class utils():
     def __init__(self)->None:

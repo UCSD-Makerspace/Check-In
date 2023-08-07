@@ -8,6 +8,9 @@ from get_info_from_pid import *
 from utils import *
 import global_
 
+############################################
+# This class helps handle reading magswipe #
+############################################ 
 
 class swipe():
     def __init__(self):
@@ -26,13 +29,13 @@ class swipe():
         check = util.IDVet(id_string)
         if check == "bad":
             id_string = ""
-            #if not swipe_error_shown:
-            #    swipe_error_shown = True
-                #id_error = tkinter.Label(
-                #    gui.get_frame(swipePage), text="Error, please swipe again"
-                #)
-                #id_error.pack(pady=40)
-                #id_error.after(1500, lambda: self.destroySwipeError(id_error))
+            if not swipe_error_shown:
+                swipe_error_shown = True
+                id_error = tkinter.Label(
+                    global_.app.get_frame(ManualFill), text="Error, please swipe again"
+                )
+                id_error.pack(pady=40)
+                id_error.after(1500, lambda: self.destroySwipeError(id_error))
             return
 
         id_string = id_string + key.char
@@ -46,24 +49,9 @@ class swipe():
         # and runs David's query funciton accordingly
         # It returns a list containing:
         # [fname, lname, [emails]]
+        
         print("ID Read is: " + ID)
         print("Trying to pull user...")
-        """
-        type_label = tkinter.Label(
-            global_.app.get_frame(ManualFill), text=f"This user is a {u_type}"
-        )
-        correct = tkinter.Label(
-            global_.app.get_frame(ManualFill), text=f"Is this information correct?"
-        )
-
-        correct.pack(pady=40)
-        correct.after(10000, lambda: correct.destroy())
-
-        type_label.pack(pady=40)
-        type_label.after(
-            10000, lambda: type_label.destroy()
-        )  # This line is a test and will not be in the final
-        """
 
         contact = contact_client()
         try:
@@ -84,11 +72,7 @@ class swipe():
         # Checks if any of the ID is a letter
         # If so return
         # Calls magswipe() on the entered string
-
-        # TODO: entry boxes
-
-        #global id_string, e1, e2, e3, e4
-        #vetted_id = IDVet(id_string)
+        
         u_info = self.magSwipe(id_string)
 
         u_type = u_info[0]
@@ -114,6 +98,7 @@ class swipe():
             # Makes a new empty string
             # Takes only chars 3-11 from the card swipe text
             # Returns student or staff ID
+            
             u_type = ""
 
             if ID[2] == "9":

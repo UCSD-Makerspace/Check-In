@@ -2,6 +2,10 @@ import gspread
 import os
 from oauth2client.service_account import ServiceAccountCredentials
 
+#############################################################
+# Declare all globals, and try to connect the google sheets #
+# Also places the sheets in accessible global arrays        #
+#############################################################
 def init():
     global rfid, user_db, activity_log, waiver_db, app
     scope = [
