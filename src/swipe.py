@@ -1,5 +1,4 @@
 from tkinter import * 
-import tkinter
 from ManualFill import *
 from NoAccNoWaiverSwipe import *
 from WaiverNoAccSwipe import *

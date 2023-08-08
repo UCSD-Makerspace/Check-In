@@ -24,7 +24,6 @@ def myLoop(app, reader):
         if in_waiting >= 14:
             tag = reader.grabRFID()
             if tag == last_tag and not reader.canScanAgain(last_time):
-                # if not canScanAgain(self.lastTime): #This do not work
                 print("Suppressing repeat scan")
                 continue
 

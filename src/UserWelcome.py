@@ -5,6 +5,7 @@
 from pathlib import Path
 from tkinter import *
 from MainPage import *
+import time
 import global_
 
 OUTPUT_PATH = Path(__file__).parent
@@ -75,6 +76,8 @@ class UserWelcome(Frame):
             font=("Montserrat", 73 * -1),
             tag="welcome"
         )
+        
+        time.sleep(0.500)
         
         global_.app.show_frame(UserWelcome)
         
