@@ -50,6 +50,7 @@ class swipe():
         # and runs David's query funciton accordingly
         # It returns a list containing:
         # [fname, lname, [emails]]
+        u_info = []
         
         print("ID Read is: " + ID)
         print("Trying to pull user...")
@@ -62,6 +63,7 @@ class swipe():
                 u_info = contact.get_student_info("A"+ID)
         except:
             print("An exception has ocurred with pulling user information")
+            return 
         print("Info pull succeeded:")
         print(u_info)
         return u_info
@@ -112,8 +114,7 @@ class swipe():
                 s += ID[c]
             return [u_type, s]
     
-    def destroySwipeError(id_error):
-        #TODO: This may not be needed anymore
+    def destroySwipeError(self, id_error):
         global swipe_error_shown
         id_error.destroy()
         swipe_error_shown = False
