@@ -221,7 +221,8 @@ class ManualFill(Frame):
             self,
             textvariable=self.first_name,
             width=40,
-            font=48
+            font=48,
+            highlightbackground="SystemButtonFace"
         )
         
         self.first_name_entry.place(
@@ -233,7 +234,8 @@ class ManualFill(Frame):
             self,
             textvariable=self.last_name,
             width=40,
-            font=48
+            font=48,
+            highlightbackground="SystemButtonFace"
         )
         
         self.last_name_entry.place(
@@ -245,7 +247,8 @@ class ManualFill(Frame):
             self,
             textvariable=self.email,
             width=40,
-            font=48
+            font=48,
+            highlightbackground="SystemButtonFace"
         )
         
         self.email_entry.place(
@@ -257,7 +260,8 @@ class ManualFill(Frame):
             self,
             textvariable=self.pid,
             width=40,
-            font=48
+            font=48,
+            highlightbackground="SystemButtonFace"
         )
         
         self.pid_entry.place(

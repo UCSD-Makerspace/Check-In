@@ -82,7 +82,6 @@ class utils():
                 invalidID.pack(pady=20)
                 invalidID.after(3000, lambda: invalidID.destroy())
                 return
-        #TODO: This probably shouldn't happen
         inProgress = tkinter.Label(
             global_.app.get_frame(ManualFill), text="Account creation in progress!"
         )
