@@ -11,6 +11,8 @@ import global_
 # This class helps handle reading magswipe #
 ############################################ 
 
+swipe_error_shown = False
+
 class swipe():
     def __init__(self):
         global id_string
@@ -19,7 +21,6 @@ class swipe():
     def keyboardPress(self, key):
         util = utils()
         global id_string, swipe_error_shown
-        swipe_error_shown = False
         if (global_.app.get_curr_frame() != NoAccNoWaiverSwipe) and (global_.app.get_curr_frame() != WaiverNoAccSwipe):
             # If one of the swipe pages is not on top
             # Then don't do anything
@@ -27,15 +28,15 @@ class swipe():
 
         check = util.IDVet(id_string)
         if check == "bad":
-        #    id_string = ""
-        #    if not swipe_error_shown:
+            id_string = ""
+            if not swipe_error_shown:
         #        FIXME: This does not work
-        #        swipe_error_shown = True
-        #        id_error = tkinter.Label(
-        #            global_.app.get_frame(NoAccNoWaiverSwipe), text="Error, please swipe again"
-        #        )
-        #        id_error.pack(pady=40)
-        #        id_error.after(1500, lambda: self.destroySwipeError(id_error))
+                swipe_error_shown = True
+                id_error = tkinter.Label(
+                    global_.app.get_frame(NoAccNoWaiverSwipe), text="Error, please swipe again"
+                )
+                id_error.pack(pady=40)
+                id_error.after(1500, lambda: self.destroySwipeError(id_error))
             return
 
         id_string = id_string + key.char

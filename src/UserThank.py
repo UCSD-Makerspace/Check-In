@@ -7,6 +7,7 @@ from tkinter import *
 from MainPage import *
 from AccNoWaiver import *
 from AccNoWaiverSwipe import *
+import time
 import global_
 
 
@@ -87,6 +88,8 @@ class UserThank(Frame):
             font=("Montserrat", 73 * -1),
             tag="thank"
         )
+        
+        time.sleep(0.500)
         
         global_.app.show_frame(UserThank)
         
