@@ -8,13 +8,28 @@ from threading import Thread
 from UserWelcome import *
 from ManualFill import *
 import global_
+import socket
+import tkinter
 
 debug = 0
+
+def is_connected():
+    try:
+        # Attempt to resolve a common hostname
+        socket.create_connection(("www.google.com", 80))
+        return True
+    except OSError:
+        pass
+    return False
 
 ##############################################################
 # This acts as the main loop of the program, ran in a thread #
 ##############################################################
+
+no_wifi_shown = False
+
 def myLoop(app, reader):
+    global no_wifi_shown
     print("Now reading ID Card")
     last_tag = 0
     last_time = 0
@@ -23,6 +38,12 @@ def myLoop(app, reader):
         in_waiting = reader.getSerInWaiting()
         tag = 0
         if in_waiting >= 14:
+            if not is_connected():
+                print("ERROR wifi is not connected")
+                no_wifi_shown=True
+                no_wifi = Label(app.get_frame(MainPage), text="ERROR, connection cannot be established, please let staff know.")
+                no_wifi.pack(pady=40)
+                no_wifi.after(1500, lambda: destroyNoWifiError())
             app.get_frame(ManualFill).clearEntries()
             tag = reader.grabRFID()
             if tag == last_tag and not reader.canScanAgain(last_time):
@@ -53,9 +74,6 @@ def myLoop(app, reader):
             for i in user_data:
                 if i["Card UUID"] == tag:
                     curr_user = i
-
-            #TODO
-            #print("TESTING: " + curr_user)
             
             if curr_user != "None" :
                 for i in waiver_data:
@@ -101,6 +119,11 @@ def myLoop(app, reader):
             reader.readSerial()
     
     
+def destroyNoWifiError(no_wifi):
+    global no_wifi_shown
+    no_wifi.destroy()
+    no_wifi_shown = False
+
 def clearAndReturn():
     global_.app.show_frame(MainPage)
     global_.app.get_frame(ManualFill).clearEntries()
