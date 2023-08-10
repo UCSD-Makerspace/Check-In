@@ -89,11 +89,6 @@ void homeScreen()
     tft.fillRect(tft.width() - 52, 45, 20, 5, ST77XX_BLUE);
 }
 
-int logEvent(String user, String uuid, String eventType, String auth, String flags, String Notes)
-{
-    return 0;
-}
-
 void loop()
 {
     struct tm timeinfo;
@@ -116,11 +111,6 @@ void loop()
 
         tft.setFont(&FreeSerif24pt7b);
 
-        //tft.setTextSize(1);
-        //tft.println("Found Card!\n");
-
-        //delay(2);
-
         uint32_t szPos;
 
         for (szPos = 0; szPos < uidLength; szPos++)
@@ -128,11 +118,9 @@ void loop()
             sprintf(uidStr, "%s%02X", uidStr, uid[szPos] & 0xff);
         }
         nowSecs = time(nullptr);
-        //gmtime_r(&nowSecs, &timeinfo);
         Serial.println(String(uidStr));
 
         tft.setTextSize(1);
     }
-
     delay(10);
 }

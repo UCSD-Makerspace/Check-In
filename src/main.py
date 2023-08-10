@@ -95,6 +95,7 @@ def myLoop(app, reader):
             ############################     
             # All scenarios for ID tap #
             ############################
+            
             if curr_user == "None" and curr_user_w == "None":
                 print("User was not found in the database")
                 app.show_frame(NoAccNoWaiver)
