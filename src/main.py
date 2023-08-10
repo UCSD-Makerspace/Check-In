@@ -47,7 +47,7 @@ def myLoop(app, reader):
                     no_wifi_shown=True
                     no_wifi = Label(app.get_frame(MainPage), text="ERROR, connection cannot be established, please let staff know.")
                     no_wifi.pack(pady=40)
-                    no_wifi.after(1500, lambda: destroyNoWifiError(no_wifi))
+                    no_wifi.after(1500, lambda: destroyNoWifiError())
             app.get_frame(ManualFill).clearEntries()
             tag = reader.grabRFID()
             if tag == last_tag and not reader.canScanAgain(last_time):
@@ -123,8 +123,8 @@ def myLoop(app, reader):
             reader.readSerial()
     
     
-def destroyNoWifiError(no_wifi):
-    global no_wifi_shown
+def destroyNoWifiError():
+    global no_wifi_shown, no_wifi
     no_wifi.destroy()
     no_wifi_shown = False
 
