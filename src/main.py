@@ -6,6 +6,7 @@ from fabman import *
 from sheets import *
 from threading import Thread
 from UserWelcome import *
+from ManualFill import *
 import global_
 
 debug = 0
@@ -22,6 +23,7 @@ def myLoop(app, reader):
         in_waiting = reader.getSerInWaiting()
         tag = 0
         if in_waiting >= 14:
+            app.get_frame(ManualFill).clearEntries()
             tag = reader.grabRFID()
             if tag == last_tag and not reader.canScanAgain(last_time):
                 print("Suppressing repeat scan")
