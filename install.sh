@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "Attempting install..."
 pip install tk
 pip install pathlib
