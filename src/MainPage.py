@@ -70,7 +70,7 @@ class MainPage(Frame):
             anchor="nw",
             text="UCSD Makerspace",
             fill="#F5F0E6",
-            font=("Montserrat bold", 113 * -1)
+            font=("Montserrat", 113 * -1, 'bold')
         )
 
         canvas.create_text(
