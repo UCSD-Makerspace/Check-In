@@ -149,10 +149,10 @@ class AccNoWaiverSwipe(Frame):
         )
 
         canvas.create_text(
-            41.0,
-            219.0,
+            45.0,
+            270.0,
             anchor="nw",
-            text="Please scan the QR code\non the right and sign our \nwaiver",
+            text="Please scan the QR code\non the right and sign our \n     waiver",
             fill="#F5F0E6",
             font=("Montserrat", 48 * -1)
         )
