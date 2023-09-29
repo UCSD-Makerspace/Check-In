@@ -78,7 +78,7 @@ class UserThank(Frame):
             font=("Montserrat", 45 * -1)
         )
         
-    def displayName(self, name):
+    def displayName(self, name, nextPage):
         u_name = self.canvas.create_text(
             99.0,
             323.0,
@@ -94,4 +94,4 @@ class UserThank(Frame):
         global_.app.show_frame(UserThank)
         
         self.canvas.after(5000, lambda: self.canvas.delete("thank"))
-        global_.app.after(4000, lambda: global_.app.show_frame(AccNoWaiverSwipe))
+        global_.app.after(4000, lambda: global_.app.show_frame(nextPage))

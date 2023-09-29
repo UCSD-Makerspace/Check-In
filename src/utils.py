@@ -108,11 +108,11 @@ class utils():
         global_.activity_log.append_row(new_a)    
 
         w_data = global_.waiver_db.get_all_records(numericise_ignore=["all"])
-        #toGoTo = docuPage
+        toGoTo = AccNoWaiverSwipe
         for i in w_data:
             if str(i["A_Number"])[1:] == pid[1:]:
                 print("User " + full_name + " made an account but had signed the waiver")
-                #toGoTo = mainPage
+                toGoTo = MainPage
         
-        global_.app.get_frame(UserThank).displayName(full_name)
+        global_.app.get_frame(UserThank).displayName(full_name, toGoTo)
         inProgress.destroy()
