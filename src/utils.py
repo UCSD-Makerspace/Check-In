@@ -83,9 +83,9 @@ class utils():
                 invalidID.after(3000, lambda: invalidID.destroy())
                 return
         inProgress = tkinter.Label(
-            global_.app.get_frame(ManualFill), text="Account creation in progress!"
+            global_.app.get_frame(ManualFill), text="Account creation in progress!", font=("Arial", 25)
         )
-        inProgress.pack(pady=20)
+        inProgress.pack(pady=40)
         global_.app.update()
         fab = fabman()
         full_name = fname+" "+lname
@@ -96,18 +96,20 @@ class utils():
             print("An ERROR has occurred making a fabman account")
         new_row = [full_name, self.getDatetime(), global_.rfid, pid, "", email, " ", " "]
         new_a = [self.getDatetime(), int(time.time()),full_name, global_.rfid, "New User", "", "", "",]
-        global_.user_db.append_row(new_row)
+
+        user_db = global_.sheets.get_user_db()
+        user_db.append_row(new_row)
         
         #FIXME: user_db and others are not being used properly
         
-        name_cell = global_.user_db.find(full_name)
+        name_cell = user_db.find(full_name)
         s_name_cell = str(name_cell.address)
         s_name_cell = s_name_cell[1 : len(s_name_cell)]
         update_range = "I" + s_name_cell + ":AA" + s_name_cell
-        set_data_validation_for_cell_range(global_.user_db, update_range, validation_rule)
-        global_.activity_log.append_row(new_a)    
+        set_data_validation_for_cell_range(user_db, update_range, validation_rule)
+        global_.sheets.get_activity_db().append_row(new_a)    
 
-        w_data = global_.waiver_db.get_all_records(numericise_ignore=["all"])
+        w_data = global_.sheets.get_waiver_db_data()
         toGoTo = AccNoWaiverSwipe
         for i in w_data:
             if str(i["A_Number"])[1:] == pid[1:]:

@@ -61,12 +61,10 @@ def myLoop(app, reader):
             global_.setRFID(tag)
 
             # Get a list of all users
-            user_db = global_.user_db
-            user_data = user_db.get_all_records(numericise_ignore=["all"])
-
+            user_data = global_.sheets.get_user_db_data()
+            
             # Get a list of all waiver signatures
-            waiver_db = global_.waiver_db
-            waiver_data = waiver_db.get_all_records(numericise_ignore=["all"])
+            waiver_data = global_.sheets.get_waiver_db_data()
 
             curr_user = "None"
             curr_user_w = "None"
@@ -110,7 +108,7 @@ def myLoop(app, reader):
                 app.after(4000, lambda: app.show_frame(WaiverNoAccSwipe))
             else:
                 new_row = [util.getDatetime(), int(time.time()), curr_user["Name"], str(tag), "User Checkin", "", "", ""]
-                activity_log = global_.activity_log
+                activity_log = global_.sheets.get_activity_db()
                 activity_log.append_row(new_row)
                 global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])
 
