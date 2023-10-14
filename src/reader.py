@@ -42,13 +42,6 @@ class Reader(Thread):
         print("Parsed tag: " + RFID)
         return str(RFID)
     
-    def checkWifi(self):
-        try:
-            requests.head("http://www.google.com/", timeout=timeout)
-            return 1
-        except requests.ConnectionError:
-            return 
-        
     def checkRFID(self, tag):
         # Varifies rfid tag
         

@@ -1,12 +1,11 @@
-import pytest
+from tkinter import Tk, Label
 
-###########################################################################
-# This is for any test that can be completed on any device before pushing #
-###########################################################################
+root=Tk()
 
-def func():
-    x = 1 + 1
-    return x
+def key_pressed(event):
+    print(event.char)
+    return
 
-def test_answer():
-    assert func() == 3
+root.bind("<Key>",key_pressed)
+
+root.mainloop()

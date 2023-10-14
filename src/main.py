@@ -13,14 +13,19 @@ import tkinter
 
 debug = 0
 
-def is_connected():
+def is_connected(host="8.8.8.8", port=53, timeout=3):
+    """
+    Host: 8.8.8.8 (google-public-dns-a.google.com)
+    OpenPort: 53/tcp
+    Service: domain (DNS/TCP)
+    """
     try:
-        # Attempt to resolve a common hostname
-        socket.create_connection(("www.google.com", 80))
+        socket.setdefaulttimeout(timeout)
+        socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
         return True
-    except OSError:
-        pass
-    return False
+    except socket.error as ex:
+        print(ex)
+        return False
 
 ##############################################################
 # This acts as the main loop of the program, ran in a thread #
@@ -37,6 +42,7 @@ def myLoop(app, reader):
         time.sleep(0.1)
         in_waiting = reader.getSerInWaiting()
         tag = 0
+
         if in_waiting >= 14:
             if not is_connected():
                 print("ERROR wifi is not connected")
@@ -44,6 +50,7 @@ def myLoop(app, reader):
                 no_wifi = Label(app.get_frame(MainPage), text="ERROR, connection cannot be established, please let staff know.")
                 no_wifi.pack(pady=40)
                 no_wifi.after(4000, lambda: destroyNoWifiError(no_wifi))
+                
             app.get_frame(ManualFill).clearEntries()
             tag = reader.grabRFID()
             if tag == last_tag and not reader.canScanAgain(last_time):
@@ -77,9 +84,6 @@ def myLoop(app, reader):
                 for i in waiver_data:
                     user_id = i["A_Number"]
                     waiver_id = curr_user["Student ID"]
-                    
-                    #TODO
-                    print(waiver_id + "=" + user_id)
                         
                     if (user_id[0] == "A") or (user_id[0] == "a"):
                         user_id = user_id[1:]
