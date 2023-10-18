@@ -21,39 +21,31 @@ class UserWelcome(Frame):
         super().__init__(parent)
         self.photoList = []
         self.loadWidgets(controller)
-        
-    def loadWidgets(self, controller):  
+
+    def loadWidgets(self, controller):
         self.canvas = Canvas(
             self,
-            bg = "#153244",
-            height = 720,
-            width = 1280,
-            bd = 0,
-            highlightthickness = 0,
-            relief = "ridge"
+            bg="#153244",
+            height=720,
+            width=1280,
+            bd=0,
+            highlightthickness=0,
+            relief="ridge",
         )
 
-        self.canvas.place(x = 0, y = 0)
-        image_image_1 = PhotoImage(
-            file=relative_to_assets("image_1.png"))
-        
+        self.canvas.place(x=0, y=0)
+        image_image_1 = PhotoImage(file=relative_to_assets("image_1.png"))
+
         self.photoList.append(image_image_1)
-        
-        image_1 = self.canvas.create_image(
-            640.0,
-            360.0,
-            image=image_image_1
-        )
 
-        image_image_2 = PhotoImage(
-            file=relative_to_assets("image_2.png"))
-        
+        image_1 = self.canvas.create_image(640.0, 360.0, image=image_image_1)
+
+        image_image_2 = PhotoImage(file=relative_to_assets("image_2.png"))
+
         self.photoList.append(image_image_2)
-        
+
         image_2 = self.canvas.create_image(
-            639.333984375,
-            359.333984375,
-            image=image_image_2
+            639.333984375, 359.333984375, image=image_image_2
         )
 
         self.canvas.create_text(
@@ -62,9 +54,9 @@ class UserWelcome(Frame):
             anchor="nw",
             text="Welcome back",
             fill="#F5F0E6",
-            font=("Montserrat", 45 * -1)
+            font=("Montserrat", 45 * -1),
         )
-    
+
     def displayName(self, name):
         print("Updating user welcome")
         u_name = self.canvas.create_text(
@@ -74,12 +66,12 @@ class UserWelcome(Frame):
             text=name,
             fill="#F5F0E6",
             font=("Montserrat", 73 * -1),
-            tag="welcome"
+            tag="welcome",
         )
-        
+
         time.sleep(0.500)
-        
+
         global_.app.show_frame(UserWelcome)
-        
+
         self.canvas.after(5000, lambda: self.canvas.delete("welcome"))
         global_.app.after(4000, lambda: global_.app.show_frame(MainPage))

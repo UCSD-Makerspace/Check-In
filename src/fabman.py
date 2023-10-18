@@ -9,10 +9,11 @@ fabman_space = 1742
 fabman_account = 1046
 fabman_DIBUser = 5657
 
+
 class fabman:
     def __init__(self) -> None:
         pass
-        
+
     def createFabmanAccount(self, firstName, lastName, emailAddress, RFIDtag):
         emailAddress = emailAddress.lower()
         member_data = {
@@ -33,7 +34,9 @@ class fabman:
         attempt_member = requests.post(
             f"{base_url}/members", headers=headers, json=member_data
         )
-        get_member_id = requests.get(f"{base_url}/members", headers=headers, params=params)
+        get_member_id = requests.get(
+            f"{base_url}/members", headers=headers, params=params
+        )
 
         if attempt_member.status_code == requests.codes.created:
             print(f"Account has been created for {firstName}\n")

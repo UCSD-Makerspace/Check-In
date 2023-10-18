@@ -3,6 +3,7 @@ import gspread
 import os
 from oauth2client.service_account import ServiceAccountCredentials
 
+
 class Sheet:
     CACHE_TIME = 60 * 30
 
@@ -37,11 +38,15 @@ class SheetManager:
                 os.path.abspath("creds.json"), scope
             )
             client = gspread.authorize(creds)
-            self.user_db = Sheet(client.open("User Database").sheet1)  # Open the spreadhseet
+            self.user_db = Sheet(
+                client.open("User Database").sheet1
+            )  # Open the spreadhseet
             print("User Database Loaded")
-            self.activity_db = Sheet(client.open_by_url(
-                "https://docs.google.com/spreadsheets/d/1aLBb1J2ifoUG2UAxHHbwxNO3KrIIWoI0pnZ14c5rpOM/edit?usp=drive_web&ouid=104398832910104737872"
-            ).sheet1)
+            self.activity_db = Sheet(
+                client.open_by_url(
+                    "https://docs.google.com/spreadsheets/d/1aLBb1J2ifoUG2UAxHHbwxNO3KrIIWoI0pnZ14c5rpOM/edit?usp=drive_web&ouid=104398832910104737872"
+                ).sheet1
+            )
             print("Activity Log Loaded")
             self.waiver_db = Sheet(client.open("Waiver Signatures").sheet1)
             print("Waiver Database Loaded")
@@ -50,18 +55,18 @@ class SheetManager:
 
     def get_user_db(self):
         return self.user_db.get_sheet()
-    
+
     def get_activity_db(self):
         return self.activity_db.get_sheet()
-    
+
     def get_waiver_db(self):
         return self.waiver_db.get_sheet()
 
     def get_user_db_data(self):
         return self.user_db.get_data()
-    
+
     def get_activity_db_data(self):
         return self.activity_db.get_data()
-    
+
     def get_waiver_db_data(self):
         return self.waiver_db.get_data()

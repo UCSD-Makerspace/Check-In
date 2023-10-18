@@ -25,39 +25,31 @@ class UserThank(Frame):
         self.controller = controller
         self.photoList = []
         self.loadWidgets(controller)
-        
-    def loadWidgets(self, controller):  
+
+    def loadWidgets(self, controller):
         self.canvas = Canvas(
             self,
-            bg = "#153244",
-            height = 720,
-            width = 1280,
-            bd = 0,
-            highlightthickness = 0,
-            relief = "ridge"
+            bg="#153244",
+            height=720,
+            width=1280,
+            bd=0,
+            highlightthickness=0,
+            relief="ridge",
         )
 
-        self.canvas.place(x = 0, y = 0)
-        image_image_1 = PhotoImage(
-            file=relative_to_assets("image_1.png"))
+        self.canvas.place(x=0, y=0)
+        image_image_1 = PhotoImage(file=relative_to_assets("image_1.png"))
 
         self.photoList.append(image_image_1)
 
-        image_1 = self.canvas.create_image(
-            640.0,
-            360.0,
-            image=image_image_1
-        )
+        image_1 = self.canvas.create_image(640.0, 360.0, image=image_image_1)
 
-        image_image_2 = PhotoImage(
-            file=relative_to_assets("image_2.png"))
-        
+        image_image_2 = PhotoImage(file=relative_to_assets("image_2.png"))
+
         self.photoList.append(image_image_2)
-        
+
         image_2 = self.canvas.create_image(
-            639.33203125,
-            359.333984375,
-            image=image_image_2
+            639.33203125, 359.333984375, image=image_image_2
         )
 
         self.canvas.create_text(
@@ -66,7 +58,7 @@ class UserThank(Frame):
             anchor="nw",
             text="Thank you for registering",
             fill="#F5F0E6",
-            font=("Montserrat", 45 * -1)
+            font=("Montserrat", 45 * -1),
         )
 
         self.canvas.create_text(
@@ -75,9 +67,9 @@ class UserThank(Frame):
             anchor="nw",
             text="UCSD Makerspace",
             fill="#F5F0E6",
-            font=("Montserrat", 45 * -1)
+            font=("Montserrat", 45 * -1),
         )
-        
+
     def displayName(self, name, nextPage):
         u_name = self.canvas.create_text(
             99.0,
@@ -86,12 +78,12 @@ class UserThank(Frame):
             text=name,
             fill="#F5F0E6",
             font=("Montserrat", 73 * -1),
-            tag="thank"
+            tag="thank",
         )
-        
+
         time.sleep(0.500)
-        
+
         global_.app.show_frame(UserThank)
-        
+
         self.canvas.after(5000, lambda: self.canvas.delete("thank"))
         global_.app.after(4000, lambda: global_.app.show_frame(nextPage))
