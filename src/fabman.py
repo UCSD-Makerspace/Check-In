@@ -1,5 +1,5 @@
 import requests
-import json
+import logging
 import datetime
 
 fab_file = open("fabtoken.txt", "r")
@@ -39,9 +39,9 @@ class fabman:
         )
 
         if attempt_member.status_code == requests.codes.created:
-            print(f"Account has been created for {firstName}\n")
+            logging.info(f"Account has been created for {firstName}\n")
         else:
-            print(f"Account creation failed: {attempt_member.status_code}\n")
+            logging.warning(f"Account creation failed: {attempt_member.status_code}\n")
             return
 
         member_id = get_member_id.json()
@@ -57,13 +57,13 @@ class fabman:
         )
 
         if add_package.status_code == requests.codes.created:
-            print(f"Package ({fabman_DIBUser}) has been added for {firstName}\n")
+            logging.info(f"Package ({fabman_DIBUser}) has been added for {firstName}\n")
         else:
-            print(f"Package add failed: {attempt_member.status_code}\n")
-            print(add_package.json())
+            logging.warning(f"Package add failed: {attempt_member.status_code}\n")
+            logging.info(add_package.json())
 
         if attempt_key.status_code == requests.codes.created:
-            print(f"Key ({RFIDtag}) has been assigned to {firstName}\n")
+            logging.info(f"Key ({RFIDtag}) has been assigned to {firstName}\n")
         else:
-            print(f"Key assignment failed: {attempt_member.status_code}\n")
-            print(attempt_key.json())
+            logging.warning(f"Key assignment failed: {attempt_member.status_code}\n")
+            logging.info(attempt_key.json())

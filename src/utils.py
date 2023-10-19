@@ -65,7 +65,6 @@ class utils:
         return datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
     def createAccount(self, fname, lname, email, pid, ManualFill):
-
         validation_rule = DataValidationRule(
             BooleanCondition("BOOLEAN", ["TRUE", "FALSE"]),
         )
@@ -91,11 +90,13 @@ class utils:
         global_.app.update()
         fab = fabman()
         full_name = fname + " " + lname
-        print(f"Creating user account for {full_name}")
+        logging.info(f"Creating user account for {full_name}")
         try:
             fab.createFabmanAccount(fname, lname, email, global_.rfid)
-        except:
-            print("An ERROR has occurred making a fabman account")
+        except Exception as e:
+            logging.warning(
+                "An ERROR has occurred making a fabman account", exc_info=True
+            )
         new_row = [
             full_name,
             self.getDatetime(),
@@ -133,7 +134,7 @@ class utils:
         toGoTo = AccNoWaiverSwipe
         for i in w_data:
             if str(i["A_Number"])[1:] == pid[1:]:
-                print(
+                logging.info(
                     "User " + full_name + " made an account but had signed the waiver"
                 )
                 toGoTo = MainPage

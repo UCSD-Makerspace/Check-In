@@ -4,6 +4,7 @@
 from pathlib import Path
 from tkinter import *
 from utils import *
+import logging
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"assets/manual_fill_assets")
@@ -198,7 +199,6 @@ class ManualFill(Frame):
         return self.entryList
 
     def clearEntries(self):
-        print("Clearing entry boxes")
         self.first_name_entry.delete(0, END)
         self.last_name_entry.delete(0, END)
         self.email_entry.delete(0, END)
@@ -217,5 +217,7 @@ class ManualFill(Frame):
         # FIXME: Is there a better way to do this?
         try:
             util.createAccount(data[0], data[1], data[2], data[3], ManualFill)
-        except:
-            print("An ERROR has occurred trying to create a user account")
+        except Exception as e:
+            logging.warning(
+                "Error occurred trying to create a user account", exc_info=True
+            )

@@ -9,9 +9,8 @@ from UserWelcome import *
 from ManualFill import *
 import global_
 import socket
-import tkinter
-
-debug = 0
+import logging
+import argparse
 
 
 def is_connected(host="8.8.8.8", port=53, timeout=3):
@@ -25,7 +24,6 @@ def is_connected(host="8.8.8.8", port=53, timeout=3):
         socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
         return True
     except socket.error as ex:
-        print(ex)
         return False
 
 
@@ -38,7 +36,7 @@ no_wifi_shown = False
 
 def myLoop(app, reader):
     global no_wifi_shown, no_wifi
-    print("Now reading ID Card")
+    logging.info("Now reading ID cards")
     last_tag = 0
     last_time = 0
     while True:
@@ -48,28 +46,30 @@ def myLoop(app, reader):
 
         if in_waiting >= 14:
             if not is_connected():
-                print("ERROR wifi is not connected")
-                no_wifi_shown = True
-                no_wifi = Label(
-                    app.get_frame(MainPage),
-                    text="ERROR, connection cannot be established, please let staff know.",
-                )
-                no_wifi.pack(pady=40)
-                no_wifi.after(4000, lambda: destroyNoWifiError(no_wifi))
+                logging.info("ERROR wifi is not connected")
+                if not no_wifi_shown:
+                    no_wifi_shown = True
+                    no_wifi = Label(
+                        app.get_frame(MainPage),
+                        text="ERROR! Connection cannot be established, please let staff know.",
+                    )
+                    no_wifi.pack(pady=40)
+                    no_wifi.after(4000, lambda: destroyNoWifiError(no_wifi))
+                    continue
 
             app.get_frame(ManualFill).clearEntries()
             tag = reader.grabRFID()
             if tag == last_tag and not reader.canScanAgain(last_time):
-                print("Suppressing repeat scan")
+                logging.debug("Suppressing repeat scan")
                 continue
 
             s_reason = reader.checkRFID(tag)
 
             if s_reason != "good":
-                print(s_reason)
+                logging.debug(s_reason)
                 continue
             else:
-                print("RFID Check Succeeded")
+                logging.debug("RFID Check Succeeded")
 
             global_.setRFID(tag)
 
@@ -105,15 +105,15 @@ def myLoop(app, reader):
             ############################
 
             if curr_user == "None" and curr_user_w == "None":
-                print("User was not found in the database")
+                logging.info("User was not found in the database")
                 app.show_frame(NoAccNoWaiver)
                 app.after(4000, lambda: app.show_frame(NoAccNoWaiverSwipe))
             elif curr_user_w == "None":
-                print("User does not have waiver")
+                logging.info("User does not have waiver")
                 app.show_frame(AccNoWaiver)
                 app.after(4000, lambda: app.show_frame(AccNoWaiverSwipe))
             elif curr_user == "None":
-                print("User has a waiver but no account")
+                logging.info("User has a waiver but no account")
                 app.show_frame(WaiverNoAcc)
                 app.after(4000, lambda: app.show_frame(WaiverNoAccSwipe))
             else:
@@ -149,6 +149,26 @@ def clearAndReturn():
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Makerspace Check-in System",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Increase verbosity (print debug info)",
+    )
+
+    args = parser.parse_args()
+    config = vars(args)
+
+    if config["verbose"]:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.INFO)
+
     global_.init()
     app = gui()
     global_.setApp(app)
@@ -156,9 +176,9 @@ if __name__ == "__main__":
     reader = Reader()
     util = utils()
     thread = Thread(target=myLoop, args=(app, reader))
-    print("Starting thread")
+    logging.info("Starting thread")
     thread.start()
     app.bind("<Key>", lambda i: sw.keyboardPress(i))
     app.bind("<Escape>", lambda i: clearAndReturn())
-    print("Made it to app start")
+    logging.info("Made it to app start")
     app.start()

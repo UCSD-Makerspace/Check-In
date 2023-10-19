@@ -33,7 +33,6 @@ class swipe:
         if check == "bad":
             id_string = ""
             if not swipe_error_shown:
-                #       FIXME: This does not work
                 swipe_error_shown = True
                 id_error = tkinter.Label(
                     global_.app.get_frame(NoAccNoWaiverSwipe),
@@ -50,7 +49,7 @@ class swipe:
             return
 
         id_string = id_string + key.char
-        print("The array is now: " + str(id_string))
+        logging.debug("The array is now: " + str(id_string))
         if (key.char == "?") and (len(id_string) == 37):
             self.swipeCard(id_string)
 
@@ -62,8 +61,7 @@ class swipe:
         # [fname, lname, [emails]]
         u_info = []
 
-        print("ID Read is: " + ID)
-        print("Trying to pull user...")
+        logging.info(f"Card ID read is: {ID}. Trying to pull user...")
 
         contact = contact_client()
         try:
@@ -71,11 +69,13 @@ class swipe:
                 u_info = contact.get_staff_info("A" + ID)
             elif u_type == "Student":
                 u_info = contact.get_student_info("A" + ID)
-        except:
-            print("An exception has ocurred with pulling user information")
+        except Exception as e:
+            logging.warning(
+                "An exception has ocurred with pulling user information", exc_info=True
+            )
             return
-        print("Info pull succeeded:")
-        print(u_info)
+
+        logging.info(f"Info pull succeeded:\n{u_info}")
         return u_info
 
     def swipeCard(self, id_string):
@@ -93,7 +93,7 @@ class swipe:
         # u_data is a list containing the user type and their ID
         u_data = self.pullUser(u_id, u_type)
         if u_data == False:
-            print("Student search returned False, returning...")
+            logging.info("Student search returned False, returning...")
             return
         if u_type == "Student":
             u_id = "A" + u_id

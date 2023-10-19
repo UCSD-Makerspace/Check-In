@@ -1,6 +1,7 @@
 import time
 import gspread
 import os
+import logging
 from oauth2client.service_account import ServiceAccountCredentials
 
 
@@ -18,9 +19,12 @@ class Sheet:
     def get_data(self):
         curr_time = time.time()
         if not self.data or curr_time - self.last_updated > self.CACHE_TIME:
-            self.data = self.db.get_all_records(numericise_ignore=["all"])
-            self.last_updated = curr_time
-            print(f"Updating database from web")
+            try:
+                logging.info("Updating database from web")
+                self.data = self.db.get_all_records(numericise_ignore=["all"])
+                self.last_updated = curr_time
+            except Exception as e:
+                logging.warning("Unable to update Google Sheets", exc_info=True)
 
         return self.data
 
@@ -41,17 +45,20 @@ class SheetManager:
             self.user_db = Sheet(
                 client.open("User Database").sheet1
             )  # Open the spreadhseet
-            print("User Database Loaded")
+
+            logging.info("User Database Loaded")
             self.activity_db = Sheet(
                 client.open_by_url(
                     "https://docs.google.com/spreadsheets/d/1aLBb1J2ifoUG2UAxHHbwxNO3KrIIWoI0pnZ14c5rpOM/edit?usp=drive_web&ouid=104398832910104737872"
                 ).sheet1
             )
-            print("Activity Log Loaded")
+            logging.info("Activity Database Loaded")
             self.waiver_db = Sheet(client.open("Waiver Signatures").sheet1)
-            print("Waiver Database Loaded")
-        except:
-            print("An ERROR has ocurred connecting to google sheets")
+            logging.info("Waiver Database Loaded")
+        except Exception as e:
+            logging.warning(
+                "An ERROR has ocurred connecting to google sheets", exc_info=True
+            )
 
     def get_user_db(self):
         return self.user_db.get_sheet()
