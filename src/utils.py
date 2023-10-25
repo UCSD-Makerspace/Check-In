@@ -120,8 +120,7 @@ class utils:
 
         user_db = global_.sheets.get_user_db()
         user_db.append_row(new_row)
-
-        # FIXME: user_db and others are not being used properly
+        global_.sheets.get_user_db_data(force_update=True)
 
         name_cell = user_db.find(full_name)
         s_name_cell = str(name_cell.address)

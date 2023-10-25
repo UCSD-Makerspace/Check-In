@@ -107,15 +107,15 @@ def myLoop(app, reader):
             if curr_user == "None" and curr_user_w == "None":
                 logging.info("User was not found in the database")
                 app.show_frame(NoAccNoWaiver)
-                app.after(4000, lambda: app.show_frame(NoAccNoWaiverSwipe))
+                app.after(3000, lambda: app.show_frame(NoAccNoWaiverSwipe))
             elif curr_user_w == "None":
                 logging.info("User does not have waiver")
                 app.show_frame(AccNoWaiver)
-                app.after(4000, lambda: app.show_frame(AccNoWaiverSwipe))
+                app.after(3000, lambda: app.show_frame(AccNoWaiverSwipe))
             elif curr_user == "None":
                 logging.info("User has a waiver but no account")
                 app.show_frame(WaiverNoAcc)
-                app.after(4000, lambda: app.show_frame(WaiverNoAccSwipe))
+                app.after(3000, lambda: app.show_frame(WaiverNoAccSwipe))
             else:
                 new_row = [
                     util.getDatetime(),

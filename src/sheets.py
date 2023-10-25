@@ -16,9 +16,13 @@ class Sheet:
     def get_sheet(self):
         return self.db
 
-    def get_data(self):
+    def get_data(self, force_update):
         curr_time = time.time()
-        if not self.data or curr_time - self.last_updated > self.CACHE_TIME:
+        if (
+            not self.data
+            or force_update
+            or curr_time - self.last_updated > self.CACHE_TIME
+        ):
             try:
                 logging.info("Updating database from web")
                 self.data = self.db.get_all_records(numericise_ignore=["all"])
@@ -69,11 +73,11 @@ class SheetManager:
     def get_waiver_db(self):
         return self.waiver_db.get_sheet()
 
-    def get_user_db_data(self):
-        return self.user_db.get_data()
+    def get_user_db_data(self, force_update=False):
+        return self.user_db.get_data(force_update)
 
-    def get_activity_db_data(self):
-        return self.activity_db.get_data()
+    def get_activity_db_data(self, force_update=False):
+        return self.activity_db.get_data(force_update)
 
-    def get_waiver_db_data(self):
-        return self.waiver_db.get_data()
+    def get_waiver_db_data(self, force_update=False):
+        return self.waiver_db.get_data(force_update)
