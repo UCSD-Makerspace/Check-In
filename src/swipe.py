@@ -89,6 +89,7 @@ class swipe:
 
         u_type = u_info[0]
         u_id = u_info[1]
+        u_id = u_id.replace("+E?", "")
 
         # u_data is a list containing the user type and their ID
         u_data = self.pullUser(u_id, u_type)
