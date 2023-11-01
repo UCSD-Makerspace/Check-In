@@ -76,7 +76,7 @@ class utils:
         for validation in (idValid, emailValid, nameValid):
             if validation != "good":
                 invalidID = tkinter.Label(
-                    self.app.get_frame(ManualFill), text=validation
+                    global_.app.get_frame(ManualFill), text=validation
                 )
                 invalidID.pack(pady=20)
                 invalidID.after(3000, lambda: invalidID.destroy())
