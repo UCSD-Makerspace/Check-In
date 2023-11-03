@@ -101,7 +101,16 @@ class swipe:
 
         manfill = global_.app.get_frame(ManualFill)
         manfill.clearEntries()
-        manfill.updateEntries(u_data[0], u_data[1], u_data[2][0], u_id)
+
+        email_to_use = u_data[2][0]
+        for email in u_data[2]:
+            if email.endswith("@ucsd.edu"):
+                email_to_use = email
+
+        u_id = u_id.replace("+E?", "")
+
+        logging.info(f"Filling data with {u_data[0]} {u_data[1]} {email_to_use} {u_id}")
+        manfill.updateEntries(u_data[0], u_data[1], email_to_use, u_id)
 
         global_.app.show_frame(ManualFill)
 
