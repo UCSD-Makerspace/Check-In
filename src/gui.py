@@ -3,6 +3,7 @@ from AccNoWaiver import AccNoWaiver
 from MainPage import MainPage
 from AccNoWaiverSwipe import AccNoWaiverSwipe
 from ManualFill import ManualFill
+from NoAccCheckInOnly import NoAccCheckinOnly
 from NoAccNoWaiver import NoAccNoWaiver
 from NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
 from QRCodes import QRCodes
@@ -10,6 +11,7 @@ from UserThank import UserThank
 from UserWelcome import UserWelcome
 from WaiverNoAcc import WaiverNoAcc
 from WaiverNoAccSwipe import WaiverNoAccSwipe
+
 
 #################################################
 # Acts as the controller and the user interface #
@@ -36,6 +38,7 @@ class gui(tk.Tk):
             AccNoWaiver,
             AccNoWaiverSwipe,
             ManualFill,
+            NoAccCheckinOnly,
             NoAccNoWaiver,
             NoAccNoWaiverSwipe,
             QRCodes,
