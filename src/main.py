@@ -91,8 +91,8 @@ def myLoop(app, reader):
                     user_id = i["A_Number"]
                     waiver_id = curr_user["Student ID"]
 
-                    user_id = user_id.replace("+E?", "")
-                    waiver_id = waiver_id.replace("+E?", "")
+                    user_id = user_id.replace("+E?", "")[:9]
+                    waiver_id = waiver_id.replace("+E?", "")[:9]
 
                     if (user_id[0] == "A") or (user_id[0] == "a"):
                         user_id = user_id[1:]

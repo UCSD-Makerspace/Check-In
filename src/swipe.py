@@ -89,7 +89,7 @@ class swipe:
 
         u_type = u_info[0]
         u_id = u_info[1]
-        u_id = u_id.replace("+E?", "")
+        u_id = u_id.replace("+E?", "")[:9]
 
         # u_data is a list containing the user type and their ID
         u_data = self.pullUser(u_id, u_type)
@@ -107,7 +107,7 @@ class swipe:
             if email.endswith("@ucsd.edu"):
                 email_to_use = email
 
-        u_id = u_id.replace("+E?", "")
+        u_id = u_id.replace("+E?", "")[:9]
 
         logging.info(f"Filling data with {u_data[0]} {u_data[1]} {email_to_use} {u_id}")
         manfill.updateEntries(u_data[0], u_data[1], email_to_use, u_id)

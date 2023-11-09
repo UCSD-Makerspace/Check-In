@@ -44,13 +44,11 @@ class NoAccCheckinOnly(Frame):
 
         image_2 = canvas.create_image(639.333984375, 359.333984375, image=image_image_2)
 
-        # TODO: Don't leave this
         canvas.create_text(
             160.0,
             180.0,
             anchor="nw",
-            # text="Looks like you don’t have an\n  account nor signed the\n   waiver, let’s solve that",
-            text="Looks like you don't have an\n  account, please scan your ID\n at the main desk",
+            text="Looks like you don't have an\n account, please scan your ID\nat the main desk",
             fill="#F5F0E6",
             font=("Montserrat", 64 * -1),
         )
