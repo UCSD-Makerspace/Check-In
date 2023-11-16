@@ -1,5 +1,6 @@
 *.pyc
 obf.pyc
-*.txt
-*.json
-log
+fabtoken.txt
+creds.json
+log*
+.venv/
