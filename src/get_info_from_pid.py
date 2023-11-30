@@ -27,17 +27,28 @@ class contact_client:
             api_url + "token", grant_type="client_credentials"
         )
 
-    def get_student_info(self, pid):
+    def get_student_info(self, barcode):
         if self.token["expires_at"] < time.time() + 60:
             self.token = self.oauth2_client.fetch_token(
                 api_url + "token", grant_type="client_credentials"
             )
+
+        token = self.token["access_token"]
+        barcode_url = f"{api_url}student_contact_info/v1/students/{barcode}/student_id"
+        barcode_response = requests.get(
+            barcode_url, headers={"Authorization": f"Bearer {token}"}, timeout=1
+        )
+        if not barcode_response.ok:
+            return False
+
+        print(barcode_response.json())
+        pid = barcode_response.json()[0]["pid"]
         url = (
             api_url
             + "student_contact_info/v1/students/contactinfo_by_pids?studentIds="
             + str(pid)
         )
-        token = self.token["access_token"]
+
         response = requests.get(
             url, headers={"Authorization": f"Bearer {token}"}, timeout=1
         )
@@ -48,7 +59,7 @@ class contact_client:
         emails = []
         for entries in response.json()[0]["emailAddressList"]:
             emails.append(entries["emailAddress"])
-        return [fname, lname, emails]
+        return [fname, lname, emails, pid]
 
     # not yet tested, still need to be authorized access to employeeData API.
     def get_staff_info(self, pid):

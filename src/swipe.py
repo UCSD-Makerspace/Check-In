@@ -36,12 +36,12 @@ class swipe:
                 swipe_error_shown = True
                 id_error = tkinter.Label(
                     global_.app.get_frame(NoAccNoWaiverSwipe),
-                    text="Error, please swipe again",
+                    text="Error, please scan again",
                 )
                 id_error.pack(pady=40)
                 id_error_2 = tkinter.Label(
                     global_.app.get_frame(WaiverNoAccSwipe),
-                    text="Error, please swipe again",
+                    text="Error, please scan again",
                 )
                 id_error_2.pack(pady=40)
                 id_error.after(1500, lambda: self.destroySwipeError(id_error))
@@ -50,10 +50,10 @@ class swipe:
 
         id_string = id_string + key.char
         logging.debug("The array is now: " + str(id_string))
-        if (key.char == "?") and (len(id_string) == 37):
+        if key.char == r"\r":
             self.swipeCard(id_string)
 
-    def pullUser(self, ID, u_type):
+    def pullUser(self, barcode, u_type):
         # This function takes in the User's ID and
         # if they are a Student or Staff
         # and runs David's query funciton accordingly
@@ -61,14 +61,14 @@ class swipe:
         # [fname, lname, [emails]]
         u_info = []
 
-        logging.info(f"Card ID read is: {ID}. Trying to pull user...")
+        logging.info(f"Card barcode read is: {barcode}. Trying to pull user...")
 
         contact = contact_client()
         try:
             if u_type == "Staff":
-                u_info = contact.get_staff_info("A" + ID)
+                u_info = contact.get_staff_info(barcode)
             elif u_type == "Student":
-                u_info = contact.get_student_info("A" + ID)
+                u_info = contact.get_student_info(barcode)
         except Exception as e:
             logging.warning(
                 "An exception has ocurred with pulling user information", exc_info=True
@@ -85,19 +85,21 @@ class swipe:
         # If so return
         # Calls magswipe() on the entered string
 
-        u_info = self.magSwipe(id_string)
+        user_card_number = id_string.strip()
 
-        u_type = u_info[0]
-        u_id = u_info[1]
-        u_id = u_id.replace("+E?", "")[:9]
+        # u_info = self.magSwipe(id_string)
+
+        # u_type = u_info[0]
+        # u_id = u_info[1]
+        # u_id = u_id.replace("+E?", "")[:9]
 
         # u_data is a list containing the user type and their ID
-        u_data = self.pullUser(u_id, u_type)
+        u_data = self.pullUser(user_card_number, "Student")
         if u_data == False:
             logging.info("Student search returned False, returning...")
             return
-        if u_type == "Student":
-            u_id = "A" + u_id
+        # if u_type == "Student":
+        #     u_id = "A" + u_id
 
         manfill = global_.app.get_frame(ManualFill)
         manfill.clearEntries()
@@ -109,8 +111,10 @@ class swipe:
 
         u_id = u_id.replace("+E?", "")[:9]
 
-        logging.info(f"Filling data with {u_data[0]} {u_data[1]} {email_to_use} {u_id}")
-        manfill.updateEntries(u_data[0], u_data[1], email_to_use, u_id)
+        logging.info(
+            f"Filling data with {u_data[0]} {u_data[1]} {email_to_use} {u_data[3]}"
+        )
+        manfill.updateEntries(u_data[0], u_data[1], email_to_use, u_data[3])
 
         global_.app.show_frame(ManualFill)
 
