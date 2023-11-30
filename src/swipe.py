@@ -49,9 +49,10 @@ class swipe:
             return
 
         id_string = id_string + key.char
-        logging.debug("The array is now: " + str(id_string))
-        if key.char == r"\r":
+        logging.debug("The array is now: " + repr(str(id_string)))
+        if id_string.endswith("\r"):
             self.swipeCard(id_string)
+            id_string = ""
 
     def pullUser(self, barcode, u_type):
         # This function takes in the User's ID and
