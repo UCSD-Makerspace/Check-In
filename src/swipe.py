@@ -29,7 +29,7 @@ class swipe:
             # Then don't do anything
             return
 
-        check = util.IDVet(id_string)
+        check = "good"  # util.IDVet(id_string)
         if check == "bad":
             id_string = ""
             if not swipe_error_shown:
@@ -108,8 +108,6 @@ class swipe:
         for email in u_data[2]:
             if email.endswith("@ucsd.edu"):
                 email_to_use = email
-
-        u_id = u_id.replace("+E?", "")[:9]
 
         logging.info(
             f"Filling data with {u_data[0]} {u_data[1]} {email_to_use} {u_data[3]}"

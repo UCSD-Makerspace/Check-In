@@ -41,8 +41,7 @@ class contact_client:
         if not barcode_response.ok:
             return False
 
-        print(barcode_response.json())
-        pid = barcode_response.json()[0]["pid"]
+        pid = barcode_response.json()["studentId"]
         url = (
             api_url
             + "student_contact_info/v1/students/contactinfo_by_pids?studentIds="
