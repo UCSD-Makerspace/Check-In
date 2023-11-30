@@ -45,7 +45,10 @@ class utils:
         return "good"
 
     def IDVet(self, id_check):
-        if len(id_check) > 16:
+        if any(i.isalpha() for i in id_check):
+            return "bad"
+
+        if len(id_check) >= 16:
             return "bad"
 
         return "good"

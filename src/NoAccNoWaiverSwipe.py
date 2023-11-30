@@ -60,7 +60,7 @@ class NoAccNoWaiverSwipe(Frame):
             420.0,
             350.0,
             anchor="nw",
-            text="Please swipe your ID",
+            text="Please scan your ID barcode",
             fill="#F5F0E6",
             font=("Montserrat", 48 * -1),
         )
