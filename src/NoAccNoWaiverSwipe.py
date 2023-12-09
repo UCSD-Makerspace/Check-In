@@ -57,10 +57,10 @@ class NoAccNoWaiverSwipe(Frame):
         image_3 = canvas.create_image(640.0, 430.0, image=image_image_3)
 
         canvas.create_text(
-            420.0,
+            303.0,
             350.0,
             anchor="nw",
-            text="Please swipe your ID",
+            text="Please scan your ID barcode",
             fill="#F5F0E6",
             font=("Montserrat", 48 * -1),
         )
