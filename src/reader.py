@@ -40,7 +40,7 @@ class Reader(Thread):
         )
         tagBytes = self.ser.read(14)
         self.ser.read(self.ser.in_waiting)
-        RFID = tagBytes.decode().replace("\r\n", "")
+        RFID = tagBytes.decode(encoding="latin-1").replace("\r\n", "")
         logging.info("Parsed tag: " + RFID)
         return str(RFID)
 
