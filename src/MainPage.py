@@ -73,16 +73,6 @@ class MainPage(Frame):
             font=("Montserrat", 73 * -1),
         )
 
-        canvas.create_text(
-            1152.0,
-            46.0,
-            anchor="nw",
-            text="No\nID",
-            fill="#F5F0E6",
-            font=("Montserrat", 73 * -1),
-            justify="center",
-        )
-
         image_image_3 = PhotoImage(file=relative_to_assets("image_3.png"))
 
         self.photoList.append(image_image_3)
@@ -99,6 +89,8 @@ class MainPage(Frame):
             bg="#153246",
             command=lambda: controller.show_frame(QRCodes),
             relief="flat",
+            highlightthickness=0,
+            bd=0
         )
 
         button_1.place(x=53.0, y=55.0)
@@ -106,9 +98,15 @@ class MainPage(Frame):
         button_2 = Button(
             self,
             image=image_image_3,
+            text="No\nID",
+            compound="center",
             bg="#153246",
+            fg="white",
             command=lambda: controller.show_frame(QRCodes),
             relief="flat",
+            highlightthickness=0,
+            bd=0,
+            font=("Montserrat", 36 * -1)
         )
 
-        button_2.place(x=1186.0, y=90.0)
+        button_2.place(x=1136.0, y=40.0)
