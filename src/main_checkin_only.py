@@ -109,7 +109,7 @@ def myLoop(app, reader):
             if curr_user == "None" and curr_user_w == "None":
                 # for check-in only they cannot make an account
                 logging.info("User was not found in the database")
-                app.show_frame(NoAccCheckinOnly)
+                app.show_frame(NoAccCheckInOnly)
                 app.after(5000, lambda: app.show_frame(MainPage))
             elif curr_user_w == "None":
                 logging.info("User does not have waiver")
