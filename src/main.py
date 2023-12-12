@@ -7,6 +7,7 @@ from sheets import *
 from threading import Thread
 from UserWelcome import *
 from ManualFill import *
+from CheckInNoId import *
 import global_
 import socket
 import logging
@@ -149,6 +150,7 @@ def destroyNoWifiError(no_wifi):
 def clearAndReturn():
     global_.app.show_frame(MainPage)
     global_.app.get_frame(ManualFill).clearEntries()
+    global_.app.get_frame(CheckInNoId).clearEntries()
 
 
 if __name__ == "__main__":

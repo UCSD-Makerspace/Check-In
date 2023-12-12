@@ -48,7 +48,7 @@ class utils:
         if any(i.isalpha() for i in id_check):
             return "bad"
 
-        if len(id_check) >= 14:
+        if len(id_check) >= 16:
             return "bad"
 
         return "good"

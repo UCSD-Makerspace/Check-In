@@ -24,6 +24,7 @@ class swipe:
         util = utils()
         global id_string, swipe_error_shown
         curr_frame = global_.app.get_curr_frame()
+
         if curr_frame not in (NoAccNoWaiverSwipe, WaiverNoAccSwipe, CheckInNoId):
             # If one of the swipe pages is not on top
             # Then don't do anything
