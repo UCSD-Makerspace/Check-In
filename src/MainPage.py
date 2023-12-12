@@ -110,4 +110,4 @@ class MainPage(Frame):
             font=("Montserrat", 36 * -1),
         )
 
-        button_2.place(x=1136.0, y=40.0)
+        button_2.place(x=1130.0, y=40.0)
