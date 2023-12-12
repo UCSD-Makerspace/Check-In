@@ -21,9 +21,10 @@ class Reader(Thread):
         logging.info("Card reader init finished")
 
     def loadScanner(self):
-        file_exists = exists("/dev/ttyUSB0")
-        if file_exists:
+        if exists("/dev/ttyUSB0"):
             self.tty = "/dev/ttyUSB0"
+        elif exists("/dev/ttyUSB1"):
+            self.tty = "/dev/ttyUSB1"
         else:
             logging.warning("Scanner not connected")
             quit()
