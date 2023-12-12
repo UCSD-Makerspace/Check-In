@@ -106,6 +106,7 @@ class CheckInNoId(Frame):
         if not pid:
             return
 
+        util = utils()
         self.clearEntries()
 
         curr_user = None
@@ -135,7 +136,7 @@ class CheckInNoId(Frame):
             controller.after(3000, lambda: controller.show_frame(AccNoWaiverSwipe))
         else:
             new_row = [
-                utils.getDatetime(),
+                util.getDatetime(),
                 int(time.time()),
                 curr_user["Name"],
                 "No ID",
