@@ -102,7 +102,7 @@ class CheckInNoId(Frame):
         self.pid_entry.insert(0, pid)
 
     def callCheckIn(self, controller):
-        pid = self.pid_entry.get().lstrip(["A", "a"])
+        pid = self.pid_entry.get().lstrip("Aa")
         if not pid:
             return
 
@@ -113,14 +113,14 @@ class CheckInNoId(Frame):
 
         user_data = global_.sheets.get_user_db_data()
         for i in user_data:
-            student_id = i["Student ID"].lstrip(["A", "a"])
+            student_id = i["Student ID"].lstrip("Aa")
             if student_id == pid:
                 curr_user = i
 
         if curr_user:
             waiver_data = global_.sheets.get_waiver_db_data()
             for i in waiver_data:
-                waiver_id = curr_user["Student ID"].lstrip(["A", "a"])
+                waiver_id = curr_user["Student ID"].lstrip("Aa")
                 if pid == waiver_id:
                     curr_user_w = i
         else:
