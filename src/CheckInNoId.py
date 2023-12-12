@@ -5,6 +5,7 @@ from pathlib import Path
 from tkinter import *
 from utils import *
 from NoAccCheckInOnly import NoAccCheckInOnly
+from UserWelcome import UserWelcome
 import logging
 
 OUTPUT_PATH = Path(__file__).parent
