@@ -4,6 +4,7 @@
 from pathlib import Path
 from tkinter import *
 from utils import *
+from NoAccCheckInOnly import NoAccCheckInOnly
 import logging
 
 OUTPUT_PATH = Path(__file__).parent
@@ -23,7 +24,6 @@ class CheckInNoId(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.photoList = []
-        self.entryList = []
         self.pid = StringVar()
         self.pid_entry = 0
 
@@ -66,6 +66,7 @@ class CheckInNoId(Frame):
             text="If you have already made an\naccount, scan your UCSD barcode\nor enter your PID manually",
             fill="#F5F0E6",
             font=("Montserrat", 48 * -1),
+            justify="center",
         )
 
         canvas.create_text(
@@ -86,7 +87,7 @@ class CheckInNoId(Frame):
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: self.callCheckIn(),
+            command=lambda: self.callCheckIn(controller),
             relief="flat",
         )
         self.button_1.place(x=465.0, y=598.0, width=349.0, height=71.0)
@@ -94,18 +95,55 @@ class CheckInNoId(Frame):
         self.pid_entry = Entry(self, textvariable=self.pid, width=40, font=52)
         self.pid_entry.place(x=420.0, y=412.0)
 
-    def getEntries(self):
-        del self.entryList[:]
-        self.entryList.append(self.pid.get())
-        return self.entryList
-
     def clearEntries(self):
         self.pid_entry.delete(0, END)
 
     def updateEntries(self, pid):
         self.pid_entry.insert(0, pid)
 
-    def callCheckIn(self):
-        data = self.getEntries()
+    def callCheckIn(self, controller):
+        pid = self.pid_entry.get().lstrip(["A", "a"])
+        if not pid:
+            return
+
         self.clearEntries()
-        print(data)
+
+        curr_user = None
+        curr_user_w = None
+
+        user_data = global_.sheets.get_user_db_data()
+        for i in user_data:
+            student_id = i["Student ID"].lstrip(["A", "a"])
+            if student_id == pid:
+                curr_user = i
+
+        if curr_user:
+            waiver_data = global_.sheets.get_waiver_db_data()
+            for i in waiver_data:
+                waiver_id = curr_user["Student ID"].lstrip(["A", "a"])
+                if pid == waiver_id:
+                    curr_user_w = i
+        else:
+            logging.info("Manual check in user account was not found")
+            controller.show_frame(NoAccCheckInOnly)
+            controller.after(5000, lambda: controller.show_frame(MainPage))
+            return
+
+        if not curr_user_w:
+            logging.info("Manual check in user does not have waiver")
+            controller.show_frame(AccNoWaiver)
+            controller.after(3000, lambda: controller.show_frame(AccNoWaiverSwipe))
+        else:
+            new_row = [
+                utils.getDatetime(),
+                int(time.time()),
+                curr_user["Name"],
+                "No ID",
+                "User Checkin",
+                "",
+                "",
+                "",
+            ]
+            activity_log = global_.sheets.get_activity_db()
+            activity_log.append_row(new_row)
+            global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])
