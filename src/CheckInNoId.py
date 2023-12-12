@@ -122,7 +122,7 @@ class CheckInNoId(Frame):
         if curr_user:
             waiver_data = global_.sheets.get_waiver_db_data()
             for i in waiver_data:
-                waiver_id = curr_user["Student ID"].lstrip("Aa")
+                waiver_id = i["A_Number"].lstrip("Aa")
                 if pid == waiver_id:
                     curr_user_w = i
         else:
