@@ -3,6 +3,7 @@ from ManualFill import *
 from NoAccNoWaiverSwipe import *
 from WaiverNoAccSwipe import *
 from AccNoWaiverSwipe import *
+from CheckInNoId import *
 from get_info_from_pid import *
 from utils import *
 import global_
@@ -22,14 +23,14 @@ class swipe:
     def keyboardPress(self, key):
         util = utils()
         global id_string, swipe_error_shown
-        if (global_.app.get_curr_frame() != NoAccNoWaiverSwipe) and (
-            global_.app.get_curr_frame() != WaiverNoAccSwipe
-        ):
+        curr_frame = global_.app.get_curr_frame()
+
+        if curr_frame not in (NoAccNoWaiverSwipe, WaiverNoAccSwipe, CheckInNoId):
             # If one of the swipe pages is not on top
             # Then don't do anything
             return
 
-        check = "good"  # util.IDVet(id_string)
+        check = util.IDVet(id_string)
         if check == "bad":
             id_string = ""
             if not swipe_error_shown:
@@ -102,6 +103,11 @@ class swipe:
         # if u_type == "Student":
         #     u_id = "A" + u_id
 
+        if global_.app.get_curr_frame() == CheckInNoId:
+            global_.app.get_frame(CheckInNoId).clearEntries()
+            global_.app.get_frame(CheckInNoId).updateEntries(u_data[3])
+            return
+
         manfill = global_.app.get_frame(ManualFill)
         manfill.clearEntries()
 
@@ -116,8 +122,6 @@ class swipe:
         manfill.updateEntries(u_data[0], u_data[1], email_to_use, u_data[3])
 
         global_.app.show_frame(ManualFill)
-
-        id_string = ""
 
     def magSwipe(self, ID):
         # Makes a new empty string

@@ -3,7 +3,8 @@ from AccNoWaiver import AccNoWaiver
 from MainPage import MainPage
 from AccNoWaiverSwipe import AccNoWaiverSwipe
 from ManualFill import ManualFill
-from NoAccCheckInOnly import NoAccCheckinOnly
+from CheckInNoId import CheckInNoId
+from NoAccCheckInOnly import NoAccCheckInOnly
 from NoAccNoWaiver import NoAccNoWaiver
 from NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
 from QRCodes import QRCodes
@@ -38,7 +39,8 @@ class gui(tk.Tk):
             AccNoWaiver,
             AccNoWaiverSwipe,
             ManualFill,
-            NoAccCheckinOnly,
+            CheckInNoId,
+            NoAccCheckInOnly,
             NoAccNoWaiver,
             NoAccNoWaiverSwipe,
             QRCodes,

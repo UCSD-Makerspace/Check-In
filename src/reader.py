@@ -21,9 +21,10 @@ class Reader(Thread):
         logging.info("Card reader init finished")
 
     def loadScanner(self):
-        file_exists = exists("/dev/ttyUSB0")
-        if file_exists:
+        if exists("/dev/ttyUSB0"):
             self.tty = "/dev/ttyUSB0"
+        elif exists("/dev/ttyUSB1"):
+            self.tty = "/dev/ttyUSB1"
         else:
             logging.warning("Scanner not connected")
             quit()
@@ -40,7 +41,7 @@ class Reader(Thread):
         )
         tagBytes = self.ser.read(14)
         self.ser.read(self.ser.in_waiting)
-        RFID = tagBytes.decode().replace("\r\n", "")
+        RFID = tagBytes.decode(encoding="latin-1").replace("\r\n", "")
         logging.info("Parsed tag: " + RFID)
         return str(RFID)
 
