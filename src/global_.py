@@ -10,7 +10,7 @@ from traffic import TrafficLight
 def init():
     global rfid, sheets, app, traffic_light
     sheets = SheetManager()
-    traffic_light = TrafficLight("/dev/tty.usbserial-10")
+    traffic_light = TrafficLight("/dev/ttyUSB1")
 
 
 def setRFID(new_rfid):
