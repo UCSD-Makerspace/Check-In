@@ -20,6 +20,12 @@ def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
 
+def go_to_next(next_page):
+    global_.app.show_frame(next_page)
+    if next_page == MainPage:
+        global_.traffic_light.set_off()
+
+
 class UserThank(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
@@ -91,4 +97,4 @@ class UserThank(Frame):
             global_.traffic_light.set_yellow()
 
         self.canvas.after(4500, lambda: self.canvas.delete("thank"))
-        global_.app.after(4000, lambda: global_.app.show_frame(nextPage))
+        global_.app.after(4000, lambda: go_to_next(nextPage))
