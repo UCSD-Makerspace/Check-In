@@ -21,7 +21,8 @@ def relative_to_assets(path: str) -> Path:
 
 
 def go_to_next(next_page):
-    if next_page is MainPage:
+    print(next_page)
+    if next_page == MainPage:
         global_.traffic_light.set_off()
     else:
         global_.traffic_light.set_yellow()
