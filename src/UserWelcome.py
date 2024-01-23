@@ -17,7 +17,7 @@ def relative_to_assets(path: str) -> Path:
 
 
 def back_to_main():
-    global_.traffic_light.set_red()
+    global_.traffic_light.set_off()
     global_.app.show_frame(MainPage)
 
 

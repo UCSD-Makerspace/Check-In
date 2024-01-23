@@ -109,10 +109,12 @@ def myLoop(app, reader):
 
             if curr_user == "None" and curr_user_w == "None":
                 logging.info("User was not found in the database")
+                global_.traffic_light.set_red()
                 app.show_frame(NoAccNoWaiver)
                 app.after(3000, lambda: app.show_frame(NoAccNoWaiverSwipe))
             elif curr_user_w == "None":
                 logging.info("User does not have waiver")
+                global_.traffic_light.set_yellow()
                 app.show_frame(AccNoWaiver)
                 app.after(3000, lambda: app.show_frame(AccNoWaiverSwipe))
             elif curr_user == "None":
@@ -150,6 +152,7 @@ def destroyNoWifiError(no_wifi):
 def clearAndReturn():
     global_.app.show_frame(MainPage)
     global_.app.get_frame(ManualFill).clearEntries()
+    global_.traffic_light.set_off()
 
 
 if __name__ == "__main__":
@@ -176,7 +179,7 @@ if __name__ == "__main__":
     global_.init()
     app = gui()
     global_.setApp(app)
-    global_.traffic_light.set_red()
+    global_.traffic_light.set_off()
     sw = swipe()
     reader = Reader()
     util = utils()
