@@ -150,9 +150,9 @@ def destroyNoWifiError(no_wifi):
 
 
 def clearAndReturn():
+    global_.traffic_light.set_off()
     global_.app.show_frame(MainPage)
     global_.app.get_frame(ManualFill).clearEntries()
-    global_.traffic_light.set_off()
 
 
 if __name__ == "__main__":
