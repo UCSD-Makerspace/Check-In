@@ -170,7 +170,6 @@ if __name__ == "__main__":
 
     parser.add_argument(
         "-i",
-        "--traffic-id",
         default="1",
         choices={"0", "1"},
         help="USB id to use for traffic light (0 or 1)",
@@ -184,13 +183,16 @@ if __name__ == "__main__":
     else:
         logging.basicConfig(level=logging.INFO)
 
+    reader_usb = 1 - int(config["i"])
+    reader_usb_id = f"/dev/ttyUSB{reader_usb}"
     traffic_usb_id = f"/dev/ttyUSB{config['i']}"
+
     global_.init(traffic_usb_id)
     app = gui()
     global_.setApp(app)
     global_.traffic_light.set_off()
     sw = swipe()
-    reader = Reader()
+    reader = Reader(reader_usb_id)
     util = utils()
     thread = Thread(target=myLoop, args=(app, reader))
     logging.info("Starting thread")
