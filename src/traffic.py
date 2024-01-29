@@ -1,5 +1,6 @@
 import serial
 import time
+import argparse
 
 
 class TrafficLight:
@@ -21,7 +22,24 @@ class TrafficLight:
 
 
 if __name__ == "__main__":
-    light = TrafficLight("/dev/tty.usbserial-1310")
+    parser = argparse.ArgumentParser(
+        description="Traffic Light Debug",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+
+    parser.add_argument(
+        "-i",
+        default="0",
+        choices={"0", "1"},
+        help="USB id to use (0 or 1)",
+    )
+
+    args = parser.parse_args()
+    config = vars(args)
+
+    usb_id = f"/dev/ttyUSB{config['i']}"
+
+    light = TrafficLight(usb_id)
     while True:
         light.set_off()
         time.sleep(1)

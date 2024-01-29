@@ -168,6 +168,14 @@ if __name__ == "__main__":
         help="Increase verbosity (print debug info)",
     )
 
+    parser.add_argument(
+        "-i",
+        "--traffic-id",
+        default="1",
+        choices={"0", "1"},
+        help="USB id to use for traffic light (0 or 1)",
+    )
+
     args = parser.parse_args()
     config = vars(args)
 
@@ -176,7 +184,8 @@ if __name__ == "__main__":
     else:
         logging.basicConfig(level=logging.INFO)
 
-    global_.init()
+    traffic_usb_id = f"/dev/ttyUSB{config['i']}"
+    global_.init(traffic_usb_id)
     app = gui()
     global_.setApp(app)
     global_.traffic_light.set_off()
