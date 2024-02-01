@@ -7,6 +7,7 @@ from tkinter import *
 from MainPage import *
 from AccNoWaiver import *
 from AccNoWaiverSwipe import *
+from MainPage import *
 import time
 import global_
 
@@ -17,6 +18,12 @@ ASSETS_PATH = OUTPUT_PATH / Path(r"assets/user_thank_assets")
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
+
+
+def go_to_next(next_page):
+    global_.app.show_frame(next_page)
+    if next_page == MainPage:
+        global_.traffic_light.set_off()
 
 
 class UserThank(Frame):
@@ -84,6 +91,10 @@ class UserThank(Frame):
         time.sleep(0.500)
 
         global_.app.show_frame(UserThank)
+        if nextPage == MainPage:
+            global_.traffic_light.set_green()
+        else:
+            global_.traffic_light.set_yellow()
 
-        self.canvas.after(5000, lambda: self.canvas.delete("thank"))
-        global_.app.after(4000, lambda: global_.app.show_frame(nextPage))
+        self.canvas.after(4500, lambda: self.canvas.delete("thank"))
+        global_.app.after(4000, lambda: go_to_next(nextPage))

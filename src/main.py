@@ -12,6 +12,10 @@ import global_
 import socket
 import logging
 import argparse
+import serial.tools.list_ports as list_ports
+
+TRAFFIC_LIGHT_VID = 6790
+READER_VID = 4292
 
 
 def is_connected(host="8.8.8.8", port=53, timeout=3):
@@ -110,10 +114,12 @@ def myLoop(app, reader):
 
             if curr_user == "None" and curr_user_w == "None":
                 logging.info("User was not found in the database")
+                global_.traffic_light.set_red()
                 app.show_frame(NoAccNoWaiver)
                 app.after(3000, lambda: app.show_frame(NoAccNoWaiverSwipe))
             elif curr_user_w == "None":
                 logging.info("User does not have waiver")
+                global_.traffic_light.set_yellow()
                 app.show_frame(AccNoWaiver)
                 app.after(3000, lambda: app.show_frame(AccNoWaiverSwipe))
             elif curr_user == "None":
@@ -133,6 +139,7 @@ def myLoop(app, reader):
                 ]
                 activity_log = global_.sheets.get_activity_db()
                 activity_log.append_row(new_row)
+                global_.traffic_light.set_green()
                 global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])
 
             last_time = time.time()
@@ -148,6 +155,7 @@ def destroyNoWifiError(no_wifi):
 
 
 def clearAndReturn():
+    global_.traffic_light.set_off()
     global_.app.show_frame(MainPage)
     global_.app.get_frame(ManualFill).clearEntries()
     global_.app.get_frame(CheckInNoId).clearEntries()
@@ -174,11 +182,22 @@ if __name__ == "__main__":
     else:
         logging.basicConfig(level=logging.INFO)
 
-    global_.init()
+    ports = list(serial.tools.list_ports.comports())
+    reader_usb_id = None
+    traffic_usb_id = None
+
+    for p in ports:
+        if p.vid == READER_VID:
+            reader_usb_id = p.device
+        elif p.vid == TRAFFIC_LIGHT_VID:
+            traffic_usb_id = p.device
+
+    global_.init(traffic_usb_id)
     app = gui()
     global_.setApp(app)
+    global_.traffic_light.set_off()
     sw = swipe()
-    reader = Reader()
+    reader = Reader(reader_usb_id)
     util = utils()
     thread = Thread(target=myLoop, args=(app, reader))
     logging.info("Starting thread")

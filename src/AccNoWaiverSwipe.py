@@ -5,6 +5,7 @@
 from pathlib import Path
 from tkinter import *
 from MainPage import *
+import global_
 
 
 OUTPUT_PATH = Path(__file__).parent
@@ -13,6 +14,11 @@ ASSETS_PATH = OUTPUT_PATH / Path(r"assets/acc_no_waiver_swipe_assets")
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
+
+
+def back_to_main():
+    global_.traffic_light.set_off()
+    global_.app.show_frame(MainPage)
 
 
 class AccNoWaiverSwipe(Frame):
@@ -66,7 +72,7 @@ class AccNoWaiverSwipe(Frame):
             image=button_image_1,
             borderwidth=0,
             highlightthickness=0,
-            command=lambda: controller.show_frame(MainPage),
+            command=lambda: back_to_main(),
             relief="flat",
         )
         self.button_1.place(x=875.0, y=581.0, width=344.0, height=71.0)

@@ -16,6 +16,11 @@ def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
 
+def back_to_main():
+    global_.traffic_light.set_off()
+    global_.app.show_frame(MainPage)
+
+
 class UserWelcome(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
@@ -73,4 +78,4 @@ class UserWelcome(Frame):
         global_.app.show_frame(UserWelcome)
 
         self.canvas.after(4000, lambda: self.canvas.delete("welcome"))
-        global_.app.after(4000, lambda: global_.app.show_frame(MainPage))
+        global_.app.after(4000, lambda: back_to_main())

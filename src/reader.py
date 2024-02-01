@@ -13,18 +13,18 @@ timeout = 1
 
 
 class Reader(Thread):
-    def __init__(self):
+    def __init__(self, usb_id="/dev/ttyUSB0"):
         super().__init__()
         self.tty = ""
+        self.usb_id = usb_id
         self.loadScanner()
         self.ser = serial.Serial(self.tty, 115200)
         logging.info("Card reader init finished")
 
     def loadScanner(self):
-        if exists("/dev/ttyUSB0"):
-            self.tty = "/dev/ttyUSB0"
-        elif exists("/dev/ttyUSB1"):
-            self.tty = "/dev/ttyUSB1"
+        file_exists = exists(self.usb_id)
+        if file_exists:
+            self.tty = self.usb_id
         else:
             logging.warning("Scanner not connected")
             quit()
