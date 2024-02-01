@@ -11,6 +11,10 @@ import global_
 import socket
 import logging
 import argparse
+import serial.tools.list_ports as list_ports
+
+TRAFFIC_LIGHT_VID = 6790
+READER_VID = 4292
 
 
 def is_connected(host="8.8.8.8", port=53, timeout=3):
@@ -168,13 +172,6 @@ if __name__ == "__main__":
         help="Increase verbosity (print debug info)",
     )
 
-    parser.add_argument(
-        "-i",
-        default="1",
-        choices={"0", "1"},
-        help="USB id to use for traffic light (0 or 1)",
-    )
-
     args = parser.parse_args()
     config = vars(args)
 
@@ -183,9 +180,15 @@ if __name__ == "__main__":
     else:
         logging.basicConfig(level=logging.INFO)
 
-    reader_usb = 1 - int(config["i"])
-    reader_usb_id = f"/dev/ttyUSB{reader_usb}"
-    traffic_usb_id = f"/dev/ttyUSB{config['i']}"
+    ports = list(serial.tools.list_ports.comports())
+    reader_usb_id = None
+    traffic_usb_id = None
+
+    for p in ports:
+        if p.vid == READER_VID:
+            reader_usb_id = p.device
+        elif p.vid == TRAFFIC_LIGHT_VID:
+            traffic_usb_id = p.device
 
     global_.init(traffic_usb_id)
     app = gui()
