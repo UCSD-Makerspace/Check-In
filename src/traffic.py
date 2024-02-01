@@ -1,6 +1,6 @@
 import serial
+import serial.tools.list_ports as list_ports
 import time
-import argparse
 
 
 class TrafficLight:
@@ -22,24 +22,14 @@ class TrafficLight:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Traffic Light Debug",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-    )
+    ports = list(serial.tools.list_ports.comports())
+    traffic_light_vid = 6790
 
-    parser.add_argument(
-        "-i",
-        default="0",
-        choices={"0", "1"},
-        help="USB id to use (0 or 1)",
-    )
+    for p in ports:
+        if p.vid == traffic_light_vid:
+            break
 
-    args = parser.parse_args()
-    config = vars(args)
-
-    usb_id = f"/dev/ttyUSB{config['i']}"
-
-    light = TrafficLight(usb_id)
+    light = TrafficLight(p.device)
     while True:
         light.set_off()
         time.sleep(1)
