@@ -30,21 +30,23 @@ class fabman:
         params = {"q": f"{emailAddress}"}
         headers = {"Authorization": f"Bearer {fabman_key}"}
 
-        check_member = requests.get(f"{base_url}/members", headers=headers)
         attempt_member = requests.post(
             f"{base_url}/members", headers=headers, json=member_data
         )
         get_member_id = requests.get(
             f"{base_url}/members", headers=headers, params=params
         )
+        member_id = get_member_id.json()
 
         if attempt_member.status_code == requests.codes.created:
-            logging.info(f"Account has been created for {firstName}\n")
+            logging.info(f"Account has been created for {firstName}")
+        elif member_id and get_member_id.status_code == requests.codes.ok:
+            logging.info(f"{emailAddress} already had account. Using old account.")
         else:
             logging.warning(f"Account creation failed: {attempt_member.status_code}\n")
+            logging.info(attempt_member.json())
             return
 
-        member_id = get_member_id.json()
         actual_id = [user["id"] for user in member_id]
 
         add_package = requests.post(
@@ -57,13 +59,13 @@ class fabman:
         )
 
         if add_package.status_code == requests.codes.created:
-            logging.info(f"Package ({fabman_DIBUser}) has been added for {firstName}\n")
+            logging.info(f"Package ({fabman_DIBUser}) has been added for {firstName}")
         else:
-            logging.warning(f"Package add failed: {attempt_member.status_code}\n")
+            logging.warning(f"Package add failed: {attempt_member.status_code}")
             logging.info(add_package.json())
 
         if attempt_key.status_code == requests.codes.created:
-            logging.info(f"Key ({RFIDtag}) has been assigned to {firstName}\n")
+            logging.info(f"Key ({RFIDtag}) has been assigned to {firstName}")
         else:
-            logging.warning(f"Key assignment failed: {attempt_member.status_code}\n")
+            logging.warning(f"Key assignment failed: {attempt_member.status_code}")
             logging.info(attempt_key.json())

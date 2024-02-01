@@ -22,6 +22,7 @@ class MainPage(Frame):
 
     def loadWidgets(self, controller):
         from QRCodes import QRCodes
+        from CheckInNoId import CheckInNoId
 
         canvas = Canvas(
             self,
@@ -89,6 +90,24 @@ class MainPage(Frame):
             bg="#153246",
             command=lambda: controller.show_frame(QRCodes),
             relief="flat",
+            highlightthickness=0,
+            bd=0,
         )
 
         button_1.place(x=53.0, y=55.0)
+
+        button_2 = Button(
+            self,
+            image=image_image_3,
+            text="No\nID",
+            compound="center",
+            bg="#153246",
+            fg="white",
+            command=lambda: controller.show_frame(CheckInNoId),
+            relief="flat",
+            highlightthickness=0,
+            bd=0,
+            font=("Montserrat", 36 * -1),
+        )
+
+        button_2.place(x=1130.0, y=40.0)
