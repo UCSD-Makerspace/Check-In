@@ -22,7 +22,7 @@ def back_to_main():
     global_.app.show_frame(MainPage)
 
 
-def timeout():
+def timeout_waiver():
     def timeout_fn():
         if global_.app.get_curr_frame() == AccNoWaiverSwipe:
             global_.app.show_frame(MainPage)

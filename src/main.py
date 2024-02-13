@@ -8,6 +8,7 @@ from threading import Thread
 from UserWelcome import *
 from ManualFill import *
 from CheckInNoId import *
+from AccNoWaiverSwipe import timeout_waiver
 import global_
 import socket
 import logging
@@ -126,7 +127,7 @@ def myLoop(app, reader):
                 global_.traffic_light.set_yellow()
                 app.show_frame(AccNoWaiver)
                 app.after(3000, lambda: app.show_frame(AccNoWaiverSwipe))
-                AccNoWaiverSwipe.timeout()
+                timeout_waiver()
             elif curr_user == "None":
                 logging.info("User has a waiver but no account")
                 app.show_frame(WaiverNoAcc)

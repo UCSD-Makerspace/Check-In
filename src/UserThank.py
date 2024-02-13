@@ -25,7 +25,7 @@ def go_to_next(next_page):
     if next_page == MainPage:
         global_.traffic_light.set_off()
     else:
-        AccNoWaiverSwipe.timeout()
+        timeout_waiver()
 
 
 class UserThank(Frame):
