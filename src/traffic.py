@@ -4,7 +4,7 @@ import time
 
 
 class TrafficLight:
-    def __init__(self, addr, baud=115200):
+    def __init__(self, addr=None, baud=115200):
         self.ser = serial.Serial(addr, baud)
         self.ser.reset_input_buffer()
 

@@ -62,6 +62,10 @@ def myLoop(app, reader):
                 logging.debug("Suppressing repeat scan")
                 continue
 
+            if global_.locked:
+                logging.debug("Different user scanned while one is logging in")
+                continue
+
             s_reason = reader.checkRFID(tag)
 
             if s_reason != "good":
@@ -126,6 +130,7 @@ def myLoop(app, reader):
                     "",
                     "",
                 ]
+                global_.locked = True
                 activity_log = global_.sheets.get_activity_db()
                 activity_log.append_row(new_row)
                 global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])

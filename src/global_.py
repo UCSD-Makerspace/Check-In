@@ -7,7 +7,7 @@ from traffic import TrafficLight
 #############################################################
 
 
-def init(traffic_usb_id):
+def init(traffic_usb_id=None):
     global rfid, sheets, app, traffic_light, locked
     sheets = SheetManager()
     traffic_light = TrafficLight(traffic_usb_id)
