@@ -26,6 +26,7 @@ def timeout_waiver():
     def timeout_fn():
         if global_.app.get_curr_frame() == AccNoWaiverSwipe:
             global_.app.show_frame(MainPage)
+            global_.traffic_light.set_off()
 
     global_.app.after(TIMEOUT, timeout_fn)
 
