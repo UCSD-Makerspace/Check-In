@@ -5,20 +5,28 @@ import time
 
 class TrafficLight:
     def __init__(self, addr=None, baud=115200):
-        self.ser = serial.Serial(addr, baud)
-        self.ser.reset_input_buffer()
+        self.ser = None
+
+        if addr:
+            self.ser = serial.Serial(addr, baud)
+            self.ser.reset_input_buffer()
+
 
     def set_off(self):
-        self.ser.write(b"off\n")
+        if self.ser:
+            self.ser.write(b"off\n")
 
     def set_red(self):
-        self.ser.write(b"red\n")
+        if self.ser:
+            self.ser.write(b"red\n")
 
     def set_yellow(self):
-        self.ser.write(b"yellow\n")
+        if self.ser:
+            self.ser.write(b"yellow\n")
 
     def set_green(self):
-        self.ser.write(b"green\n")
+        if self.ser:
+            self.ser.write(b"green\n")
 
 
 if __name__ == "__main__":

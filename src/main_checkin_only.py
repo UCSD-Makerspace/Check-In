@@ -7,6 +7,7 @@ from sheets import *
 from threading import Thread
 from UserWelcome import *
 from ManualFill import *
+from CheckInNoId import *
 import global_
 import socket
 import logging
@@ -113,7 +114,7 @@ def myLoop(app, reader):
             if curr_user == "None" and curr_user_w == "None":
                 # for check-in only they cannot make an account
                 logging.info("User was not found in the database")
-                app.show_frame(NoAccCheckinOnly)
+                app.show_frame(NoAccCheckInOnly)
                 app.after(5000, lambda: app.show_frame(MainPage))
             elif curr_user_w == "None":
                 logging.info("User does not have waiver")
@@ -150,6 +151,7 @@ def destroyNoWifiError(no_wifi):
 def clearAndReturn():
     global_.app.show_frame(MainPage)
     global_.app.get_frame(ManualFill).clearEntries()
+    global_.app.get_frame(CheckInNoId).clearEntries()
 
 
 if __name__ == "__main__":
