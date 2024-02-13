@@ -10,6 +10,7 @@ import global_
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"assets/acc_no_waiver_swipe_assets")
+TIMEOUT = 20000
 
 
 def relative_to_assets(path: str) -> Path:
@@ -19,6 +20,14 @@ def relative_to_assets(path: str) -> Path:
 def back_to_main():
     global_.traffic_light.set_off()
     global_.app.show_frame(MainPage)
+
+
+def timeout():
+    def timeout_fn():
+        if global_.app.get_curr_frame() == AccNoWaiverSwipe:
+            global_.app.show_frame(MainPage)
+
+    global_.app.after(TIMEOUT, timeout_fn)
 
 
 class AccNoWaiverSwipe(Frame):

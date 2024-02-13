@@ -126,6 +126,7 @@ def myLoop(app, reader):
                 global_.traffic_light.set_yellow()
                 app.show_frame(AccNoWaiver)
                 app.after(3000, lambda: app.show_frame(AccNoWaiverSwipe))
+                AccNoWaiverSwipe.timeout()
             elif curr_user == "None":
                 logging.info("User has a waiver but no account")
                 app.show_frame(WaiverNoAcc)

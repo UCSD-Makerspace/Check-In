@@ -120,6 +120,7 @@ def myLoop(app, reader):
                 logging.info("User does not have waiver")
                 app.show_frame(AccNoWaiver)
                 app.after(3000, lambda: app.show_frame(AccNoWaiverSwipe))
+                AccNoWaiverSwipe.timeout()
             else:
                 new_row = [
                     util.getDatetime(),
