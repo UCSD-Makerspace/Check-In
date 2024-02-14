@@ -61,7 +61,7 @@ def myLoop(app, reader):
                     )
                     no_wifi.pack(pady=40)
                     no_wifi.after(4000, lambda: destroyNoWifiError(no_wifi))
-                    continue
+                continue
 
             app.get_frame(ManualFill).clearEntries()
             tag = reader.grabRFID()
