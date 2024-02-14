@@ -28,7 +28,7 @@ def timeout_waiver():
             global_.app.show_frame(MainPage)
             global_.traffic_light.set_off()
 
-    global_.app.after(TIMEOUT, timeout_fn)
+    # global_.app.after(TIMEOUT, timeout_fn)
 
 
 class AccNoWaiverSwipe(Frame):
