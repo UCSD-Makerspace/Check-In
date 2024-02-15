@@ -111,15 +111,30 @@ class utils:
         ]
 
         user_db = global_.sheets.get_user_db()
-        user_db.append_row(new_row)
-        global_.sheets.get_user_db_data(force_update=True)
 
-        name_cell = user_db.find(full_name)
-        s_name_cell = str(name_cell.address)
-        s_name_cell = s_name_cell[1 : len(s_name_cell)]
-        update_range = "I" + s_name_cell + ":AA" + s_name_cell
-        set_data_validation_for_cell_range(user_db, update_range, validation_rule)
-        global_.sheets.get_activity_db().append_row(new_a)
+        retries = 0
+        while retries < 10:
+            try:
+                user_db.append_row(new_row)
+                global_.sheets.get_user_db_data(force_update=True)
+                name_cell = user_db.find(full_name)
+                s_name_cell = str(name_cell.address)
+                s_name_cell = s_name_cell[1 : len(s_name_cell)]
+                update_range = "I" + s_name_cell + ":AA" + s_name_cell
+                set_data_validation_for_cell_range(
+                    user_db, update_range, validation_rule
+                )
+                global_.sheets.get_activity_db().append_row(new_a)
+            except Exception as e:
+                no_wifi = Label(
+                    global_.app.get_curr_frame(),
+                    text="ERROR! Connection cannot be established, please let staff know.",
+                )
+                no_wifi.pack(pady=40)
+                time.sleep(retries * 1000)
+                no_wifi.destroy()
+
+            retries += 1
 
         w_data = global_.sheets.get_waiver_db_data()
         toGoTo = AccNoWaiverSwipe
