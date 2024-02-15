@@ -16,7 +16,7 @@ from WaiverNoAcc import WaiverNoAcc
 from WaiverNoAccSwipe import WaiverNoAccSwipe
 
 
-TIMEOUT_DICT = {AccNoWaiverSwipe: 20000, QRCodes: 20000}
+TIMEOUT_DICT = {AccNoWaiverSwipe: 30000, QRCodes: 30000, NoAccNoWaiverSwipe: 30000}
 
 
 #################################################
