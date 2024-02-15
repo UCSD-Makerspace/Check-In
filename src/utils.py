@@ -109,6 +109,7 @@ class utils:
         no_wifi = Label(
             global_.app.get_frame(ManualFill),
             text="ERROR! Connection cannot be established, please let staff know.",
+            font=("Arial", 25),
         )
 
         retries = 1
@@ -129,7 +130,7 @@ class utils:
                 break
             except Exception as e:
                 logging.warning("Exception occurred while in account creation")
-                no_wifi.pack(pady=100)
+                no_wifi.pack(pady=60)
                 global_.app.update()
                 time.sleep(retries)
                 retries += 1
