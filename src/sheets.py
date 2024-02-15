@@ -63,6 +63,7 @@ class SheetManager:
             logging.warning(
                 "An ERROR has ocurred connecting to google sheets", exc_info=True
             )
+            raise Exception("Failed to connect to Google Sheets... check the wifi?")
 
     def get_user_db(self):
         return self.user_db.get_sheet()

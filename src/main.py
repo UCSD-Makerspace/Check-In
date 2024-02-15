@@ -8,7 +8,6 @@ from threading import Thread
 from UserWelcome import *
 from ManualFill import *
 from CheckInNoId import *
-from AccNoWaiverSwipe import timeout_waiver
 import global_
 import socket
 import logging
@@ -58,10 +57,11 @@ def myLoop(app, reader):
                     no_wifi = Label(
                         app.get_frame(MainPage),
                         text="ERROR! Connection cannot be established, please let staff know.",
+                        font=("Arial", 25),
                     )
                     no_wifi.pack(pady=40)
                     no_wifi.after(4000, lambda: destroyNoWifiError(no_wifi))
-                    continue
+                continue
 
             app.get_frame(ManualFill).clearEntries()
             tag = reader.grabRFID()
@@ -127,7 +127,6 @@ def myLoop(app, reader):
                 global_.traffic_light.set_yellow()
                 app.show_frame(AccNoWaiver)
                 app.after(3000, lambda: app.show_frame(AccNoWaiverSwipe))
-                timeout_waiver()
             elif curr_user == "None":
                 logging.info("User has a waiver but no account")
                 app.show_frame(WaiverNoAcc)

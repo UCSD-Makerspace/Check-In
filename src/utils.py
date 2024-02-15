@@ -73,6 +73,7 @@ class utils:
                 invalidID.pack(pady=20)
                 invalidID.after(3000, lambda: invalidID.destroy())
                 return
+
         inProgress = tkinter.Label(
             global_.app.get_frame(ManualFill),
             text="Account creation in progress!",
@@ -83,12 +84,7 @@ class utils:
         fab = fabman()
         full_name = fname + " " + lname
         logging.info(f"Creating user account for {full_name}")
-        try:
-            fab.createFabmanAccount(fname, lname, email, global_.rfid)
-        except Exception as e:
-            logging.warning(
-                "An ERROR has occurred making a fabman account", exc_info=True
-            )
+
         new_row = [
             full_name,
             self.getDatetime(),
@@ -110,16 +106,41 @@ class utils:
             "",
         ]
 
-        user_db = global_.sheets.get_user_db()
-        user_db.append_row(new_row)
-        global_.sheets.get_user_db_data(force_update=True)
+        no_wifi = Label(
+            global_.app.get_frame(ManualFill),
+            text="ERROR! Connection cannot be established, please let staff know.",
+            font=("Arial", 25),
+        )
 
-        name_cell = user_db.find(full_name)
-        s_name_cell = str(name_cell.address)
-        s_name_cell = s_name_cell[1 : len(s_name_cell)]
-        update_range = "I" + s_name_cell + ":AA" + s_name_cell
-        set_data_validation_for_cell_range(user_db, update_range, validation_rule)
-        global_.sheets.get_activity_db().append_row(new_a)
+        retries = 1
+        while retries < 6:
+            try:
+                fab.createFabmanAccount(fname, lname, email, global_.rfid)
+                user_db = global_.sheets.get_user_db()
+                user_db.append_row(new_row)
+                global_.sheets.get_user_db_data(force_update=True)
+                name_cell = user_db.find(full_name)
+                s_name_cell = str(name_cell.address)
+                s_name_cell = s_name_cell[1 : len(s_name_cell)]
+                update_range = "I" + s_name_cell + ":AA" + s_name_cell
+                set_data_validation_for_cell_range(
+                    user_db, update_range, validation_rule
+                )
+                global_.sheets.get_activity_db().append_row(new_a)
+                break
+            except Exception as e:
+                logging.warning("Exception occurred while in account creation")
+                no_wifi.pack(pady=20)
+                global_.app.update()
+                time.sleep(retries)
+                retries += 1
+
+        no_wifi.destroy()
+
+        if retries == 6:
+            global_.app.show_frame(MainPage)
+            inProgress.destroy()
+            return
 
         w_data = global_.sheets.get_waiver_db_data()
         toGoTo = AccNoWaiverSwipe
