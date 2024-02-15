@@ -73,6 +73,7 @@ class utils:
                 invalidID.pack(pady=20)
                 invalidID.after(3000, lambda: invalidID.destroy())
                 return
+
         inProgress = tkinter.Label(
             global_.app.get_frame(ManualFill),
             text="Account creation in progress!",
@@ -83,12 +84,7 @@ class utils:
         fab = fabman()
         full_name = fname + " " + lname
         logging.info(f"Creating user account for {full_name}")
-        try:
-            fab.createFabmanAccount(fname, lname, email, global_.rfid)
-        except Exception as e:
-            logging.warning(
-                "An ERROR has occurred making a fabman account", exc_info=True
-            )
+
         new_row = [
             full_name,
             self.getDatetime(),
@@ -110,11 +106,11 @@ class utils:
             "",
         ]
 
-        user_db = global_.sheets.get_user_db()
-
         retries = 0
         while retries < 5:
             try:
+                fab.createFabmanAccount(fname, lname, email, global_.rfid)
+                user_db = global_.sheets.get_user_db()
                 user_db.append_row(new_row)
                 global_.sheets.get_user_db_data(force_update=True)
                 name_cell = user_db.find(full_name)
@@ -126,6 +122,7 @@ class utils:
                 )
                 global_.sheets.get_activity_db().append_row(new_a)
             except Exception as e:
+                logging.warning("Exception occurred while in account creation")
                 no_wifi = Label(
                     global_.app.get_curr_frame(),
                     text="ERROR! Connection cannot be established, please let staff know.",
