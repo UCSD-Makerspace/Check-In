@@ -130,7 +130,7 @@ class utils:
                 break
             except Exception as e:
                 logging.warning("Exception occurred while in account creation")
-                no_wifi.pack(pady=60)
+                no_wifi.pack(pady=50)
                 global_.app.update()
                 time.sleep(retries)
                 retries += 1
@@ -139,6 +139,7 @@ class utils:
 
         if retries == 6:
             global_.app.show_frame(MainPage)
+            inProgress.destroy()
             return
 
         w_data = global_.sheets.get_waiver_db_data()
