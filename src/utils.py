@@ -106,8 +106,8 @@ class utils:
             "",
         ]
 
-        retries = 0
-        while retries < 5:
+        retries = 1
+        while retries < 6:
             try:
                 fab.createFabmanAccount(fname, lname, email, global_.rfid)
                 user_db = global_.sheets.get_user_db()
@@ -128,12 +128,12 @@ class utils:
                     global_.app.get_frame(global_.app.get_curr_frame()),
                     text="ERROR! Connection cannot be established, please let staff know.",
                 )
-                no_wifi.pack(pady=40)
-                time.sleep(retries * 1000)
+                no_wifi.pack(pady=100)
+                time.sleep(retries)
                 no_wifi.destroy()
                 retries += 1
 
-        if retries == 5:
+        if retries == 6:
             global_.app.show_frame(MainPage)
 
         w_data = global_.sheets.get_waiver_db_data()
