@@ -8,7 +8,6 @@ from threading import Thread
 from UserWelcome import *
 from ManualFill import *
 from CheckInNoId import *
-from AccNoWaiverSwipe import timeout_waiver
 import global_
 import socket
 import logging
@@ -121,7 +120,6 @@ def myLoop(app, reader):
                 logging.info("User does not have waiver")
                 app.show_frame(AccNoWaiver)
                 app.after(3000, lambda: app.show_frame(AccNoWaiverSwipe))
-                timeout_waiver()
             else:
                 new_row = [
                     util.getDatetime(),

@@ -22,15 +22,6 @@ def back_to_main():
     global_.app.show_frame(MainPage)
 
 
-def timeout_waiver():
-    def timeout_fn():
-        if global_.app.get_curr_frame() == AccNoWaiverSwipe:
-            global_.app.show_frame(MainPage)
-            global_.traffic_light.set_off()
-
-    # global_.app.after(TIMEOUT, timeout_fn)
-
-
 class AccNoWaiverSwipe(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
