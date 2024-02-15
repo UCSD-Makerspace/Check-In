@@ -106,6 +106,11 @@ class utils:
             "",
         ]
 
+        no_wifi = Label(
+            global_.app.get_frame(ManualFill),
+            text="ERROR! Connection cannot be established, please let staff know.",
+        )
+
         retries = 1
         while retries < 6:
             try:
@@ -124,17 +129,16 @@ class utils:
                 break
             except Exception as e:
                 logging.warning("Exception occurred while in account creation")
-                no_wifi = Label(
-                    global_.app.get_frame(global_.app.get_curr_frame()),
-                    text="ERROR! Connection cannot be established, please let staff know.",
-                )
                 no_wifi.pack(pady=100)
+                global_.app.update()
                 time.sleep(retries)
-                no_wifi.destroy()
                 retries += 1
+
+        no_wifi.destroy()
 
         if retries == 6:
             global_.app.show_frame(MainPage)
+            return
 
         w_data = global_.sheets.get_waiver_db_data()
         toGoTo = AccNoWaiverSwipe
