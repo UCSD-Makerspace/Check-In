@@ -57,6 +57,7 @@ def myLoop(app, reader):
                     no_wifi = Label(
                         app.get_frame(MainPage),
                         text="ERROR! Connection cannot be established, please let staff know.",
+                        font=("Arial", 25),
                     )
                     no_wifi.pack(pady=40)
                     no_wifi.after(4000, lambda: destroyNoWifiError(no_wifi))
