@@ -130,7 +130,7 @@ class utils:
                 break
             except Exception as e:
                 logging.warning("Exception occurred while in account creation")
-                no_wifi.pack(pady=50)
+                no_wifi.pack(pady=20)
                 global_.app.update()
                 time.sleep(retries)
                 retries += 1
