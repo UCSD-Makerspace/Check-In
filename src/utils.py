@@ -113,7 +113,7 @@ class utils:
         user_db = global_.sheets.get_user_db()
 
         retries = 0
-        while retries < 10:
+        while retries < 5:
             try:
                 user_db.append_row(new_row)
                 global_.sheets.get_user_db_data(force_update=True)
@@ -135,6 +135,9 @@ class utils:
                 no_wifi.destroy()
 
             retries += 1
+
+        if retries == 5:
+            global_.app.show_frame(MainPage)
 
         w_data = global_.sheets.get_waiver_db_data()
         toGoTo = AccNoWaiverSwipe
