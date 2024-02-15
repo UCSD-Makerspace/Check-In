@@ -124,7 +124,7 @@ class utils:
             except Exception as e:
                 logging.warning("Exception occurred while in account creation")
                 no_wifi = Label(
-                    global_.app.get_curr_frame(),
+                    global_.app.get_frame(global_.app.get_curr_frame()),
                     text="ERROR! Connection cannot be established, please let staff know.",
                 )
                 no_wifi.pack(pady=40)
