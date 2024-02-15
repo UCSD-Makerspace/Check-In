@@ -121,6 +121,7 @@ class utils:
                     user_db, update_range, validation_rule
                 )
                 global_.sheets.get_activity_db().append_row(new_a)
+                break
             except Exception as e:
                 logging.warning("Exception occurred while in account creation")
                 no_wifi = Label(
@@ -130,8 +131,7 @@ class utils:
                 no_wifi.pack(pady=40)
                 time.sleep(retries * 1000)
                 no_wifi.destroy()
-
-            retries += 1
+                retries += 1
 
         if retries == 5:
             global_.app.show_frame(MainPage)
