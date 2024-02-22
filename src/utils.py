@@ -40,8 +40,8 @@ class utils:
         return "good"
 
     def IDCheck(self, user_id):
-        if len(user_id) <= 2:
-            return "PID was not entered"
+        if len(user_id) <= 2 or len(user_id) > 12:
+            return "PID was not entered correctly"
         return "good"
 
     def IDVet(self, id_check):
