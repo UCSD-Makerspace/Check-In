@@ -65,6 +65,10 @@ def myLoop(app, reader):
 
             app.get_frame(ManualFill).clearEntries()
             tag = reader.grabRFID()
+
+            if " " in tag:
+                continue
+
             if tag == last_tag and not reader.canScanAgain(last_time):
                 logging.debug("Suppressing repeat scan")
                 continue
