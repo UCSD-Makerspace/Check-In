@@ -90,4 +90,4 @@ class UserWelcome(Frame):
 
         self.offset += 73
         global_.app.show_frame(UserWelcome)
-        self.canvas.after(3000, lambda: self.removeName(name, text_id))
+        self.canvas.after(3000, lambda: self.removeName(text_id))
