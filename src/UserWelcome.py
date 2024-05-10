@@ -16,10 +16,9 @@ def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
 
-def back_to_main(offset):
-    if offset <= 73:
-        global_.traffic_light.set_off()
-        global_.app.show_frame(MainPage)
+def back_to_main():
+    global_.traffic_light.set_off()
+    global_.app.show_frame(MainPage)
 
 
 class UserWelcome(Frame):
@@ -64,22 +63,31 @@ class UserWelcome(Frame):
             font=("Montserrat", 45 * -1),
         )
 
-    def removeName(self, name):
-        self.canvas.delete(f"welcome_{name}")
+    def removeName(self, text_id):
+        self.canvas.delete(text_id)
         self.offset -= 73
 
+        # Move the remaining text objects up
+        for text in self.canvas.find_withtag("welcome"):
+            coords = self.canvas.coords(text)
+            if coords[1] > 323.0:
+                self.canvas.move(text, 0, -73)
+
+        # Check if there are any remaining "welcome" text objects
+        if not self.canvas.find_withtag("welcome"):
+            back_to_main()
+
     def displayName(self, name):
-        self.canvas.create_text(
+        text_id = self.canvas.create_text(
             99.0,
             323.0 + self.offset,
             anchor="nw",
             text=name,
             fill="#F5F0E6",
             font=("Montserrat", 73 * -1),
-            tag=f"welcome_{name}",
+            tag=f"welcome",
         )
 
         self.offset += 73
         global_.app.show_frame(UserWelcome)
-        self.canvas.after(3000, lambda: self.removeName(name))
-        global_.app.after(3000, lambda: back_to_main(self.offset))
+        self.canvas.after(3000, lambda: self.removeName(name, text_id))
