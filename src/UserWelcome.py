@@ -16,10 +16,10 @@ def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
 
-def back_to_main():
-    global_.locked = False
-    global_.traffic_light.set_off()
-    global_.app.show_frame(MainPage)
+def back_to_main(offset):
+    if offset <= 73:
+        global_.traffic_light.set_off()
+        global_.app.show_frame(MainPage)
 
 
 class UserWelcome(Frame):
@@ -27,6 +27,7 @@ class UserWelcome(Frame):
         super().__init__(parent)
         self.photoList = []
         self.loadWidgets(controller)
+        self.offset = 0
 
     def loadWidgets(self, controller):
         self.canvas = Canvas(
@@ -63,20 +64,22 @@ class UserWelcome(Frame):
             font=("Montserrat", 45 * -1),
         )
 
+    def removeName(self, name):
+        self.canvas.delete(f"welcome_{name}")
+        self.offset -= 73
+
     def displayName(self, name):
-        u_name = self.canvas.create_text(
+        self.canvas.create_text(
             99.0,
-            323.0,
+            323.0 + self.offset,
             anchor="nw",
             text=name,
             fill="#F5F0E6",
             font=("Montserrat", 73 * -1),
-            tag="welcome",
+            tag=f"welcome_{name}",
         )
 
-        time.sleep(0.500)
-
+        self.offset += 73
         global_.app.show_frame(UserWelcome)
-
-        self.canvas.after(4000, lambda: self.canvas.delete("welcome"))
-        global_.app.after(4000, lambda: back_to_main())
+        self.canvas.after(3000, lambda: self.removeName(name))
+        global_.app.after(3000, lambda: back_to_main(self.offset))
