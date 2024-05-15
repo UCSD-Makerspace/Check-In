@@ -93,8 +93,10 @@ def myLoop(app, reader):
 
             if curr_user != "None":
                 for i in waiver_data:
-                    user_id = i["A_Number"]
-                    waiver_id = curr_user["Student ID"]
+                    waiver_id = i["A_Number"]
+                    waiver_email = i["Email"]
+                    user_id = curr_user["Student ID"]
+                    user_email = curr_user["Email Address"]
 
                     user_id = user_id.replace("+E?", "")[:9]
                     waiver_id = waiver_id.replace("+E?", "")[:9]
@@ -105,7 +107,7 @@ def myLoop(app, reader):
                     if (waiver_id[0] == "A") or (waiver_id[0] == "a"):
                         waiver_id = waiver_id[1:]
 
-                    if user_id == waiver_id:
+                    if user_id == waiver_id or user_email == waiver_email:
                         curr_user_w = i
 
             ############################
