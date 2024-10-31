@@ -148,4 +148,5 @@ class CheckInNoId(Frame):
             ]
             activity_log = global_.sheets.get_activity_db()
             activity_log.append_row(new_row)
+            global_.traffic_light.set_green()
             global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])

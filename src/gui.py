@@ -28,7 +28,7 @@ class gui(tk.Tk):
 
         self.title("Check-In")
         self.geometry("1280x720")
-        self.attributes("-fullscreen", True)
+        self.after(10000, lambda: self.attributes("-fullscreen", True))
 
         container = tk.Frame(self)
 

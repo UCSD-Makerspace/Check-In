@@ -65,12 +65,12 @@ def myLoop(app, reader):
 
             app.get_frame(ManualFill).clearEntries()
             tag = reader.grabRFID()
-            if tag == last_tag and not reader.canScanAgain(last_time):
-                logging.debug("Suppressing repeat scan")
+
+            if " " in tag:
                 continue
 
-            if global_.locked:
-                logging.debug("Different user scanned while one is logging in")
+            if tag == last_tag and not reader.canScanAgain(last_time):
+                logging.debug("Suppressing repeat scan")
                 continue
 
             s_reason = reader.checkRFID(tag)
@@ -98,19 +98,21 @@ def myLoop(app, reader):
 
             if curr_user != "None":
                 for i in waiver_data:
-                    user_id = i["A_Number"]
-                    waiver_id = curr_user["Student ID"]
+                    waiver_id = i["A_Number"].lower()
+                    waiver_email = i["Email"].lower()
+                    user_id = curr_user["Student ID"].lower()
+                    user_email = curr_user["Email Address"].lower()
 
-                    user_id = user_id.replace("+E?", "")[:9]
-                    waiver_id = waiver_id.replace("+E?", "")[:9]
+                    user_id = user_id.replace("+e?", "")[:9]
+                    waiver_id = waiver_id.replace("+e?", "")[:9]
 
-                    if (user_id[0] == "A") or (user_id[0] == "a"):
+                    if user_id[0] == "a":
                         user_id = user_id[1:]
 
-                    if (waiver_id[0] == "A") or (waiver_id[0] == "a"):
+                    if waiver_id[0] == "a":
                         waiver_id = waiver_id[1:]
 
-                    if user_id == waiver_id:
+                    if user_id == waiver_id or user_email == waiver_email:
                         curr_user_w = i
 
             ############################
@@ -145,7 +147,6 @@ def myLoop(app, reader):
                 activity_log = global_.sheets.get_activity_db()
                 activity_log.append_row(new_row)
                 global_.traffic_light.set_green()
-                global_.locked = True
                 global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])
 
             last_time = time.time()

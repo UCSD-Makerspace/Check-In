@@ -17,7 +17,6 @@ def relative_to_assets(path: str) -> Path:
 
 
 def back_to_main():
-    global_.locked = False
     global_.traffic_light.set_off()
     global_.app.show_frame(MainPage)
 
@@ -27,6 +26,7 @@ class UserWelcome(Frame):
         super().__init__(parent)
         self.photoList = []
         self.loadWidgets(controller)
+        self.offset = 0
 
     def loadWidgets(self, controller):
         self.canvas = Canvas(
@@ -63,20 +63,31 @@ class UserWelcome(Frame):
             font=("Montserrat", 45 * -1),
         )
 
+    def removeName(self, text_id):
+        self.canvas.delete(text_id)
+        self.offset -= 73
+
+        # Move the remaining text objects up
+        for text in self.canvas.find_withtag("welcome"):
+            coords = self.canvas.coords(text)
+            if coords[1] > 323.0:
+                self.canvas.move(text, 0, -73)
+
+        # Check if there are any remaining "welcome" text objects
+        if not self.canvas.find_withtag("welcome"):
+            back_to_main()
+
     def displayName(self, name):
-        u_name = self.canvas.create_text(
+        text_id = self.canvas.create_text(
             99.0,
-            323.0,
+            323.0 + self.offset,
             anchor="nw",
             text=name,
             fill="#F5F0E6",
             font=("Montserrat", 73 * -1),
-            tag="welcome",
+            tag=f"welcome",
         )
 
-        time.sleep(0.500)
-
+        self.offset += 73
         global_.app.show_frame(UserWelcome)
-
-        self.canvas.after(4000, lambda: self.canvas.delete("welcome"))
-        global_.app.after(4000, lambda: back_to_main())
+        self.canvas.after(3000, lambda: self.removeName(text_id))
