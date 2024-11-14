@@ -44,6 +44,7 @@ class ManualFill(Frame):
         self.name_entry = 0
         self.email_entry = 0
         self.pid_entry = 0
+        self.affiliation_entry = 0
 
         self.loadWidgets(controller)
 
@@ -194,10 +195,12 @@ class ManualFill(Frame):
         self.pid_entry.place(x=420.0, y=428.0)
 
         self.affiliation.set(AFFILIATIONS[0])
-        self.pid_entry = OptionMenu(self, self.affiliation, *AFFILIATIONS)
-        self.pid_entry.config(width=40, font=52)
 
-        self.pid_entry.place(x=420.0, y=530.0)
+        self.affiliation_entry = OptionMenu(self, self.affiliation, *AFFILIATIONS)
+
+        self.affiliation_entry.config(width=40, font=52)
+
+        self.affiliation_entry.place(x=420.0, y=530.0)
 
     def getEntries(self):
         del self.entryList[:]

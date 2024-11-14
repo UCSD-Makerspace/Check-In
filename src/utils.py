@@ -54,7 +54,7 @@ class utils:
         return "good"
 
     def getDatetime(self):
-        return datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+        return datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
     def createAccount(self, name, email, pid, affiliation, ManualFill):
         validation_rule = DataValidationRule(
