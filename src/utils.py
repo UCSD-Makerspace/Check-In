@@ -1,6 +1,6 @@
 from datetime import datetime
+import logging
 from gspread_formatting import *
-from fabman import *
 import time
 import global_
 import tkinter
@@ -33,8 +33,8 @@ class utils:
 
         return "good"
 
-    def nameCheck(self, fname, lname):
-        if len(fname) == 0 or len(lname) == 0:
+    def nameCheck(self, name):
+        if len(name) == 0:
             return "Name was not entered"
 
         return "good"
@@ -56,14 +56,14 @@ class utils:
     def getDatetime(self):
         return datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
-    def createAccount(self, fname, lname, email, pid, ManualFill):
+    def createAccount(self, name, email, pid, affiliation, ManualFill):
         validation_rule = DataValidationRule(
             BooleanCondition("BOOLEAN", ["TRUE", "FALSE"]),
         )
 
         idValid = self.IDCheck(pid)
         emailValid = self.emailCheck(email)
-        nameValid = self.nameCheck(fname, lname)
+        nameValid = self.nameCheck(name)
 
         for validation in (idValid, emailValid, nameValid):
             if validation != "good":
@@ -81,16 +81,14 @@ class utils:
         )
         inProgress.pack(pady=40)
         global_.app.update()
-        fab = fabman()
-        full_name = fname + " " + lname
-        logging.info(f"Creating user account for {full_name}")
+        logging.info(f"Creating user account for {name}")
 
         new_row = [
-            full_name,
+            name,
             self.getDatetime(),
             global_.rfid,
             pid,
-            "",
+            affiliation,
             email,
             " ",
             " ",
@@ -98,7 +96,7 @@ class utils:
         new_a = [
             self.getDatetime(),
             int(time.time()),
-            full_name,
+            name,
             global_.rfid,
             "New User",
             "",
@@ -115,11 +113,10 @@ class utils:
         retries = 1
         while retries < 6:
             try:
-                fab.createFabmanAccount(fname, lname, email, global_.rfid)
                 user_db = global_.sheets.get_user_db()
                 user_db.append_row(new_row)
                 global_.sheets.get_user_db_data(force_update=True)
-                name_cell = user_db.find(full_name)
+                name_cell = user_db.find(name)
                 s_name_cell = str(name_cell.address)
                 s_name_cell = s_name_cell[1 : len(s_name_cell)]
                 update_range = "I" + s_name_cell + ":AA" + s_name_cell
@@ -142,14 +139,5 @@ class utils:
             inProgress.destroy()
             return
 
-        w_data = global_.sheets.get_waiver_db_data()
-        toGoTo = AccNoWaiverSwipe
-        for i in w_data:
-            if str(i["A_Number"])[1:] == pid[1:]:
-                logging.info(
-                    "User " + full_name + " made an account but had signed the waiver"
-                )
-                toGoTo = MainPage
-
-        global_.app.get_frame(UserThank).displayName(full_name, toGoTo)
+        global_.app.get_frame(UserThank).displayName(name, MainPage)
         inProgress.destroy()

@@ -60,7 +60,7 @@ class MainPage(Frame):
             67.0,
             270.0,
             anchor="nw",
-            text="UCSD Makerspace",
+            text="The Basement",
             fill="#F5F0E6",
             font=("Montserrat", 113 * -1, "bold"),
         )

@@ -111,7 +111,6 @@ class CheckInNoId(Frame):
         self.clearEntries()
 
         curr_user = None
-        curr_user_w = None
 
         user_data = global_.sheets.get_user_db_data()
         for i in user_data:
@@ -119,34 +118,23 @@ class CheckInNoId(Frame):
             if student_id == pid:
                 curr_user = i
 
-        if curr_user:
-            waiver_data = global_.sheets.get_waiver_db_data()
-            for i in waiver_data:
-                waiver_id = i["A_Number"].lstrip("Aa")
-                if pid == waiver_id:
-                    curr_user_w = i
-        else:
+        if not curr_user:
             logging.info("Manual check in user account was not found")
             controller.show_frame(NoAccCheckInOnly)
             controller.after(5000, lambda: controller.show_frame(MainPage))
             return
 
-        if not curr_user_w:
-            logging.info("Manual check in user does not have waiver")
-            controller.show_frame(AccNoWaiver)
-            controller.after(3000, lambda: controller.show_frame(AccNoWaiverSwipe))
-        else:
-            new_row = [
-                util.getDatetime(),
-                int(time.time()),
-                curr_user["Name"],
-                "No ID",
-                "User Checkin",
-                "",
-                "",
-                "",
-            ]
-            activity_log = global_.sheets.get_activity_db()
-            activity_log.append_row(new_row)
-            global_.traffic_light.set_green()
-            global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])
+        new_row = [
+            util.getDatetime(),
+            int(time.time()),
+            curr_user["Name"],
+            "No ID",
+            "User Checkin",
+            "",
+            "",
+            "",
+        ]
+        activity_log = global_.sheets.get_activity_db()
+        activity_log.append_row(new_row)
+        global_.traffic_light.set_green()
+        global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])

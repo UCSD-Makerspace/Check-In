@@ -57,8 +57,6 @@ class SheetManager:
                 ).sheet1
             )
             logging.info("Activity Database Loaded")
-            self.waiver_db = Sheet(client.open("Waiver Signatures").sheet1)
-            logging.info("Waiver Database Loaded")
         except Exception as e:
             logging.warning(
                 "An ERROR has ocurred connecting to google sheets", exc_info=True
@@ -71,14 +69,8 @@ class SheetManager:
     def get_activity_db(self):
         return self.activity_db.get_sheet()
 
-    def get_waiver_db(self):
-        return self.waiver_db.get_sheet()
-
     def get_user_db_data(self, force_update=False):
         return self.user_db.get_data(force_update)
 
     def get_activity_db_data(self, force_update=False):
         return self.activity_db.get_data(force_update)
-
-    def get_waiver_db_data(self, force_update=False):
-        return self.waiver_db.get_data(force_update)

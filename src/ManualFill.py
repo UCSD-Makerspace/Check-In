@@ -9,6 +9,18 @@ import logging
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"assets/manual_fill_assets")
 
+AFFILIATIONS = [
+    "UC San Diego Undergraduate Student",
+    "UC San Diego Graduate Student",
+    "UC San Diego Post-Doc",
+    "UC San Diego Faculty",
+    "UC San Diego Staff",
+    "UC San Diego Alumni",
+    "Mentor",
+    "Industry",
+    "Community Member",
+]
+
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
@@ -24,13 +36,12 @@ class ManualFill(Frame):
         super().__init__(parent)
         self.photoList = []
         self.entryList = []
-        self.first_name = StringVar()
-        self.last_name = StringVar()
+        self.name = StringVar()
         self.email = StringVar()
         self.pid = StringVar()
+        self.affiliation = StringVar()
 
-        self.first_name_entry = 0
-        self.last_name_entry = 0
+        self.name_entry = 0
         self.email_entry = 0
         self.pid_entry = 0
 
@@ -124,7 +135,7 @@ class ManualFill(Frame):
             565.0,
             177.0,
             anchor="nw",
-            text="First Name",
+            text="First and Last Name",
             fill="#F5F0E6",
             font=("Montserrat", 24 * -1),
         )
@@ -133,7 +144,7 @@ class ManualFill(Frame):
             565.0,
             278.0,
             anchor="nw",
-            text="Last Name",
+            text="Email",
             fill="#F5F0E6",
             font=("Montserrat", 24 * -1),
         )
@@ -142,7 +153,7 @@ class ManualFill(Frame):
             595.0,
             379.0,
             anchor="nw",
-            text="Email",
+            text="PID",
             fill="#F5F0E6",
             font=("Montserrat", 24 * -1),
         )
@@ -151,7 +162,7 @@ class ManualFill(Frame):
             605.0,
             480.0,
             anchor="nw",
-            text="PID",
+            text="Affliation",
             fill="#F5F0E6",
             font=("Montserrat", 24 * -1),
         )
@@ -170,43 +181,40 @@ class ManualFill(Frame):
         )
         self.button_1.place(x=465.0, y=598.0, width=349.0, height=71.0)
 
-        self.first_name_entry = Entry(
-            self, textvariable=self.first_name, width=40, font=52
-        )
+        self.name_entry = Entry(self, textvariable=self.name, width=40, font=52)
 
-        self.first_name_entry.place(x=420.0, y=227.0)
-
-        self.last_name_entry = Entry(
-            self, textvariable=self.last_name, width=40, font=52
-        )
-
-        self.last_name_entry.place(x=420.0, y=327.0)
+        self.name_entry.place(x=420.0, y=227.0)
 
         self.email_entry = Entry(self, textvariable=self.email, width=40, font=52)
 
-        self.email_entry.place(x=420.0, y=428.0)
+        self.email_entry.place(x=420.0, y=327.0)
 
         self.pid_entry = Entry(self, textvariable=self.pid, width=40, font=52)
+
+        self.pid_entry.place(x=420.0, y=428.0)
+
+        self.affiliation.set(AFFILIATIONS[0])
+        self.pid_entry = OptionMenu(self, self.affiliation, *AFFILIATIONS)
+        self.pid_entry.config(width=40, font=52)
 
         self.pid_entry.place(x=420.0, y=530.0)
 
     def getEntries(self):
         del self.entryList[:]
-        self.entryList.append(self.first_name.get())
-        self.entryList.append(self.last_name.get())
+        self.entryList.append(self.name.get())
         self.entryList.append(self.email.get())
         self.entryList.append(self.pid.get())
+        self.entryList.append(self.affiliation.get())
         return self.entryList
 
     def clearEntries(self):
-        self.first_name_entry.delete(0, END)
-        self.last_name_entry.delete(0, END)
+        self.name_entry.delete(0, END)
         self.email_entry.delete(0, END)
         self.pid_entry.delete(0, END)
+        self.affiliation.set(AFFILIATIONS[0])
 
     def updateEntries(self, fname, lname, email, pid):
-        self.first_name_entry.insert(0, fname)
-        self.last_name_entry.insert(0, lname)
+        self.name_entry.insert(0, fname + " " + lname)
         self.email_entry.insert(0, email)
         self.pid_entry.insert(0, pid)
 
@@ -214,7 +222,6 @@ class ManualFill(Frame):
         util = utils()
         data = self.getEntries()
         self.clearEntries()
-        # FIXME: Is there a better way to do this?
         try:
             util.createAccount(data[0], data[1], data[2], data[3], ManualFill)
         except Exception as e:

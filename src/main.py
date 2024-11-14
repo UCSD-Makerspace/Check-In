@@ -2,7 +2,6 @@ from tkinter import *
 from gui import *
 from swipe import *
 from reader import *
-from fabman import *
 from sheets import *
 from threading import Thread
 from UserWelcome import *
@@ -85,54 +84,21 @@ def myLoop(app, reader):
 
             # Get a list of all users
             user_data = global_.sheets.get_user_db_data()
-
-            # Get a list of all waiver signatures
-            waiver_data = global_.sheets.get_waiver_db_data()
-
             curr_user = "None"
-            curr_user_w = "None"
 
             for i in user_data:
                 if i["Card UUID"] == tag:
                     curr_user = i
 
-            if curr_user != "None":
-                for i in waiver_data:
-                    waiver_id = i["A_Number"].lower()
-                    waiver_email = i["Email"].lower()
-                    user_id = curr_user["Student ID"].lower()
-                    user_email = curr_user["Email Address"].lower()
-
-                    user_id = user_id.replace("+e?", "")[:9]
-                    waiver_id = waiver_id.replace("+e?", "")[:9]
-
-                    if user_id[0] == "a":
-                        user_id = user_id[1:]
-
-                    if waiver_id[0] == "a":
-                        waiver_id = waiver_id[1:]
-
-                    if user_id == waiver_id or user_email == waiver_email:
-                        curr_user_w = i
-
             ############################
             # All scenarios for ID tap #
             ############################
 
-            if curr_user == "None" and curr_user_w == "None":
+            if curr_user == "None":
                 logging.info("User was not found in the database")
                 global_.traffic_light.set_red()
                 app.show_frame(NoAccNoWaiver)
                 app.after(3000, lambda: app.show_frame(NoAccNoWaiverSwipe))
-            elif curr_user_w == "None":
-                logging.info("User does not have waiver")
-                global_.traffic_light.set_yellow()
-                app.show_frame(AccNoWaiver)
-                app.after(3000, lambda: app.show_frame(AccNoWaiverSwipe))
-            elif curr_user == "None":
-                logging.info("User has a waiver but no account")
-                app.show_frame(WaiverNoAcc)
-                app.after(3000, lambda: app.show_frame(WaiverNoAccSwipe))
             else:
                 new_row = [
                     util.getDatetime(),
