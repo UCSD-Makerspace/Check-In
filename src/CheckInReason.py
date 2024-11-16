@@ -5,11 +5,22 @@ from pathlib import Path
 from tkinter import *
 from utils import *
 from NoAccCheckInOnly import NoAccCheckInOnly
-from CheckInReason import CheckInReason
+from UserWelcome import UserWelcome
 import logging
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"assets/check_in_no_id_assets")
+ASSETS_PATH = OUTPUT_PATH / Path(r"assets/check_in_reason_assets")
+
+REASONS = [
+    "Event/Workshop",
+    "Tour",
+    "Work/Study",
+    "Basement Team Meeting",
+    "Meeting with Staff",
+    "Meeting with Mentor",
+    "Meeting with Faculty",
+    "Meeting with Community Partner",
+]
 
 
 def relative_to_assets(path: str) -> Path:
@@ -21,12 +32,13 @@ def relative_to_assets(path: str) -> Path:
 ########################################################
 
 
-class CheckInNoId(Frame):
+class CheckInReason(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.photoList = []
-        self.pid = StringVar()
-        self.pid_entry = 0
+        self.check_in_reason = StringVar()
+        self.check_in_reason_entry = 0
+        self.check_in_row = []
 
         self.loadWidgets(controller)
 
@@ -64,19 +76,10 @@ class CheckInNoId(Frame):
             212.0,
             120.0,
             anchor="nw",
-            text="If you have already made an\naccount, scan your UCSD barcode\nor enter your PID manually",
+            text="What is the reason for\nyour visit today?",
             fill="#F5F0E6",
             font=("Montserrat", 48 * -1),
             justify="center",
-        )
-
-        canvas.create_text(
-            605.0,
-            480.0,
-            anchor="nw",
-            text="PID",
-            fill="#F5F0E6",
-            font=("Montserrat", 24 * -1),
         )
 
         button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))
@@ -93,48 +96,21 @@ class CheckInNoId(Frame):
         )
         self.button_1.place(x=465.0, y=598.0, width=349.0, height=71.0)
 
-        self.pid_entry = Entry(self, textvariable=self.pid, width=40, font=52)
-        self.pid_entry.place(x=420.0, y=412.0)
+        self.check_in_reason.set(REASONS[0])
+        self.check_in_reason_entry = OptionMenu(self, self.check_in_reason, *REASONS)
+        self.check_in_reason_entry.config(width=40, font=52)
+        self.check_in_reason_entry.place(x=420.0, y=412.0)
 
     def clearEntries(self):
-        self.pid_entry.delete(0, END)
+        self.check_in_reason.set(REASONS[0])
 
-    def updateEntries(self, pid):
-        self.pid_entry.insert(0, pid)
+    def setCheckInUser(self, row):
+        self.check_in_row = row
 
     def callCheckIn(self, controller):
-        pid = self.pid_entry.get().lstrip("Aa")
-        if not pid:
-            return
-
-        util = utils()
+        self.check_in_row[5] = self.check_in_reason.get()
         self.clearEntries()
-
-        curr_user = None
-
-        user_data = global_.sheets.get_user_db_data()
-        for i in user_data:
-            student_id = i["Student ID"].lstrip("Aa")
-            if student_id == pid:
-                curr_user = i
-
-        if not curr_user:
-            logging.info("Manual check in user account was not found")
-            controller.show_frame(NoAccCheckInOnly)
-            controller.after(5000, lambda: controller.show_frame(MainPage))
-            return
-
-        new_row = [
-            util.getDatetime(),
-            int(time.time()),
-            curr_user["Name"],
-            "No ID",
-            "User Checkin",
-            "",
-            "",
-            "",
-        ]
-
-        check_in_reason = global_.app.get_frame(CheckInReason)
-        check_in_reason.setCheckInUser(new_row)
-        controller.show_frame(CheckInReason)
+        activity_log = global_.sheets.get_activity_db()
+        activity_log.append_row(self.check_in_row)
+        global_.traffic_light.set_green()
+        global_.app.get_frame(UserWelcome).displayName(self.check_in_row[2])

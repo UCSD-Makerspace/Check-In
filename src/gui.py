@@ -6,6 +6,7 @@ from MainPage import MainPage
 from AccNoWaiverSwipe import AccNoWaiverSwipe
 from ManualFill import ManualFill
 from CheckInNoId import CheckInNoId
+from CheckInReason import CheckInReason
 from NoAccCheckInOnly import NoAccCheckInOnly
 from NoAccNoWaiver import NoAccNoWaiver
 from NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
@@ -28,7 +29,7 @@ class gui(tk.Tk):
 
         self.title("Check-In")
         self.geometry("1280x720")
-        self.after(10000, lambda: self.attributes("-fullscreen", True))
+        # self.after(10000, lambda: self.attributes("-fullscreen", True))
 
         container = tk.Frame(self)
 
@@ -46,6 +47,7 @@ class gui(tk.Tk):
             AccNoWaiverSwipe,
             ManualFill,
             CheckInNoId,
+            CheckInReason,
             NoAccCheckInOnly,
             NoAccNoWaiver,
             NoAccNoWaiverSwipe,

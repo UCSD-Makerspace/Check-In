@@ -1,6 +1,5 @@
 from datetime import datetime
 import logging
-from gspread_formatting import *
 import time
 import global_
 import tkinter
@@ -57,10 +56,6 @@ class utils:
         return datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
     def createAccount(self, name, email, pid, affiliation, ManualFill):
-        validation_rule = DataValidationRule(
-            BooleanCondition("BOOLEAN", ["TRUE", "FALSE"]),
-        )
-
         idValid = self.IDCheck(pid)
         emailValid = self.emailCheck(email)
         nameValid = self.nameCheck(name)
@@ -90,8 +85,6 @@ class utils:
             pid,
             affiliation,
             email,
-            " ",
-            " ",
         ]
         new_a = [
             self.getDatetime(),
@@ -116,17 +109,12 @@ class utils:
                 user_db = global_.sheets.get_user_db()
                 user_db.append_row(new_row)
                 global_.sheets.get_user_db_data(force_update=True)
-                name_cell = user_db.find(name)
-                s_name_cell = str(name_cell.address)
-                s_name_cell = s_name_cell[1 : len(s_name_cell)]
-                update_range = "I" + s_name_cell + ":AA" + s_name_cell
-                set_data_validation_for_cell_range(
-                    user_db, update_range, validation_rule
-                )
                 global_.sheets.get_activity_db().append_row(new_a)
                 break
             except Exception as e:
-                logging.warning("Exception occurred while in account creation")
+                logging.warning(
+                    "Exception occurred while in account creation", exc_info=True
+                )
                 no_wifi.pack(pady=20)
                 global_.app.update()
                 time.sleep(retries)

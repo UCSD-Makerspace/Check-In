@@ -7,6 +7,7 @@ from threading import Thread
 from UserWelcome import *
 from ManualFill import *
 from CheckInNoId import *
+from CheckInReason import *
 import global_
 import socket
 import logging
@@ -110,10 +111,10 @@ def myLoop(app, reader):
                     "",
                     "",
                 ]
-                activity_log = global_.sheets.get_activity_db()
-                activity_log.append_row(new_row)
-                global_.traffic_light.set_green()
-                global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])
+
+                check_in_reason = global_.app.get_frame(CheckInReason)
+                check_in_reason.setCheckInUser(new_row)
+                app.show_frame(CheckInReason)
 
             last_time = time.time()
             last_tag = tag

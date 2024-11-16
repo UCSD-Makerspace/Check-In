@@ -224,9 +224,9 @@ class ManualFill(Frame):
     def callAccountCreation(self):
         util = utils()
         data = self.getEntries()
-        self.clearEntries()
         try:
             util.createAccount(data[0], data[1], data[2], data[3], ManualFill)
+            self.clearEntries()
         except Exception as e:
             logging.warning(
                 "Error occurred trying to create a user account", exc_info=True
