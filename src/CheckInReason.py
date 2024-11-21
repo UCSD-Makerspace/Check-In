@@ -73,7 +73,7 @@ class CheckInReason(Frame):
         image_3 = canvas.create_image(640.0, 424.0, image=image_image_3)
 
         canvas.create_text(
-            212.0,
+            374.0,
             120.0,
             anchor="nw",
             text="What is the reason for\nyour visit today?",

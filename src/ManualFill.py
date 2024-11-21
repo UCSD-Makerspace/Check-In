@@ -133,7 +133,7 @@ class ManualFill(Frame):
         image_9 = canvas.create_image(640.0, 239.0, image=image_image_9)
 
         canvas.create_text(
-            565.0,
+            520.0,
             177.0,
             anchor="nw",
             text="First and Last Name",
@@ -142,7 +142,7 @@ class ManualFill(Frame):
         )
 
         canvas.create_text(
-            565.0,
+            602.0,
             278.0,
             anchor="nw",
             text="Email",
@@ -151,7 +151,7 @@ class ManualFill(Frame):
         )
 
         canvas.create_text(
-            595.0,
+            615.0,
             379.0,
             anchor="nw",
             text="PID",
@@ -160,7 +160,7 @@ class ManualFill(Frame):
         )
 
         canvas.create_text(
-            605.0,
+            583.0,
             480.0,
             anchor="nw",
             text="Affliation",
@@ -182,15 +182,15 @@ class ManualFill(Frame):
         )
         self.button_1.place(x=465.0, y=598.0, width=349.0, height=71.0)
 
-        self.name_entry = Entry(self, textvariable=self.name, width=40, font=52)
+        self.name_entry = Entry(self, textvariable=self.name, width=45, font=52)
 
         self.name_entry.place(x=420.0, y=227.0)
 
-        self.email_entry = Entry(self, textvariable=self.email, width=40, font=52)
+        self.email_entry = Entry(self, textvariable=self.email, width=45, font=52)
 
         self.email_entry.place(x=420.0, y=327.0)
 
-        self.pid_entry = Entry(self, textvariable=self.pid, width=40, font=52)
+        self.pid_entry = Entry(self, textvariable=self.pid, width=45, font=52)
 
         self.pid_entry.place(x=420.0, y=428.0)
 
