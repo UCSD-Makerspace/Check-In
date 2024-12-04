@@ -130,8 +130,8 @@ class CheckInNoId(Frame):
             curr_user["Name"],
             "No ID",
             "User Checkin",
-            "",
-            "",
+            curr_user["Email Address"],
+            curr_user["Student ID"],
             "",
         ]
 

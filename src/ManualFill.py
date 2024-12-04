@@ -3,6 +3,7 @@
 
 from pathlib import Path
 from tkinter import *
+from tkinter import ttk
 from utils import *
 import logging
 
@@ -136,7 +137,7 @@ class ManualFill(Frame):
             520.0,
             177.0,
             anchor="nw",
-            text="First and Last Name",
+            text="First and Last Name*",
             fill="#F5F0E6",
             font=("Montserrat", 24 * -1),
         )
@@ -145,7 +146,7 @@ class ManualFill(Frame):
             602.0,
             278.0,
             anchor="nw",
-            text="Email",
+            text="Email*",
             fill="#F5F0E6",
             font=("Montserrat", 24 * -1),
         )
@@ -163,7 +164,7 @@ class ManualFill(Frame):
             583.0,
             480.0,
             anchor="nw",
-            text="Affliation",
+            text="Affliation*",
             fill="#F5F0E6",
             font=("Montserrat", 24 * -1),
         )
@@ -182,23 +183,36 @@ class ManualFill(Frame):
         )
         self.button_1.place(x=465.0, y=598.0, width=349.0, height=71.0)
 
-        self.name_entry = Entry(self, textvariable=self.name, width=45, font=52)
+        self.name_entry = Entry(
+            self, textvariable=self.name, width=45, font=52, justify="center"
+        )
 
         self.name_entry.place(x=420.0, y=227.0)
 
-        self.email_entry = Entry(self, textvariable=self.email, width=45, font=52)
+        self.email_entry = Entry(
+            self, textvariable=self.email, width=45, font=52, justify="center"
+        )
 
         self.email_entry.place(x=420.0, y=327.0)
 
-        self.pid_entry = Entry(self, textvariable=self.pid, width=45, font=52)
+        self.pid_entry = Entry(
+            self, textvariable=self.pid, width=45, font=52, justify="center"
+        )
 
         self.pid_entry.place(x=420.0, y=428.0)
 
         self.affiliation.set(AFFILIATIONS[0])
 
-        self.affiliation_entry = OptionMenu(self, self.affiliation, *AFFILIATIONS)
+        self.affiliation_entry = self.affiliation_entry = ttk.Combobox(
+            self,
+            textvariable=self.affiliation,
+            values=AFFILIATIONS,
+            state="readonly",
+            width=40,
+            font=52,
+        )
 
-        self.affiliation_entry.config(width=40, font=52)
+        self.affiliation_entry.config(width=40, font=52, justify="center")
 
         self.affiliation_entry.place(x=420.0, y=530.0)
 
@@ -225,8 +239,11 @@ class ManualFill(Frame):
         util = utils()
         data = self.getEntries()
         try:
-            util.createAccount(data[0], data[1], data[2], data[3], ManualFill)
-            self.clearEntries()
+            response = util.createAccount(
+                data[0], data[1], data[2], data[3], ManualFill
+            )
+            if response != "bad":
+                self.clearEntries()
         except Exception as e:
             logging.warning(
                 "Error occurred trying to create a user account", exc_info=True

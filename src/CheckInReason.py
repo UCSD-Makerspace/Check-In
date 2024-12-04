@@ -3,6 +3,7 @@
 
 from pathlib import Path
 from tkinter import *
+from tkinter import ttk
 from utils import *
 from NoAccCheckInOnly import NoAccCheckInOnly
 from UserWelcome import UserWelcome
@@ -20,6 +21,7 @@ REASONS = [
     "Meeting with Mentor",
     "Meeting with Faculty",
     "Meeting with Community Partner",
+    "Other (Please Specify)",
 ]
 
 
@@ -97,7 +99,13 @@ class CheckInReason(Frame):
         self.button_1.place(x=465.0, y=598.0, width=349.0, height=71.0)
 
         self.check_in_reason.set(REASONS[0])
-        self.check_in_reason_entry = OptionMenu(self, self.check_in_reason, *REASONS)
+        self.check_in_reason_entry = ttk.Combobox(
+            self,
+            textvariable=self.check_in_reason,
+            values=REASONS,
+            width=40,
+            font=52,
+        )
         self.check_in_reason_entry.config(width=40, font=52)
         self.check_in_reason_entry.place(x=420.0, y=412.0)
 
@@ -108,7 +116,7 @@ class CheckInReason(Frame):
         self.check_in_row = row
 
     def callCheckIn(self, controller):
-        self.check_in_row[5] = self.check_in_reason.get()
+        self.check_in_row[7] = self.check_in_reason.get()
         self.clearEntries()
         activity_log = global_.sheets.get_activity_db()
         activity_log.append_row(self.check_in_row)

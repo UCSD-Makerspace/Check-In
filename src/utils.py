@@ -38,11 +38,6 @@ class utils:
 
         return "good"
 
-    def IDCheck(self, user_id):
-        if len(user_id) <= 2 or len(user_id) > 12:
-            return "PID was not entered correctly"
-        return "good"
-
     def IDVet(self, id_check):
         if any(i.isalpha() for i in id_check):
             return "bad"
@@ -56,18 +51,17 @@ class utils:
         return datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
     def createAccount(self, name, email, pid, affiliation, ManualFill):
-        idValid = self.IDCheck(pid)
         emailValid = self.emailCheck(email)
         nameValid = self.nameCheck(name)
 
-        for validation in (idValid, emailValid, nameValid):
+        for validation in (emailValid, nameValid):
             if validation != "good":
                 invalidID = tkinter.Label(
                     global_.app.get_frame(ManualFill), text=validation
                 )
                 invalidID.pack(pady=20)
                 invalidID.after(3000, lambda: invalidID.destroy())
-                return
+                return "bad"
 
         inProgress = tkinter.Label(
             global_.app.get_frame(ManualFill),
@@ -92,8 +86,8 @@ class utils:
             name,
             global_.rfid,
             "New User",
-            "",
-            "",
+            email,
+            pid,
             "",
         ]
 
