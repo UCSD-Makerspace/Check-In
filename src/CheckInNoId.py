@@ -25,8 +25,8 @@ class CheckInNoId(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.photoList = []
-        self.pid = StringVar()
-        self.pid_entry = 0
+        self.email = StringVar()
+        self.email_entry = 0
 
         self.loadWidgets(controller)
 
@@ -64,7 +64,7 @@ class CheckInNoId(Frame):
             212.0,
             120.0,
             anchor="nw",
-            text="If you have already made an\naccount, scan your UCSD barcode\nor enter your PID manually",
+            text="If you have already made an\naccount, scan your UCSD barcode\nor enter your email manually",
             fill="#F5F0E6",
             font=("Montserrat", 48 * -1),
             justify="center",
@@ -74,9 +74,10 @@ class CheckInNoId(Frame):
             605.0,
             480.0,
             anchor="nw",
-            text="PID",
+            text="Email",
             fill="#F5F0E6",
             font=("Montserrat", 24 * -1),
+            justify="center",
         )
 
         button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))
@@ -93,18 +94,18 @@ class CheckInNoId(Frame):
         )
         self.button_1.place(x=465.0, y=598.0, width=349.0, height=71.0)
 
-        self.pid_entry = Entry(self, textvariable=self.pid, width=40, font=52)
-        self.pid_entry.place(x=420.0, y=412.0)
+        self.email_entry = Entry(self, textvariable=self.email, width=40, font=52)
+        self.email_entry.place(x=420.0, y=412.0)
 
     def clearEntries(self):
-        self.pid_entry.delete(0, END)
+        self.email_entry.delete(0, END)
 
-    def updateEntries(self, pid):
-        self.pid_entry.insert(0, pid)
+    def updateEntries(self, email):
+        self.email_entry.insert(0, email)
 
     def callCheckIn(self, controller):
-        pid = self.pid_entry.get().lstrip("Aa")
-        if not pid:
+        email = self.email_entry.get().lstrip("Aa")
+        if not email:
             return
 
         util = utils()
@@ -114,8 +115,8 @@ class CheckInNoId(Frame):
 
         user_data = global_.sheets.get_user_db_data()
         for i in user_data:
-            student_id = i["Student ID"].lstrip("Aa")
-            if student_id == pid:
+            student_email = i["Email Address"].lstrip("Aa")
+            if student_email == email:
                 curr_user = i
 
         if not curr_user:
