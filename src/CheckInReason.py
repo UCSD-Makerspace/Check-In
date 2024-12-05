@@ -21,7 +21,6 @@ REASONS = [
     "Meeting with Mentor",
     "Meeting with Faculty",
     "Meeting with Community Partner",
-    "Other (Please Specify)",
 ]
 
 
@@ -53,7 +52,7 @@ class CheckInReason(Frame):
 
         # Position the window near the button
         x = self.winfo_rootx() + 420
-        y = self.winfo_rooty() + 412
+        y = self.winfo_rooty() + 200
         self.option_window.geometry(f"+{x}+{y}")
 
         for reason in REASONS:

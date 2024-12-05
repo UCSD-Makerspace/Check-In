@@ -46,8 +46,39 @@ class ManualFill(Frame):
         self.email_entry = 0
         self.pid_entry = 0
         self.affiliation_entry = 0
+        self.option_window = None
 
         self.loadWidgets(controller)
+
+    def show_options(self, controller):
+        if self.option_window is not None:
+            self.option_window.destroy()
+
+        self.option_window = Toplevel(self)
+        self.option_window.configure(bg="#153246")
+
+        # Position the window near the button
+        x = self.winfo_rootx() + 420
+        y = self.winfo_rooty() + 200
+        self.option_window.geometry(f"+{x}+{y}")
+
+        for reason in AFFILIATIONS:
+            btn = Button(
+                self.option_window,
+                text=reason,
+                font=52,
+                command=lambda x=reason: self.select_option(x),
+                width=40,
+                bg="white",
+            )
+            btn.pack(fill="x", padx=5, pady=2)
+
+    def select_option(self, selected):
+        self.affiliation.set(selected)
+        self.affiliation_button.configure(text=selected)
+        if self.option_window:
+            self.option_window.destroy()
+            self.option_window = None
 
     def loadWidgets(self, controller):
         canvas = Canvas(
@@ -203,18 +234,17 @@ class ManualFill(Frame):
 
         self.affiliation.set(AFFILIATIONS[0])
 
-        self.affiliation_entry = self.affiliation_entry = ttk.Combobox(
+        self.affiliation_button = Button(
             self,
-            textvariable=self.affiliation,
-            values=AFFILIATIONS,
-            state="readonly",
-            width=40,
+            text=self.affiliation.get(),
             font=52,
+            command=lambda: self.show_options(controller),
+            width=40,
+            bg="white",
+            relief="solid",
+            bd=1,
         )
-
-        self.affiliation_entry.config(width=40, font=52, justify="center")
-
-        self.affiliation_entry.place(x=420.0, y=530.0)
+        self.affiliation_button.place(x=420.0, y=530.0)
 
     def getEntries(self):
         del self.entryList[:]
@@ -229,6 +259,7 @@ class ManualFill(Frame):
         self.email_entry.delete(0, END)
         self.pid_entry.delete(0, END)
         self.affiliation.set(AFFILIATIONS[0])
+        self.affiliation_button.configure(text=AFFILIATIONS[0])
 
     def updateEntries(self, fname, lname, email, pid):
         self.name_entry.insert(0, fname + " " + lname)
