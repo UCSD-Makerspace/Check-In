@@ -41,8 +41,38 @@ class CheckInReason(Frame):
         self.check_in_reason = StringVar()
         self.check_in_reason_entry = 0
         self.check_in_row = []
-
+        self.option_window = None
         self.loadWidgets(controller)
+
+    def show_options(self, controller):
+        if self.option_window is not None:
+            self.option_window.destroy()
+
+        self.option_window = Toplevel(self)
+        self.option_window.configure(bg="#153246")
+
+        # Position the window near the button
+        x = self.winfo_rootx() + 420
+        y = self.winfo_rooty() + 412
+        self.option_window.geometry(f"+{x}+{y}")
+
+        for reason in REASONS:
+            btn = Button(
+                self.option_window,
+                text=reason,
+                font=52,
+                command=lambda x=reason: self.select_option(x),
+                width=40,
+                bg="white",
+            )
+            btn.pack(fill="x", padx=5, pady=2)
+
+    def select_option(self, selected):
+        self.check_in_reason.set(selected)
+        self.check_in_reason_button.configure(text=selected)
+        if self.option_window:
+            self.option_window.destroy()
+            self.option_window = None
 
     def loadWidgets(self, controller):
         canvas = Canvas(
@@ -99,18 +129,21 @@ class CheckInReason(Frame):
         self.button_1.place(x=465.0, y=598.0, width=349.0, height=71.0)
 
         self.check_in_reason.set(REASONS[0])
-        self.check_in_reason_entry = ttk.Combobox(
+        self.check_in_reason_button = Button(
             self,
-            textvariable=self.check_in_reason,
-            values=REASONS,
-            width=40,
+            text=self.check_in_reason.get(),
             font=52,
+            command=lambda: self.show_options(controller),
+            width=40,
+            bg="white",
+            relief="solid",
+            bd=1,
         )
-        self.check_in_reason_entry.config(width=40, font=52)
-        self.check_in_reason_entry.place(x=420.0, y=412.0)
+        self.check_in_reason_button.place(x=420.0, y=412.0)
 
     def clearEntries(self):
         self.check_in_reason.set(REASONS[0])
+        self.check_in_reason_button.configure(text=REASONS[0])
 
     def setCheckInUser(self, row):
         self.check_in_row = row
