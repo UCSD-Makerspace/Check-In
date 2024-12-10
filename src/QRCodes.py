@@ -74,10 +74,10 @@ class QRCodes(Frame):
         )
 
         canvas.create_text(
-            788.0,
+            761.0,
             557.0,
             anchor="nw",
-            text="Waiver",
+            text="Instagram",
             fill="#F5F0E6",
             font=("Montserrat", 40 * -1),
         )
