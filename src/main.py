@@ -110,6 +110,7 @@ def myLoop(app, reader):
                     curr_user["Email Address"],
                     curr_user["Student ID"],
                     "",
+                    curr_user["Affiliation"],
                 ]
 
                 check_in_reason = global_.app.get_frame(CheckInReason)

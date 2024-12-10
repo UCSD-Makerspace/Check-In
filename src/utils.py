@@ -89,6 +89,7 @@ class utils:
             email,
             pid,
             "",
+            affiliation,
         ]
 
         no_wifi = Label(
