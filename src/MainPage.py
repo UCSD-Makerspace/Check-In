@@ -110,7 +110,7 @@ class MainPage(Frame):
             compound="center",
             bg="#153246",
             fg="white",
-            command=lambda: controller.show_frame(CheckInNoId),
+            command=lambda: go_to_id_page(controller),
             relief="flat",
             highlightthickness=0,
             bd=0,
