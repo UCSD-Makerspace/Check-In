@@ -6,9 +6,6 @@ from pathlib import Path
 from tkinter import *
 import global_
 
-from QRCodes import QRCodes
-from CheckInNoId import CheckInNoId
-
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"assets/main_page_assets")
@@ -18,19 +15,22 @@ def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
 
-def go_to_id_page(controller):
-    check_in_no_id = global_.app.get_frame(CheckInNoId)
-    check_in_no_id.clearEntries()
-    controller.show_frame(CheckInNoId)
-
-
 class MainPage(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.photoList = []
         self.loadWidgets(controller)
 
+    def go_to_no_id_page(self, controller):
+        from CheckInNoId import CheckInNoId
+
+        no_id = global_.app.get_frame(CheckInNoId)
+        no_id.clearEntries()
+        controller.show_frame(CheckInNoId)
+
     def loadWidgets(self, controller):
+        from QRCodes import QRCodes
+
         canvas = Canvas(
             self,
             bg="#153246",
@@ -110,7 +110,7 @@ class MainPage(Frame):
             compound="center",
             bg="#153246",
             fg="white",
-            command=lambda: go_to_id_page(controller),
+            command=lambda: self.go_to_no_id_page(controller),
             relief="flat",
             highlightthickness=0,
             bd=0,
