@@ -7,6 +7,8 @@ import tkinter
 from gui import *
 from UserThank import *
 
+import timeit
+
 ######################################################
 # Utilities that I couldn't get to fit anywhere else #
 ######################################################
@@ -115,7 +117,11 @@ class utils:
         retries = 1
         while retries < 6:
             try:
-                fab.createFabmanAccount(fname, lname, email, global_.rfid)
+                delay = timeit.timeit(
+                    lambda: fab.createFabmanAccount(fname, lname, email, global_.rfid),
+                    number=1
+                )
+                logging.debug(f"Time to create fabman account: {delay}")
                 user_db = global_.sheets.get_user_db()
                 user_db.append_row(new_row)
                 global_.sheets.get_user_db_data(force_update=True)
