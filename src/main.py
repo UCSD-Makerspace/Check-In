@@ -13,6 +13,7 @@ import socket
 import logging
 import argparse
 import serial.tools.list_ports as list_ports
+from time import perf_counter
 
 TRAFFIC_LIGHT_VID = 6790
 READER_VID = 4292
@@ -92,9 +93,12 @@ def myLoop(app, reader):
             curr_user = "None"
             curr_user_w = "None"
 
+            start = perf_counter()
             for i in user_data:
                 if i["Card UUID"] == tag:
                     curr_user = i
+            end = perf_counter()
+            logging.debug(f"Card found in {end - start} seconds")
 
             if curr_user != "None":
                 for i in waiver_data:

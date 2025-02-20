@@ -6,6 +6,7 @@ import global_
 import tkinter
 from gui import *
 from UserThank import *
+import threading
 
 import timeit
 
@@ -117,11 +118,12 @@ class utils:
         retries = 1
         while retries < 6:
             try:
-                delay = timeit.timeit(
-                    lambda: fab.createFabmanAccount(fname, lname, email, global_.rfid),
-                    number=1
+                fabman_thread = threading.Thread(
+                    target=fab.createFabmanAccount,
+                    args=(fname, lname, email, global_.rfid),
                 )
-                logging.debug(f"Time to create fabman account: {delay}")
+                fabman_thread.start()
+
                 user_db = global_.sheets.get_user_db()
 
                 delay = timeit.timeit(
@@ -143,11 +145,15 @@ class utils:
                 set_data_validation_for_cell_range(
                     user_db, update_range, validation_rule
                 )
-                delay = timeit.timeit(
-                    lambda: global_.sheets.get_activity_db().append_row(new_a), 
-                    number=1
+
+                def update_activity():
+                    delay = timeit.timeit(global_.sheets.get_activity_db().append_row(new_a, number=1))
+                    logging.debug(f"Time to add activity to gsheets: {delay}")
+                
+                add_row_thread = threading.Thread(
+                    target=update_activity
                 )
-                logging.debug(f"Time to update activity: {delay}")
+                add_row_thread.start()
 
                 break
             except Exception as e:
