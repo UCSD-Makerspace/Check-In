@@ -123,8 +123,19 @@ class utils:
                 )
                 logging.debug(f"Time to create fabman account: {delay}")
                 user_db = global_.sheets.get_user_db()
-                user_db.append_row(new_row)
-                global_.sheets.get_user_db_data(force_update=True)
+
+                delay = timeit.timeit(
+                    lambda: user_db.append_row(new_row),
+                    number=1
+                )
+                logging.debug(f"Time to add row to gsheets: {delay}")
+
+                delay = timeit.timeit(
+                    lambda: global_.sheets.get_user_db_data(force_update=True),
+                    number=1
+                )
+                logging.debug(f"Time to force update gsheets: {delay}")
+
                 name_cell = user_db.find(full_name)
                 s_name_cell = str(name_cell.address)
                 s_name_cell = s_name_cell[1 : len(s_name_cell)]
@@ -132,7 +143,12 @@ class utils:
                 set_data_validation_for_cell_range(
                     user_db, update_range, validation_rule
                 )
-                global_.sheets.get_activity_db().append_row(new_a)
+                delay = timeit.timeit(
+                    lambda: global_.sheets.get_activity_db().append_row(new_a), 
+                    number=1
+                )
+                logging.debug(f"Time to update activity: {delay}")
+
                 break
             except Exception as e:
                 logging.warning("Exception occurred while in account creation")
