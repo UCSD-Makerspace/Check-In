@@ -147,9 +147,11 @@ class utils:
                 )
 
                 def update_activity():
-                    delay = timeit.timeit(global_.sheets.get_activity_db().append_row(new_a, number=1))
+                    delay = timeit.timeit(
+                        global_.sheets.get_activity_db().append_row(new_a), number=1
+                    )
                     logging.debug(f"Time to add activity to gsheets: {delay}")
-                
+
                 add_row_thread = threading.Thread(
                     target=update_activity
                 )
