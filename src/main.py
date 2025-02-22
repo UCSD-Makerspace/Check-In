@@ -13,6 +13,7 @@ import socket
 import logging
 import argparse
 import serial.tools.list_ports as list_ports
+from sys import stdout
 from time import perf_counter
 
 TRAFFIC_LIGHT_VID = 6790
@@ -189,7 +190,7 @@ if __name__ == "__main__":
     config = vars(args)
 
     if config["verbose"]:
-        logging.basicConfig(level=logging.DEBUG)
+        logging.basicConfig(level=logging.DEBUG, stream=stdout)
     else:
         logging.basicConfig(level=logging.INFO)
 

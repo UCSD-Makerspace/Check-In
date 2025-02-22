@@ -60,6 +60,7 @@ class utils:
         return datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
     def createAccount(self, fname, lname, email, pid, ManualFill):
+        start = time.perf_counter()
         validation_rule = DataValidationRule(
             BooleanCondition("BOOLEAN", ["TRUE", "FALSE"]),
         )
@@ -76,6 +77,9 @@ class utils:
                 invalidID.pack(pady=20)
                 invalidID.after(3000, lambda: invalidID.destroy())
                 return
+
+        end1 = time.perf_counter()
+        logging.debug(f"Time to validate info: {end1 - start}")
 
         inProgress = tkinter.Label(
             global_.app.get_frame(ManualFill),
@@ -115,6 +119,9 @@ class utils:
             font=("Arial", 25),
         )
 
+        end2 = time.perf_counter()
+        logging.debug(f"Time to structure row entries: {end2 - end1}")
+
         retries = 1
         while retries < 6:
             try:
@@ -126,32 +133,38 @@ class utils:
 
                 user_db = global_.sheets.get_user_db()
 
-                delay = timeit.timeit(
-                    lambda: user_db.append_row(new_row),
-                    number=1
-                )
-                logging.debug(f"Time to add row to gsheets: {delay}")
+                end3 = time.perf_counter()
+                logging.debug(f"Time to pull user db: {end3 - end2}")
 
-                delay = timeit.timeit(
-                    lambda: global_.sheets.get_user_db_data(force_update=True),
-                    number=1
-                )
-                logging.debug(f"Time to force update gsheets: {delay}")
+                user_db.append_row(new_row)
+                end4 = time.perf_counter()
+                logging.debug(f"Time to add row to gsheets: {end4 - end3}")
 
-                name_cell = user_db.find(full_name)
+                global_.sheets.get_user_db_data(force_update=True)
+                end5 = time.perf_counter()
+                logging.debug(f"Time to force update gsheets: {end5 - end4}")
+
+                name_cell = user_db.find(full_name, in_column=1)
                 s_name_cell = str(name_cell.address)
                 s_name_cell = s_name_cell[1 : len(s_name_cell)]
+
+                end6 = time.perf_counter()
+                logging.debug(f"Time to find user: {end6 - end5}")
+
                 update_range = "I" + s_name_cell + ":AA" + s_name_cell
                 set_data_validation_for_cell_range(
                     user_db, update_range, validation_rule
                 )
+
+                end7 = time.perf_counter()
+                logging.debug(f"Time to set data validation: {end7 - end6}")
 
                 def update_activity():
                     delay = timeit.timeit(
                         lambda: global_.sheets.get_activity_db().append_row(new_a), 
                         number=1
                     )
-                    logging.debug(f"Time to add activity to gsheets: {delay}")
+                    logging.debug(f"Time to add activity to gsheets (threaded): {delay}")
 
                 add_row_thread = threading.Thread(
                     target=update_activity
@@ -161,6 +174,7 @@ class utils:
                 break
             except Exception as e:
                 logging.warning("Exception occurred while in account creation")
+                logging.exception("Exception occurred while in account creation")
                 no_wifi.pack(pady=20)
                 global_.app.update()
                 time.sleep(retries)
@@ -173,6 +187,9 @@ class utils:
             inProgress.destroy()
             return
 
+        end8 = time.perf_counter()
+        logging.debug(f"Total time to send data: {end8 - end2}")
+
         w_data = global_.sheets.get_waiver_db_data()
         toGoTo = AccNoWaiverSwipe
         for i in w_data:
@@ -181,6 +198,9 @@ class utils:
                     "User " + full_name + " made an account but had signed the waiver"
                 )
                 toGoTo = MainPage
+
+        end9 = time.perf_counter()
+        logging.debug(f"Time to check waiver data: {end9 - end8}")
 
         global_.app.get_frame(UserThank).displayName(full_name, toGoTo)
         inProgress.destroy()
