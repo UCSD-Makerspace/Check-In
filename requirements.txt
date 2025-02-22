@@ -105,6 +105,7 @@ python-memcached==1.58
 python-prctl==1.7
 pytz==2022.5
 PyYAML==5.3.1
+py122u
 rainbowhat==0.1.0
 reportlab==3.5.59
 requests==2.25.1
