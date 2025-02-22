@@ -75,4 +75,4 @@ class fabman:
             logging.info(attempt_key.json())
         
         end = perf_counter()
-        logging.debug(f"Created fabman account: f{end - start}")
+        logging.debug(f"Created fabman account: {end - start}")
