@@ -4,6 +4,7 @@
 
 from pathlib import Path
 from tkinter import *
+import global_
 
 
 OUTPUT_PATH = Path(__file__).parent
@@ -20,9 +21,15 @@ class MainPage(Frame):
         self.photoList = []
         self.loadWidgets(controller)
 
+    def go_to_no_id_page(self, controller):
+        from CheckInNoId import CheckInNoId
+
+        no_id = global_.app.get_frame(CheckInNoId)
+        no_id.clearEntries()
+        controller.show_frame(CheckInNoId)
+
     def loadWidgets(self, controller):
         from QRCodes import QRCodes
-        from CheckInNoId import CheckInNoId
 
         canvas = Canvas(
             self,
@@ -103,7 +110,7 @@ class MainPage(Frame):
             compound="center",
             bg="#153246",
             fg="white",
-            command=lambda: controller.show_frame(CheckInNoId),
+            command=lambda: self.go_to_no_id_page(controller),
             relief="flat",
             highlightthickness=0,
             bd=0,
