@@ -13,6 +13,7 @@ import socket
 import logging
 import argparse
 import serial.tools.list_ports as list_ports
+import rfid
 
 TRAFFIC_LIGHT_VID = 6790
 READER_VID = 4292
@@ -46,81 +47,68 @@ def myLoop(app, reader):
     last_time = 0
     while True:
         time.sleep(0.1)
-        in_waiting = reader.getSerInWaiting()
         tag = 0
 
-        if in_waiting >= 14:
-            if not is_connected():
-                logging.info("ERROR wifi is not connected")
-                if not no_wifi_shown:
-                    no_wifi_shown = True
-                    no_wifi = Label(
-                        app.get_frame(MainPage),
-                        text="ERROR! Connection cannot be established, please let staff know.",
-                        font=("Arial", 25),
-                    )
-                    no_wifi.pack(pady=40)
-                    no_wifi.after(4000, lambda: destroyNoWifiError(no_wifi))
-                continue
+        if not is_connected():
+            logging.info("ERROR wifi is not connected")
+            if not no_wifi_shown:
+                no_wifi_shown = True
+                no_wifi = Label(
+                    app.get_frame(MainPage),
+                    text="ERROR! Connection cannot be established, please let staff know.",
+                    font=("Arial", 25),
+                )
+                no_wifi.pack(pady=40)
+                no_wifi.after(4000, lambda: destroyNoWifiError(no_wifi))
+            continue
 
-            app.get_frame(ManualFill).clearEntries()
-            tag = reader.grabRFID()
+        app.get_frame(ManualFill).clearEntries()
+        tag = rfid.RFID122U.getRFID()
 
-            if " " in tag:
-                continue
+        if " " in tag:
+            continue
 
-            if tag == last_tag and not reader.canScanAgain(last_time):
-                logging.debug("Suppressing repeat scan")
-                continue
+        logging.debug("RFID Check Succeeded")
 
-            s_reason = reader.checkRFID(tag)
+        global_.setRFID(tag)
 
-            if s_reason != "good":
-                logging.debug(s_reason)
-                continue
-            else:
-                logging.debug("RFID Check Succeeded")
+        # Get a list of all users
+        user_data = global_.sheets.get_user_db_data()
+        curr_user = "None"
 
-            global_.setRFID(tag)
+        for i in user_data:
+            if i["Card UUID"] == tag:
+                curr_user = i
 
-            # Get a list of all users
-            user_data = global_.sheets.get_user_db_data()
-            curr_user = "None"
+        ############################
+        # All scenarios for ID tap #
+        ############################
 
-            for i in user_data:
-                if i["Card UUID"] == tag:
-                    curr_user = i
+        if curr_user == "None":
+            logging.info("User was not found in the database")
+            global_.traffic_light.set_red()
+            app.show_frame(NoAccNoWaiver)
+            app.after(3000, lambda: app.show_frame(NoAccNoWaiverSwipe))
+        else:
+            new_row = [
+                util.getDatetime(),
+                int(time.time()),
+                curr_user["Name"],
+                str(tag),
+                "User Checkin",
+                curr_user["Email Address"],
+                curr_user["Student ID"],
+                "",
+                curr_user["Affiliation"],
+            ]
 
-            ############################
-            # All scenarios for ID tap #
-            ############################
+            check_in_reason = global_.app.get_frame(CheckInReason)
+            check_in_reason.setCheckInUser(new_row)
+            app.show_frame(CheckInReason)
 
-            if curr_user == "None":
-                logging.info("User was not found in the database")
-                global_.traffic_light.set_red()
-                app.show_frame(NoAccNoWaiver)
-                app.after(3000, lambda: app.show_frame(NoAccNoWaiverSwipe))
-            else:
-                new_row = [
-                    util.getDatetime(),
-                    int(time.time()),
-                    curr_user["Name"],
-                    str(tag),
-                    "User Checkin",
-                    curr_user["Email Address"],
-                    curr_user["Student ID"],
-                    "",
-                    curr_user["Affiliation"],
-                ]
+        last_time = time.time()
+        last_tag = tag
 
-                check_in_reason = global_.app.get_frame(CheckInReason)
-                check_in_reason.setCheckInUser(new_row)
-                app.show_frame(CheckInReason)
-
-            last_time = time.time()
-            last_tag = tag
-
-            reader.readSerial()
 
 
 def destroyNoWifiError(no_wifi):
