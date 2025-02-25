@@ -8,7 +8,7 @@ from gui import *
 import global_
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"assets/no_acc_no_waiver_swipe_assets")
+ASSETS_PATH = OUTPUT_PATH / Path(r"assets/no_acc_swipe_assets")
 
 
 def relative_to_assets(path: str) -> Path:
@@ -20,7 +20,7 @@ def go_to_manual_fill(controller):
     controller.show_frame(ManualFill)
 
 
-class NoAccNoWaiverSwipe(Frame):
+class NoAccSwipe(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.photoList = []
@@ -70,15 +70,6 @@ class NoAccNoWaiverSwipe(Frame):
             45.0,
             anchor="nw",
             text="Account Status:",
-            fill="#F5F0E6",
-            font=("Montserrat", 40 * -1),
-        )
-
-        canvas.create_text(
-            690.0,
-            45.0,
-            anchor="nw",
-            text="Waiver Status:",
             fill="#F5F0E6",
             font=("Montserrat", 40 * -1),
         )

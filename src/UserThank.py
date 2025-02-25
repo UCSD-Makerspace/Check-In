@@ -5,8 +5,6 @@
 from pathlib import Path
 from tkinter import *
 from MainPage import *
-from AccNoWaiver import *
-from AccNoWaiverSwipe import *
 from MainPage import *
 import time
 import global_
@@ -72,7 +70,7 @@ class UserThank(Frame):
             429.0,
             550.0,
             anchor="nw",
-            text="UCSD Basement",
+            text="Entrepreneurship Center",
             fill="#F5F0E6",
             font=("Montserrat", 45 * -1),
         )

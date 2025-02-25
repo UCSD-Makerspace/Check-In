@@ -5,18 +5,17 @@ from pathlib import Path
 from tkinter import *
 from tkinter import ttk
 from utils import *
-from NoAccCheckInOnly import NoAccCheckInOnly
 from UserWelcome import UserWelcome
 import logging
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"assets/check_in_reason_assets")
 
+# TODO: Update reasons
 REASONS = [
     "Event/Workshop",
     "Tour",
     "Work/Study",
-    "Basement Team Meeting",
     "Meeting with Staff",
     "Meeting with Mentor",
     "Meeting with Faculty",

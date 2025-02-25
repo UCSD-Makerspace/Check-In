@@ -119,15 +119,6 @@ class ManualFill(Frame):
             font=("Montserrat", 40 * -1),
         )
 
-        canvas.create_text(
-            670.0,
-            45.0,
-            anchor="nw",
-            text="Waiver Status:",
-            fill="#F5F0E6",
-            font=("Montserrat", 40 * -1),
-        )
-
         image_image_4 = PhotoImage(file=relative_to_assets("image_4.png"))
 
         self.photoList.append(image_image_4)

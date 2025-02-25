@@ -1,8 +1,6 @@
 from tkinter import *
 from ManualFill import *
-from NoAccNoWaiverSwipe import *
-from WaiverNoAccSwipe import *
-from AccNoWaiverSwipe import *
+from NoAccSwipe import *
 from CheckInNoId import *
 from get_info_from_pid import *
 from utils import *
@@ -25,7 +23,7 @@ class swipe:
         global id_string, swipe_error_shown
         curr_frame = global_.app.get_curr_frame()
 
-        if curr_frame not in (NoAccNoWaiverSwipe, WaiverNoAccSwipe, CheckInNoId):
+        if curr_frame not in (NoAccSwipe, CheckInNoId):
             # If one of the swipe pages is not on top
             # Then don't do anything
             return
@@ -36,17 +34,11 @@ class swipe:
             if not swipe_error_shown:
                 swipe_error_shown = True
                 id_error = tkinter.Label(
-                    global_.app.get_frame(NoAccNoWaiverSwipe),
+                    global_.app.get_frame(NoAccSwipe),
                     text="Error, please scan again",
                 )
                 id_error.pack(pady=40)
-                id_error_2 = tkinter.Label(
-                    global_.app.get_frame(WaiverNoAccSwipe),
-                    text="Error, please scan again",
-                )
-                id_error_2.pack(pady=40)
                 id_error.after(1500, lambda: self.destroySwipeError(id_error))
-                id_error_2.after(1500, lambda: self.destroySwipeError(id_error_2))
             return
 
         id_string = id_string + key.char

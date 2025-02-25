@@ -1,7 +1,6 @@
 from tkinter import *
 from gui import *
 from swipe import *
-from reader import *
 from sheets import *
 from threading import Thread
 from UserWelcome import *
@@ -40,7 +39,7 @@ def is_connected(host="8.8.8.8", port=53, timeout=3):
 no_wifi_shown = False
 
 
-def myLoop(app, reader):
+def myLoop(app):
     global no_wifi_shown, no_wifi
     logging.info("Now reading ID cards")
     last_tag = 0
@@ -87,8 +86,8 @@ def myLoop(app, reader):
         if curr_user == "None":
             logging.info("User was not found in the database")
             global_.traffic_light.set_red()
-            app.show_frame(NoAccNoWaiver)
-            app.after(3000, lambda: app.show_frame(NoAccNoWaiverSwipe))
+            app.show_frame(NoAccount)
+            app.after(3000, lambda: app.show_frame(NoAccSwipe))
         else:
             new_row = [
                 util.getDatetime(),
@@ -108,7 +107,6 @@ def myLoop(app, reader):
 
         last_time = time.time()
         last_tag = tag
-
 
 
 def destroyNoWifiError(no_wifi):
@@ -145,14 +143,11 @@ if __name__ == "__main__":
     else:
         logging.basicConfig(level=logging.INFO)
 
-    ports = list(serial.tools.list_ports.comports())
-    reader_usb_id = None
+    ports = list(list_ports.comports())
     traffic_usb_id = None
 
     for p in ports:
-        if p.vid == READER_VID:
-            reader_usb_id = p.device
-        elif p.vid == TRAFFIC_LIGHT_VID:
+        if p.vid == TRAFFIC_LIGHT_VID:
             traffic_usb_id = p.device
 
     global_.init(traffic_usb_id)
@@ -160,9 +155,8 @@ if __name__ == "__main__":
     global_.setApp(app)
     global_.traffic_light.set_off()
     sw = swipe()
-    reader = Reader(reader_usb_id)
     util = utils()
-    thread = Thread(target=myLoop, args=(app, reader))
+    thread = Thread(target=myLoop, args=(app))
     logging.info("Starting thread")
     thread.start()
     app.bind("<Key>", lambda i: sw.keyboardPress(i))

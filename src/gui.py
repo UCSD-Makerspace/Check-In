@@ -1,23 +1,18 @@
 import uuid
 import tkinter as tk
 import global_
-from AccNoWaiver import AccNoWaiver
 from MainPage import MainPage
-from AccNoWaiverSwipe import AccNoWaiverSwipe
 from ManualFill import ManualFill
 from CheckInNoId import CheckInNoId
 from CheckInReason import CheckInReason
-from NoAccCheckInOnly import NoAccCheckInOnly
-from NoAccNoWaiver import NoAccNoWaiver
-from NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
+from NoAcc import NoAccount
+from NoAccSwipe import NoAccSwipe
 from QRCodes import QRCodes
 from UserThank import UserThank
 from UserWelcome import UserWelcome
-from WaiverNoAcc import WaiverNoAcc
-from WaiverNoAccSwipe import WaiverNoAccSwipe
 
 
-TIMEOUT_DICT = {AccNoWaiverSwipe: 30000, QRCodes: 30000, NoAccNoWaiverSwipe: 30000}
+TIMEOUT_DICT = {QRCodes: 30000, NoAccSwipe: 30000}
 
 
 #################################################
@@ -43,19 +38,14 @@ class gui(tk.Tk):
 
         for F in (
             MainPage,
-            AccNoWaiver,
-            AccNoWaiverSwipe,
             ManualFill,
             CheckInNoId,
             CheckInReason,
-            NoAccCheckInOnly,
-            NoAccNoWaiver,
-            NoAccNoWaiverSwipe,
+            NoAccount,
+            NoAccSwipe,
             QRCodes,
             UserThank,
             UserWelcome,
-            WaiverNoAcc,
-            WaiverNoAccSwipe,
         ):
             frame = F(container, self)
             self.frames[F] = frame

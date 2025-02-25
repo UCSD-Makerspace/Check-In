@@ -46,6 +46,7 @@ class SheetManager:
                 os.path.abspath("creds.json"), scope
             )
             client = gspread.authorize(creds)
+            # TODO: Ask David for the creds JSON and the new google sheets
             self.user_db = Sheet(
                 client.open("User Database Basement").sheet1
             )  # Open the spreadhseet
