@@ -51,6 +51,7 @@ class utils:
         return datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
     def createAccount(self, name, email, pid, affiliation, ManualFill):
+        logging.info("Creating account")
         emailValid = self.emailCheck(email)
         nameValid = self.nameCheck(name)
 

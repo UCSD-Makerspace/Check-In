@@ -246,6 +246,7 @@ class ManualFill(Frame):
         return self.entryList
 
     def clearEntries(self):
+        logging.info("Entries cleared!")
         self.name_entry.delete(0, END)
         self.email_entry.delete(0, END)
         self.pid_entry.delete(0, END)
@@ -264,7 +265,7 @@ class ManualFill(Frame):
             response = util.createAccount(
                 data[0], data[1], data[2], data[3], ManualFill
             )
-            if response != "bad":
+            if response is "good":
                 self.clearEntries()
         except Exception as e:
             logging.warning(

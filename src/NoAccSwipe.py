@@ -6,6 +6,7 @@ from pathlib import Path
 from tkinter import *
 from gui import *
 import global_
+import logging
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"assets/no_acc_swipe_assets")
@@ -16,6 +17,7 @@ def relative_to_assets(path: str) -> Path:
 
 
 def go_to_manual_fill(controller):
+    logging.info("Going to manual fill")
     global_.app.get_frame(ManualFill).clearEntries()
     controller.show_frame(ManualFill)
 
@@ -79,12 +81,6 @@ class NoAccSwipe(Frame):
         self.photoList.append(image_image_4)
 
         image_4 = canvas.create_image(576.0, 65.0, image=image_image_4)
-
-        image_image_5 = PhotoImage(file=relative_to_assets("image_5.png"))
-
-        self.photoList.append(image_image_5)
-
-        image_5 = canvas.create_image(1030.0, 65.0, image=image_image_5)
 
         button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))
 
