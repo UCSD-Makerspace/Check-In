@@ -5,7 +5,6 @@
 from pathlib import Path
 from tkinter import *
 from gui import *
-from PIL import Image, ImageTk
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"assets/qr_codes_assets")
@@ -55,9 +54,7 @@ class QRCodes(Frame):
 
         image_3 = canvas.create_image(88.0, 90.0, image=image_image_3)
 
-        qr_code_image = Image.open("assets/qr_codes_assets/image_4.png")
-        resized_qr_code = qr_code_image.resize((400, 400), Image.ANTIALIAS)
-        image_image_4 = ImageTk.PhotoImage(resized_qr_code)
+        image_image_4 = PhotoImage(file=relative_to_assets("image_4.png"))
 
         self.photoList.append(image_image_4)
 
