@@ -58,16 +58,16 @@ class QRCodes(Frame):
 
         self.photoList.append(image_image_4)
 
-        image_4 = canvas.create_image(421.0, 360.0, image=image_image_4)
+        image_4 = canvas.create_image(640.0, 360.0, image=image_image_4)
 
-        image_image_5 = PhotoImage(file=relative_to_assets("image_5.png"))
+        # image_image_5 = PhotoImage(file=relative_to_assets("image_5.png"))
 
-        self.photoList.append(image_image_5)
+        # self.photoList.append(image_image_5)
 
-        image_5 = canvas.create_image(859.0, 360.0, image=image_image_5)
+        # image_5 = canvas.create_image(859.0, 360.0, image=image_image_5)
 
         canvas.create_text(
-            335.0,
+            548.0,
             551.0,
             anchor="nw",
             text="Website",
@@ -75,14 +75,14 @@ class QRCodes(Frame):
             font=("Montserrat", 40 * -1),
         )
 
-        canvas.create_text(
-            761.0,
-            557.0,
-            anchor="nw",
-            text="Instagram",
-            fill="#F5F0E6",
-            font=("Montserrat", 40 * -1),
-        )
+        # canvas.create_text(
+        #     761.0,
+        #     557.0,
+        #     anchor="nw",
+        #     text="Instagram",
+        #     fill="#F5F0E6",
+        #     font=("Montserrat", 40 * -1),
+        # )
 
         button_image_1 = PhotoImage(file=relative_to_assets("image_6.png"))
 
