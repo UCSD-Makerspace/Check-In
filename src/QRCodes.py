@@ -5,6 +5,7 @@
 from pathlib import Path
 from tkinter import *
 from gui import *
+from PIL import Image
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"assets/qr_codes_assets")
@@ -33,7 +34,7 @@ class QRCodes(Frame):
             relief="ridge",
         )
 
-        # TODO: Change QR codes for the website and instagram 
+        # TODO: Change QR codes for the website and instagram
 
         canvas.place(x=0, y=0)
         image_image_1 = PhotoImage(file=relative_to_assets("image_1.png"))
@@ -54,7 +55,9 @@ class QRCodes(Frame):
 
         image_3 = canvas.create_image(88.0, 90.0, image=image_image_3)
 
-        image_image_4 = PhotoImage(file=relative_to_assets("image_4.png"))
+        qr_code_image = Image.open(file=relative_to_assets("image_4.png"))
+        resized_qr_code = qr_code_image.resize(400, 400)
+        image_image_4 = PhotoImage(resized_qr_code)
 
         self.photoList.append(image_image_4)
 
@@ -67,8 +70,8 @@ class QRCodes(Frame):
         # image_5 = canvas.create_image(859.0, 360.0, image=image_image_5)
 
         canvas.create_text(
-            548.0,
-            551.0,
+            640.0,
+            600.0,
             anchor="center",
             text="Website",
             fill="#F5F0E6",
