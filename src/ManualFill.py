@@ -259,9 +259,13 @@ class ManualFill(Frame):
         self.pid_entry.insert(0, pid)
 
     def callAccountCreation(self):
+        logging.info("Account creation button pressed!")
         util = utils()
         data = self.getEntries()
         try:
+            response = "bad"
+            if not data[0] or not data[1] or not data[2] or not data[3]:
+                return
             response = util.createAccount(
                 data[0], data[1], data[2], data[3], ManualFill
             )
