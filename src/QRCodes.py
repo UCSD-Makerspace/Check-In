@@ -69,7 +69,7 @@ class QRCodes(Frame):
         canvas.create_text(
             548.0,
             551.0,
-            anchor="nw",
+            anchor="center",
             text="Website",
             fill="#F5F0E6",
             font=("Montserrat", 40 * -1),
