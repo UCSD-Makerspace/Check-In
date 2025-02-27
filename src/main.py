@@ -44,6 +44,8 @@ def myLoop(app):
     logging.info("Now reading ID cards")
     last_tag = 0
     last_time = 0
+    card_reader = rfid()
+
     while True:
         time.sleep(0.1)
         tag = 0
@@ -62,7 +64,7 @@ def myLoop(app):
             continue
 
         app.get_frame(ManualFill).clearEntries()
-        tag = rfid.RFID122U.getRFID()
+        tag = card_reader.getRFID()
 
         if " " in tag:
             continue
