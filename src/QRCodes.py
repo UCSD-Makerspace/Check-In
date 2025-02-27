@@ -56,7 +56,7 @@ class QRCodes(Frame):
         image_3 = canvas.create_image(88.0, 90.0, image=image_image_3)
 
         qr_code_image = Image.open("assets/qr_codes_assets/image_4.png")
-        resized_qr_code = qr_code_image.resize(400, 400)
+        resized_qr_code = qr_code_image.resize((400, 400), Image.ANTIALIAS)
         image_image_4 = PhotoImage(resized_qr_code)
 
         self.photoList.append(image_image_4)
