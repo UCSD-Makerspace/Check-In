@@ -1,13 +1,17 @@
 from py122u import error, nfc
 from typing import List
 import logging
+from time import sleep
 
 class RFID122U:
     def __init__(self):
-        try:
-            self.reader = nfc.Reader()
-        except error.NoReader as e:
-            logging.error("No reader connected!")
+        while True:
+            try:
+                self.reader = nfc.Reader()
+                break
+            except error.NoReader as e:
+                logging.error("No reader connected!")
+                sleep(0.5)
 
     def convert_uid_to_hex(uid: List) -> str:
         hex_id = ""
