@@ -4,7 +4,10 @@ import logging
 
 class RFID122U:
     def __init__(self):
-        self.reader = nfc.Reader()
+        try:
+            self.reader = nfc.Reader()
+        except error.NoReader as e:
+            logging.error("No reader connected!")
 
     def convert_uid_to_hex(uid: List) -> str:
         hex_id = ""
