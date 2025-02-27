@@ -62,7 +62,7 @@ class MainPage(Frame):
             anchor="nw",
             text="Entrepreneurship Center",
             fill="#F5F0E6",
-            font=("Montserrat", 90 * -1, "bold"),
+            font=("Montserrat", 80 * -1, "bold"),
         )
 
         canvas.create_text(
