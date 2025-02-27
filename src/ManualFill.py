@@ -265,7 +265,7 @@ class ManualFill(Frame):
             response = util.createAccount(
                 data[0], data[1], data[2], data[3], ManualFill
             )
-            if response is "good":
+            if response == "good":
                 self.clearEntries()
         except Exception as e:
             logging.warning(
