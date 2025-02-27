@@ -63,7 +63,6 @@ def myLoop(app):
                 no_wifi.after(4000, lambda: destroyNoWifiError(no_wifi))
             continue
 
-        app.get_frame(ManualFill).clearEntries()
         tag = card_reader.getRFID()
 
         if " " in tag:
