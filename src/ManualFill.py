@@ -216,7 +216,11 @@ class ManualFill(Frame):
         self.clearEntries()
         # FIXME: Is there a better way to do this?
         try:
-            util.createAccount(data[0], data[1], data[2], data[3], ManualFill)
+            delay = timeit.timeit(
+                lambda: util.createAccount(data[0], data[1], data[2], data[3], ManualFill),
+                number=1
+            )
+            logging.debug(f"Time to create account: {delay}")
         except Exception as e:
             logging.warning(
                 "Error occurred trying to create a user account", exc_info=True

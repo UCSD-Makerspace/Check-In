@@ -1,6 +1,8 @@
 import requests
 import logging
 import datetime
+import asyncio
+from time import perf_counter
 
 fab_file = open("fabtoken.txt", "r")
 fabman_key = fab_file.readline()[:-1]
@@ -15,6 +17,8 @@ class fabman:
         pass
 
     def createFabmanAccount(self, firstName, lastName, emailAddress, RFIDtag):
+        start = perf_counter()
+        logging.debug("Started creating fabman account.")
         emailAddress = emailAddress.lower()
         member_data = {
             "firstName": f"{firstName}",
@@ -69,3 +73,6 @@ class fabman:
         else:
             logging.warning(f"Key assignment failed: {attempt_member.status_code}")
             logging.info(attempt_key.json())
+        
+        end = perf_counter()
+        logging.debug(f"Created fabman account: {end - start}")
