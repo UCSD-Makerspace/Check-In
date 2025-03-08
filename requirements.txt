@@ -1,7 +1,6 @@
-authlib==1.5.0
+Authlib==1.2.1
 gspread==6.1.4
 oauth2client==4.1.3
-obf==1.0.0
 py122u==2.3.5
 pyserial==3.5
 Requests==2.32.3

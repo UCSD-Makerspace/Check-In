@@ -91,6 +91,7 @@ class utils:
             pid,
             "",
             affiliation,
+            True
         ]
 
         no_wifi = Label(
