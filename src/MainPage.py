@@ -51,7 +51,7 @@ class MainPage(Frame):
             336.0,
             602.0,
             anchor="nw",
-            text="Please tap ID on the black box to start",
+            text="Please tap ID on the reader to start",
             fill="#F5F0E6",
             font=("Montserrat", 32 * -1),
         )
