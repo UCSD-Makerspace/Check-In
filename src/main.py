@@ -13,6 +13,7 @@ import logging
 import argparse
 import serial.tools.list_ports as list_ports
 import rfid
+import time
 
 TRAFFIC_LIGHT_VID = 6790
 READER_VID = 4292
@@ -66,6 +67,12 @@ def myLoop(app):
         tag = card_reader.getRFID()
 
         if " " in tag:
+            continue
+        
+        curr_time = time.time()
+
+        # Don't do repeat scans
+        if tag is last_tag and (curr_time - last_time) < 60:
             continue
 
         logging.debug("RFID Check Succeeded")

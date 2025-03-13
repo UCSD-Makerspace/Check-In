@@ -124,5 +124,5 @@ class utils:
             inProgress.destroy()
             return
 
-        global_.app.get_frame(UserThank).displayName(name, MainPage)
+        global_.app.get_frame(CheckInReason).displayName(name, CheckInReason)
         inProgress.destroy()
