@@ -5,6 +5,7 @@ import global_
 import tkinter
 from gui import *
 from UserThank import *
+from CheckInReason import CheckInReason
 
 ######################################################
 # Utilities that I couldn't get to fit anywhere else #
@@ -79,6 +80,7 @@ class utils:
             pid,
             affiliation,
             email,
+            False # Account created at basement, not entrepreneurship center
         ]
         new_a = [
             self.getDatetime(),
@@ -89,7 +91,7 @@ class utils:
             email,
             pid,
             "",
-            affiliation,
+            affiliation
         ]
 
         no_wifi = Label(
@@ -104,7 +106,6 @@ class utils:
                 user_db = global_.sheets.get_user_db()
                 user_db.append_row(new_row)
                 global_.sheets.get_user_db_data(force_update=True)
-                global_.sheets.get_activity_db().append_row(new_a)
                 break
             except Exception as e:
                 logging.warning(
@@ -122,5 +123,19 @@ class utils:
             inProgress.destroy()
             return
 
-        global_.app.get_frame(UserThank).displayName(name, MainPage)
+        new_a = [
+            self.getDatetime(),
+            int(time.time()),
+            name,
+            global_.rfid,
+            "New User",
+            email,
+            pid,
+            "",
+            affiliation
+        ]
+
+        check_in_reason = global_.app.get_frame(CheckInReason)
+        check_in_reason.setCheckInUser(new_a)
+        global_.app.show_frame(CheckInReason)
         inProgress.destroy()
