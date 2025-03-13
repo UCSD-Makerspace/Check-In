@@ -52,7 +52,7 @@ class SheetManager:
             )  # Open the spreadhseet
 
             logging.info("User Database Loaded")
-            self.activity_db = Sheet(client.open("Activity Log Basement").sheet1)
+            self.activity_db = Sheet(client.open("Activity Log Entrepreneurship Center").sheet1)
             logging.info("Activity Database Loaded")
         except Exception as e:
             logging.warning(
