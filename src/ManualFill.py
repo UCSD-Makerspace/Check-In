@@ -125,12 +125,6 @@ class ManualFill(Frame):
 
         image_4 = canvas.create_image(605.0, 77.0, image=image_image_4)
 
-        image_image_5 = PhotoImage(file=relative_to_assets("image_5.png"))
-
-        self.photoList.append(image_image_5)
-
-        image_5 = canvas.create_image(1010.0, 77.0, image=image_image_5)
-
         image_image_6 = PhotoImage(file=relative_to_assets("image_6.png"))
 
         self.photoList.append(image_image_6)
