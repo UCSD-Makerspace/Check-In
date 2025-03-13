@@ -80,6 +80,7 @@ class utils:
             pid,
             affiliation,
             email,
+            True
         ]
         new_a = [
             self.getDatetime(),
@@ -90,8 +91,7 @@ class utils:
             email,
             pid,
             "",
-            affiliation,
-            True
+            affiliation
         ]
 
         no_wifi = Label(
