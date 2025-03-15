@@ -59,7 +59,7 @@ class NoAccSwipe(Frame):
         image_3 = canvas.create_image(640.0, 430.0, image=image_image_3)
 
         canvas.create_text(
-            303.0,
+            315.0,
             350.0,
             anchor="nw",
             text="Please scan your ID barcode",
@@ -68,7 +68,7 @@ class NoAccSwipe(Frame):
         )
 
         canvas.create_text(
-            215.0,
+            430.0,
             45.0,
             anchor="nw",
             text="Account Status:",
@@ -80,7 +80,7 @@ class NoAccSwipe(Frame):
 
         self.photoList.append(image_image_4)
 
-        image_4 = canvas.create_image(576.0, 65.0, image=image_image_4)
+        image_4 = canvas.create_image(782.0, 65.0, image=image_image_4)
 
         button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))
 
