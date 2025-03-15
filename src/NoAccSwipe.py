@@ -68,8 +68,8 @@ class NoAccSwipe(Frame):
         )
 
         canvas.create_text(
-            430.0,
-            45.0,
+            445.0,
+            55.0,
             anchor="nw",
             text="Account Status:",
             fill="#F5F0E6",
@@ -80,7 +80,7 @@ class NoAccSwipe(Frame):
 
         self.photoList.append(image_image_4)
 
-        image_4 = canvas.create_image(782.0, 65.0, image=image_image_4)
+        image_4 = canvas.create_image(797.0, 75.0, image=image_image_4)
 
         button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))
 
