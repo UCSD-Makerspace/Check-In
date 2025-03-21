@@ -97,7 +97,7 @@ class swipe:
 
         # u_data is a list containing the user type and their ID
         u_data = self.pullUser(user_card_number, "Student")
-        if u_data == False:
+        if not u_data:
             logging.info("Student search returned False, returning...")
             return
         # if u_type == "Student":
