@@ -55,19 +55,7 @@ class SheetManager:
             )  # Open the spreadhseet
 
             logging.info("User Database Loaded")
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            self.activity_db = Sheet(
-                client.open_by_url(
-                    "https://docs.google.com/spreadsheets/d/1aLBb1J2ifoUG2UAxHHbwxNO3KrIIWoI0pnZ14c5rpOM/edit?usp=drive_web&ouid=104398832910104737872"
-                ).sheet1
-            )
-=======
             self.activity_db = Sheet(client.open("Activity Log Entrepreneurship Center").sheet1)
->>>>>>> Stashed changes
-=======
-            self.activity_db = Sheet(client.open("Activity Log Entrepreneurship Center").sheet1)
->>>>>>> Stashed changes
             logging.info("Activity Database Loaded")
             self.waiver_db = Sheet(client.open("Waiver Signatures").sheet1)
             logging.info("Waiver Database Loaded")
@@ -90,11 +78,4 @@ class SheetManager:
         return self.user_db.get_data(force_update)
 
     def get_activity_db_data(self, force_update=False):
-<<<<<<< Updated upstream
         return self.activity_db.get_data(force_update)
-
-    def get_waiver_db_data(self, force_update=False):
-        return self.waiver_db.get_data(force_update)
-=======
-        return self.activity_db.get_data(force_update)
->>>>>>> Stashed changes

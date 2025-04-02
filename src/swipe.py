@@ -1,8 +1,6 @@
 from tkinter import *
 from ManualFill import *
-from NoAccNoWaiverSwipe import *
-from WaiverNoAccSwipe import *
-from AccNoWaiverSwipe import *
+from NoAccSwipe import *
 from CheckInNoId import *
 from get_info_from_pid import *
 from utils import *
@@ -25,28 +23,21 @@ class swipe:
         global id_string, swipe_error_shown
         curr_frame = global_.app.get_curr_frame()
 
-        if curr_frame not in (NoAccNoWaiverSwipe, WaiverNoAccSwipe, CheckInNoId):
+        if curr_frame not in (NoAccSwipe, CheckInNoId):
             # If one of the swipe pages is not on top
             # Then don't do anything
             return
-
         check = util.IDVet(id_string)
         if check == "bad":
             id_string = ""
             if not swipe_error_shown:
                 swipe_error_shown = True
                 id_error = tkinter.Label(
-                    global_.app.get_frame(NoAccNoWaiverSwipe),
+                    global_.app.get_frame(NoAccSwipe),
                     text="Error, please scan again",
                 )
                 id_error.pack(pady=40)
-                id_error_2 = tkinter.Label(
-                    global_.app.get_frame(WaiverNoAccSwipe),
-                    text="Error, please scan again",
-                )
-                id_error_2.pack(pady=40)
                 id_error.after(1500, lambda: self.destroySwipeError(id_error))
-                id_error_2.after(1500, lambda: self.destroySwipeError(id_error_2))
             return
 
         id_string = id_string + key.char
@@ -97,29 +88,29 @@ class swipe:
 
         # u_data is a list containing the user type and their ID
         u_data = self.pullUser(user_card_number, "Student")
-        if not u_data:
+        if u_data == False:
             logging.info("Student search returned False, returning...")
             return
         # if u_type == "Student":
         #     u_id = "A" + u_id
 
+        email_to_use = "" if len(u_data[2]) == 0 else u_data[2][0]
+        for email in u_data[2]:
+            if email.endswith("@ucsd.edu"):
+                email_to_use = email
+
         if global_.app.get_curr_frame() == CheckInNoId:
             global_.app.get_frame(CheckInNoId).clearEntries()
-            global_.app.get_frame(CheckInNoId).updateEntries(u_data[3])
+            global_.app.get_frame(CheckInNoId).updateEntries(email)
             return
 
         manfill = global_.app.get_frame(ManualFill)
         manfill.clearEntries()
 
-        email_to_use = u_data[2][0]
-        for email in u_data[2]:
-            if email.endswith("@ucsd.edu"):
-                email_to_use = email
-
         logging.info(
             f"Filling data with {u_data[0]} {u_data[1]} {email_to_use} {u_data[3]}"
         )
-        manfill.updateEntries(u_data[0], u_data[1], email_to_use, u_data[3])
+        manfill.updateEntries(u_data[0], u_data[1], email_to_use, u_data[3], u_data[4])
 
         global_.app.show_frame(ManualFill)
 
