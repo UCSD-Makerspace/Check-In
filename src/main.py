@@ -146,8 +146,13 @@ def myLoop(app, reader):
                     str(tag),
                     "User Checkin",
                     "",
+<<<<<<< Updated upstream
                     "",
                     "",
+=======
+                    curr_user["Affiliation"],
+                    curr_user["Last Enrolled Term", ""]
+>>>>>>> Stashed changes
                 ]
                 activity_log = global_.sheets.get_activity_db()
                 activity_log.append_row(new_row)

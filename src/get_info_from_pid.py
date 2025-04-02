@@ -32,7 +32,7 @@ class contact_client:
             self.token = self.oauth2_client.fetch_token(
                 api_url + "token", grant_type="client_credentials"
             )
-
+            
         token = self.token["access_token"]
         barcode_url = f"{api_url}student_contact_info/v1/students/{barcode}/student_id"
         barcode_response = requests.get(
@@ -55,10 +55,13 @@ class contact_client:
             return False
         fname = response.json()[0]["name"]["firstName"]
         lname = response.json()[0]["name"]["lastName"]
+        # New last quarter enrolled parameter [TESTING]
+        lastqtr = response.json()[0]["lastEnrTrm"]
         emails = []
         for entries in response.json()[0]["emailAddressList"]:
             emails.append(entries["emailAddress"])
-        return [fname, lname, emails, pid]
+        return [fname, lname, emails, pid, lastqtr]
+    
 
     # not yet tested, still need to be authorized access to employeeData API.
     def get_staff_info(self, pid):
@@ -66,6 +69,9 @@ class contact_client:
             self.token = self.oauth2_client.fetch_token(
                 api_url + "token", grant_type="client_credentials"
             )
+
+
+            
         url = api_url + "employee_data/v1/employees/" + str(pid)
         token = self.token["access_token"]
         response = requests.get(

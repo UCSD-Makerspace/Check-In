@@ -56,11 +56,15 @@ class SheetManager:
 
             logging.info("User Database Loaded")
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             self.activity_db = Sheet(
                 client.open_by_url(
                     "https://docs.google.com/spreadsheets/d/1aLBb1J2ifoUG2UAxHHbwxNO3KrIIWoI0pnZ14c5rpOM/edit?usp=drive_web&ouid=104398832910104737872"
                 ).sheet1
             )
+=======
+            self.activity_db = Sheet(client.open("Activity Log Entrepreneurship Center").sheet1)
+>>>>>>> Stashed changes
 =======
             self.activity_db = Sheet(client.open("Activity Log Entrepreneurship Center").sheet1)
 >>>>>>> Stashed changes
