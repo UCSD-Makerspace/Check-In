@@ -128,7 +128,6 @@ class CheckInNoId(Frame):
         if not curr_user:
             logging.info("Manual check in user account was not found")
             controller.show_frame(NoAccCheckInOnly)
-            controller.after(5000, lambda: controller.show_frame(MainPage))
             return
 
         new_row = [
