@@ -4,6 +4,8 @@
 
 from pathlib import Path
 from tkinter import *
+from ManualFill import ManualFill
+import global_
 
 
 OUTPUT_PATH = Path(__file__).parent
@@ -48,7 +50,62 @@ class NoAccCheckInOnly(Frame):
             160.0,
             180.0,
             anchor="nw",
-            text="Looks like you don't have an\n account, please scan your ID\nat the main desk",
+            text="Looks like you don't have an\n account linked to this email.\nWould you like to:",
             fill="#F5F0E6",
             font=("Montserrat", 64 * -1),
         )
+
+        # Create new account button
+        button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))
+        self.photoList.append(button_image_1)
+
+        button_1 = Button(
+            self,
+            image=button_image_1,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: self.go_to_manual_fill(controller),
+            relief="flat",
+        )
+        button_1.place(x=465.0, y=400.0, width=349.0, height=71.0)
+
+        # Link existing account button
+        button_image_2 = PhotoImage(file=relative_to_assets("button_1.png"))
+        self.photoList.append(button_image_2)
+
+        button_2 = Button(
+            self,
+            image=button_image_2,
+            borderwidth=0,
+            highlightthickness=0,
+            command=lambda: self.go_to_check_in_no_id(controller),
+            relief="flat",
+        )
+        button_2.place(x=465.0, y=500.0, width=349.0, height=71.0)
+
+        # Add text labels for buttons
+        canvas.create_text(
+            500.0,
+            430.0,
+            anchor="nw",
+            text="Create New Account",
+            fill="#F5F0E6",
+            font=("Montserrat", 24 * -1),
+        )
+
+        canvas.create_text(
+            500.0,
+            530.0,
+            anchor="nw",
+            text="Link Existing Account",
+            fill="#F5F0E6",
+            font=("Montserrat", 24 * -1),
+        )
+
+    def go_to_manual_fill(self, controller):
+        global_.app.get_frame(ManualFill).clearEntries()
+        controller.show_frame(ManualFill)
+
+    def go_to_check_in_no_id(self, controller):
+        global_.app.get_frame(CheckInNoId).clearEntries()
+        controller.show_frame(CheckInNoId)

@@ -73,25 +73,47 @@ class utils:
         global_.app.update()
         logging.info(f"Creating user account for {name}")
 
-        new_row = [
-            name,
-            self.getDatetime(),
-            global_.rfid,
-            pid,
-            affiliation,
-            email,
-            False # Account created at basement, not entrepreneurship center
-        ]
+        # Check if user already exists with this email
+        user_data = global_.sheets.get_user_db_data()
+        existing_user = None
+        for user in user_data:
+            if user["Email Address"].lstrip("Aa") == email.lstrip("Aa"):
+                existing_user = user
+                break
+
+        if existing_user:
+            # Update existing user with NFID
+            new_row = [
+                existing_user["Name"],
+                self.getDatetime(),
+                global_.rfid,  # Link the NFID to the existing account
+                existing_user["Student ID"],
+                existing_user["Affiliation"],
+                existing_user["Email Address"],
+                existing_user["Basement Account"]
+            ]
+        else:
+            # Create new user
+            new_row = [
+                name,
+                self.getDatetime(),
+                global_.rfid,
+                pid,
+                affiliation,
+                email,
+                False # Account created at basement, not entrepreneurship center
+            ]
+
         new_a = [
             self.getDatetime(),
             int(time.time()),
-            name,
+            name if not existing_user else existing_user["Name"],
             global_.rfid,
-            "New User",
+            "New User" if not existing_user else "User Checkin",
             email,
-            pid,
+            pid if not existing_user else existing_user["Student ID"],
             "",
-            affiliation
+            affiliation if not existing_user else existing_user["Affiliation"]
         ]
 
         no_wifi = Label(
@@ -104,7 +126,14 @@ class utils:
         while retries < 6:
             try:
                 user_db = global_.sheets.get_user_db()
-                user_db.append_row(new_row)
+                if existing_user:
+                    # Find and update the existing user's row
+                    for i, row in enumerate(user_data):
+                        if row["Email Address"].lstrip("Aa") == email.lstrip("Aa"):
+                            user_db.update_cell(i + 2, 3, global_.rfid)  # Update NFID
+                            break
+                else:
+                    user_db.append_row(new_row)
                 global_.sheets.get_user_db_data(force_update=True)
                 break
             except Exception as e:
@@ -122,18 +151,6 @@ class utils:
             global_.app.show_frame(MainPage)
             inProgress.destroy()
             return
-
-        new_a = [
-            self.getDatetime(),
-            int(time.time()),
-            name,
-            global_.rfid,
-            "New User",
-            email,
-            pid,
-            "",
-            affiliation
-        ]
 
         check_in_reason = global_.app.get_frame(CheckInReason)
         check_in_reason.setCheckInUser(new_a)
