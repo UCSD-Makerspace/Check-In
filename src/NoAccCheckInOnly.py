@@ -6,7 +6,7 @@ from pathlib import Path
 from tkinter import *
 from ManualFill import ManualFill
 import global_
-
+from CheckInNoId import CheckInNoId
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"assets/no_acc_assets")
@@ -50,7 +50,7 @@ class NoAccCheckInOnly(Frame):
             160.0,
             180.0,
             anchor="nw",
-            text="Looks like you don't have an\n account linked to this email.\nWould you like to:",
+            text="Looks like you don't have an\n account linked to this PID.\nWould you like to:",
             fill="#F5F0E6",
             font=("Montserrat", 64 * -1),
         )
