@@ -5,7 +5,7 @@ from pathlib import Path
 from tkinter import *
 from utils import *
 from NoAccCheckInOnly import NoAccCheckInOnly
-from CheckInReason import CheckInReason
+from UserWelcome import UserWelcome
 import logging
 
 OUTPUT_PATH = Path(__file__).parent
@@ -25,8 +25,8 @@ class CheckInNoId(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.photoList = []
-        self.email = StringVar()
-        self.email_entry = 0
+        self.pid = StringVar()
+        self.pid_entry = 0
 
         self.loadWidgets(controller)
 
@@ -64,7 +64,7 @@ class CheckInNoId(Frame):
             212.0,
             120.0,
             anchor="nw",
-            text="If you have already made an\naccount, scan your UCSD barcode\nor enter your email manually",
+            text="If you have already made an\naccount, scan your UCSD barcode\nor enter your PID manually",
             fill="#F5F0E6",
             font=("Montserrat", 48 * -1),
             justify="center",
@@ -74,10 +74,9 @@ class CheckInNoId(Frame):
             605.0,
             480.0,
             anchor="nw",
-            text="Email",
+            text="PID",
             fill="#F5F0E6",
             font=("Montserrat", 24 * -1),
-            justify="center",
         )
 
         button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))
@@ -94,48 +93,59 @@ class CheckInNoId(Frame):
         )
         self.button_1.place(x=465.0, y=598.0, width=349.0, height=71.0)
 
-        self.email_entry = Entry(self, textvariable=self.email, width=40, font=52)
-        self.email_entry.place(x=420.0, y=412.0)
+        self.pid_entry = Entry(self, textvariable=self.pid, width=40, font=52)
+        self.pid_entry.place(x=420.0, y=412.0)
 
     def clearEntries(self):
-        self.email_entry.delete(0, END)
+        self.pid_entry.delete(0, END)
 
-    def updateEntries(self, email):
-        self.email_entry.insert(0, email)
+    def updateEntries(self, pid):
+        self.pid_entry.insert(0, pid)
 
     def callCheckIn(self, controller):
-        email = self.email_entry.get().lstrip("Aa")
-        if not email:
+        pid = self.pid_entry.get().lstrip("Aa")
+        if not pid:
             return
 
         util = utils()
         self.clearEntries()
 
         curr_user = None
+        curr_user_w = None
 
         user_data = global_.sheets.get_user_db_data()
         for i in user_data:
-            student_email = i["Email Address"].lstrip("Aa")
-            if student_email == email:
+            student_id = i["Student ID"].lstrip("Aa")
+            if student_id == pid:
                 curr_user = i
 
-        if not curr_user:
+        if curr_user:
+            waiver_data = global_.sheets.get_waiver_db_data()
+            for i in waiver_data:
+                waiver_id = i["A_Number"].lstrip("Aa")
+                if pid == waiver_id:
+                    curr_user_w = i
+        else:
             logging.info("Manual check in user account was not found")
             controller.show_frame(NoAccCheckInOnly)
             return
 
-        new_row = [
-            util.getDatetime(),
-            int(time.time()),
-            curr_user["Name"],
-            "No ID",
-            "User Checkin",
-            curr_user["Email Address"],
-            curr_user["Student ID"],
-            "",
-            curr_user["Affiliation"],
-        ]
-
-        check_in_reason = global_.app.get_frame(CheckInReason)
-        check_in_reason.setCheckInUser(new_row)
-        controller.show_frame(CheckInReason)
+        if not curr_user_w:
+            logging.info("Manual check in user does not have waiver")
+            controller.show_frame(AccNoWaiver)
+            controller.after(3000, lambda: controller.show_frame(AccNoWaiverSwipe))
+        else:
+            new_row = [
+                util.getDatetime(),
+                int(time.time()),
+                curr_user["Name"],
+                "No ID",
+                "User Checkin",
+                "",
+                "",
+                "",
+            ]
+            activity_log = global_.sheets.get_activity_db()
+            activity_log.append_row(new_row)
+            global_.traffic_light.set_green()
+            global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])

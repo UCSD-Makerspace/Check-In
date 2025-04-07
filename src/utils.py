@@ -73,11 +73,11 @@ class utils:
         global_.app.update()
         logging.info(f"Creating user account for {name}")
 
-        # Check if user already exists with this email
+        # Check if user already exists with this PID
         user_data = global_.sheets.get_user_db_data()
         existing_user = None
         for user in user_data:
-            if user["Email Address"].lstrip("Aa") == email.lstrip("Aa"):
+            if user["Student ID"].lstrip("Aa") == pid.lstrip("Aa"):
                 existing_user = user
                 break
 
@@ -110,7 +110,7 @@ class utils:
             name if not existing_user else existing_user["Name"],
             global_.rfid,
             "New User" if not existing_user else "User Checkin",
-            email,
+            email if not existing_user else existing_user["Email Address"],
             pid if not existing_user else existing_user["Student ID"],
             "",
             affiliation if not existing_user else existing_user["Affiliation"]
@@ -129,7 +129,7 @@ class utils:
                 if existing_user:
                     # Find and update the existing user's row
                     for i, row in enumerate(user_data):
-                        if row["Email Address"].lstrip("Aa") == email.lstrip("Aa"):
+                        if row["Student ID"].lstrip("Aa") == pid.lstrip("Aa"):
                             user_db.update_cell(i + 2, 3, global_.rfid)  # Update NFID
                             break
                 else:
@@ -152,7 +152,8 @@ class utils:
             inProgress.destroy()
             return
 
-        check_in_reason = global_.app.get_frame(CheckInReason)
-        check_in_reason.setCheckInUser(new_a)
-        global_.app.show_frame(CheckInReason)
+        activity_log = global_.sheets.get_activity_db()
+        activity_log.append_row(new_a)
+        global_.traffic_light.set_green()
+        global_.app.get_frame(UserWelcome).displayName(name if not existing_user else existing_user["Name"])
         inProgress.destroy()
