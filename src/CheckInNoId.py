@@ -119,21 +119,10 @@ class CheckInNoId(Frame):
             if student_id == pid:
                 curr_user = i
 
-        if curr_user:
-            waiver_data = global_.sheets.get_waiver_db_data()
-            for i in waiver_data:
-                waiver_id = i["A_Number"].lstrip("Aa")
-                if pid == waiver_id:
-                    curr_user_w = i
-        else:
+        if curr_user is None:
             logging.info("Manual check in user account was not found")
             controller.show_frame(NoAccCheckInOnly)
             return
-
-        if not curr_user_w:
-            logging.info("Manual check in user does not have waiver")
-            controller.show_frame(AccNoWaiver)
-            controller.after(3000, lambda: controller.show_frame(AccNoWaiverSwipe))
         else:
             new_row = [
                 util.getDatetime(),
