@@ -90,8 +90,9 @@ class utils:
                 global_.rfid,  # Link the NFID to the existing account
                 existing_user["Student ID"],
                 existing_user["Affiliation"],
-                existing_user["Email Address"],
-                existing_user["Basement Account"]
+                existing_user["Email Address"]
+                # ,
+                # existing_user["Basement Account"]
             ]
         else:
             # Create new user
