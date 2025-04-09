@@ -67,7 +67,7 @@ class NoAccCheckInOnly(Frame):
             command=lambda: self.go_to_manual_fill(controller),
             relief="flat",
         )
-        button_1.place(x=465.0, y=400.0, width=349.0, height=71.0)
+        button_1.place(x=465.0, y=450.0, width=349.0, height=71.0)
 
         # Link existing account button
         button_image_2 = PhotoImage(file=relative_to_assets("button_2.png"))
@@ -81,7 +81,7 @@ class NoAccCheckInOnly(Frame):
             command=lambda: self.go_to_check_in_no_id(controller),
             relief="flat",
         )
-        try_again_button.place(x=465.0, y=600.0, width=349.0, height=71.0)
+        try_again_button.place(x=465.0, y=575.0, width=349.0, height=71.0)
 
         # Add text labels for buttons
         canvas.create_text(
@@ -93,14 +93,14 @@ class NoAccCheckInOnly(Frame):
             font=("Montserrat", 24 * -1),
         )
 
-        canvas.create_text(
-            500.0,
-            530.0,
-            anchor="nw",
-            text="Link Existing Account",
-            fill="#F5F0E6",
-            font=("Montserrat", 24 * -1),
-        )
+        # canvas.create_text(
+        #     500.0,
+        #     530.0,
+        #     anchor="nw",
+        #     text="Link Existing Account",
+        #     fill="#F5F0E6",
+        #     font=("Montserrat", 24 * -1),
+        # )
 
     def go_to_manual_fill(self, controller):
         global_.app.get_frame(ManualFill).clearEntries()
