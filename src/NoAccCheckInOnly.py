@@ -70,10 +70,10 @@ class NoAccCheckInOnly(Frame):
         button_1.place(x=465.0, y=400.0, width=349.0, height=71.0)
 
         # Link existing account button
-        button_image_2 = PhotoImage(file=relative_to_assets("button_1.png"))
+        button_image_2 = PhotoImage(file=relative_to_assets("button_2.png"))
         self.photoList.append(button_image_2)
 
-        button_2 = Button(
+        try_again_button = Button(
             self,
             image=button_image_2,
             borderwidth=0,
@@ -81,7 +81,7 @@ class NoAccCheckInOnly(Frame):
             command=lambda: self.go_to_check_in_no_id(controller),
             relief="flat",
         )
-        button_2.place(x=465.0, y=500.0, width=349.0, height=71.0)
+        try_again_button.place(x=465.0, y=600.0, width=349.0, height=71.0)
 
         # Add text labels for buttons
         canvas.create_text(

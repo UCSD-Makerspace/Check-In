@@ -5,6 +5,7 @@ import global_
 import tkinter
 from gui import *
 from UserThank import *
+from UserWelcome import UserWelcome
 from CheckInReason import CheckInReason
 
 ######################################################
