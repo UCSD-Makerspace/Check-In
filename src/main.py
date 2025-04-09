@@ -7,8 +7,9 @@ from threading import Thread
 from UserWelcome import *
 from ManualFill import *
 from CheckInNoId import *
-from CheckInReason import *
-from NoAccNoWaiver import *
+from CheckInReason import CheckInReason
+from NoAccNoWaiver import NoAccNoWaiver
+from NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
 import global_
 import socket
 import logging
