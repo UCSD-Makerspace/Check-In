@@ -5,7 +5,6 @@ from pathlib import Path
 from tkinter import *
 from tkinter import ttk
 from utils import *
-from NoAccCheckInOnly import NoAccCheckInOnly
 from UserWelcome import UserWelcome
 import logging
 
