@@ -1,6 +1,5 @@
 from tkinter import *
 from gui import *
-from swipe import *
 from reader import *
 from fabman import *
 from sheets import *
@@ -180,13 +179,11 @@ if __name__ == "__main__":
     global_.init()
     app = gui()
     global_.setApp(app)
-    sw = swipe()
     reader = Reader()
     util = utils()
     thread = Thread(target=myLoop, args=(app, reader))
     logging.info("Starting thread")
     thread.start()
-    app.bind("<Key>", lambda i: sw.keyboardPress(i))
     app.bind("<Escape>", lambda i: clearAndReturn())
     logging.info("Made it to app start")
     app.start()

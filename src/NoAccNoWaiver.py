@@ -50,7 +50,7 @@ class NoAccNoWaiver(Frame):
             180.0,
             anchor="nw",
             # text="Looks like you don’t have an\n  account nor signed the\n   waiver, let’s solve that",
-            text="Looks like you don't have an\n  account, let's solve that",
+            text="Looks like your card isn't registered, let's set up your account.",
             fill="#F5F0E6",
             font=("Montserrat", 64 * -1),
         )
