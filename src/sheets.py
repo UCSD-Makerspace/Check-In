@@ -3,10 +3,10 @@ import gspread
 import os
 import logging
 from oauth2client.service_account import ServiceAccountCredentials
-import threading
+
 
 class Sheet:
-    CACHE_TIME = 60 * 5
+    CACHE_TIME = 60 * 30
 
     def __init__(self, db):
         self.db = db
@@ -15,24 +15,20 @@ class Sheet:
 
     def get_sheet(self):
         return self.db
-    
-    def update_cache(self):
-        try:
-            logging.info("Updating database from web")
-            self.data = self.db.get_all_records(numericise_ignore=["all"])
-            self.last_updated = time.time()
-            logging.info("Finished updating database from web")
-        except Exception as e:
-            logging.warning("Unable to update Google Sheets", exc_info=True)
 
     def get_data(self, force_update):
         curr_time = time.time()
-        if (not self.data or force_update):
-            self.update_cache()
-        # Do it asynchronously when time has expired
-        elif (curr_time - self.last_updated > self.CACHE_TIME):
-            update_thread = threading.Thread(target=self.update_cache)
-            update_thread.start()
+        if (
+            not self.data
+            or force_update
+            or curr_time - self.last_updated > self.CACHE_TIME
+        ):
+            try:
+                logging.info("Updating database from web")
+                self.data = self.db.get_all_records(numericise_ignore=["all"])
+                self.last_updated = curr_time
+            except Exception as e:
+                logging.warning("Unable to update Google Sheets", exc_info=True)
 
         return self.data
 
@@ -55,7 +51,11 @@ class SheetManager:
             )  # Open the spreadhseet
 
             logging.info("User Database Loaded")
-            self.activity_db = Sheet(client.open("Activity Log Entrepreneurship Center").sheet1)
+            self.activity_db = Sheet(
+                client.open_by_url(
+                    "https://docs.google.com/spreadsheets/d/1aLBb1J2ifoUG2UAxHHbwxNO3KrIIWoI0pnZ14c5rpOM/edit?usp=drive_web&ouid=104398832910104737872"
+                ).sheet1
+            )
             logging.info("Activity Database Loaded")
             self.waiver_db = Sheet(client.open("Waiver Signatures").sheet1)
             logging.info("Waiver Database Loaded")
@@ -79,3 +79,6 @@ class SheetManager:
 
     def get_activity_db_data(self, force_update=False):
         return self.activity_db.get_data(force_update)
+
+    def get_waiver_db_data(self, force_update=False):
+        return self.waiver_db.get_data(force_update)

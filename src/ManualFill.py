@@ -28,8 +28,6 @@ class ManualFill(Frame):
         self.last_name = StringVar()
         self.email = StringVar()
         self.pid = StringVar()
-        self.affiliation = StringVar()
-        self.lastqtr = StringVar()
 
         self.first_name_entry = 0
         self.last_name_entry = 0
@@ -198,8 +196,6 @@ class ManualFill(Frame):
         self.entryList.append(self.last_name.get())
         self.entryList.append(self.email.get())
         self.entryList.append(self.pid.get())
-        self.entryList.append(self.affiliation.get())
-        self.entryList.append(self.lastqtr.get())
         return self.entryList
 
     def clearEntries(self):
@@ -207,15 +203,12 @@ class ManualFill(Frame):
         self.last_name_entry.delete(0, END)
         self.email_entry.delete(0, END)
         self.pid_entry.delete(0, END)
-        self.lastqtr.set("")
-        self.affiliation.set(AFFILIATIONS[0])
-        self.affiliation_button.configure(text=AFFILIATIONS[0])
 
-    def updateEntries(self, fname, lname, email, pid, lastqtr):
-        self.name_entry.insert(0, fname + " " + lname)
+    def updateEntries(self, fname, lname, email, pid):
+        self.first_name_entry.insert(0, fname)
+        self.last_name_entry.insert(0, lname)
         self.email_entry.insert(0, email)
         self.pid_entry.insert(0, pid)
-        self.lastqtr.set(lastqtr)
 
     def callAccountCreation(self):
         util = utils()
