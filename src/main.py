@@ -8,6 +8,7 @@ from UserWelcome import *
 from ManualFill import *
 from CheckInNoId import *
 from CheckInReason import *
+from NoAccNoWaiver import *
 import global_
 import socket
 import logging
