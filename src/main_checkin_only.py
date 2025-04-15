@@ -133,8 +133,10 @@ def myLoop(app, reader):
                     str(tag),
                     "User Checkin",
                     curr_user["Type"],
-                    get_student_info[4],
-                    get_student_info[5],
+                    "",
+                    "",
+                    #get_student_info[4],
+                    #get_student_info[5],
                 ]
                 activity_log = global_.sheets.get_activity_db()
                 activity_log.append_row(new_row)
