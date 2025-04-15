@@ -116,7 +116,7 @@ def myLoop(app, reader):
             # All scenarios for ID tap #
             ############################
 
-            get_student_info = global_.getStudentInfo(tag)
+            get_student_info = global_.api.get_student_info(tag)
 
             if curr_user == "None" and curr_user_w == "None":
                 # for check-in only they cannot make an account
