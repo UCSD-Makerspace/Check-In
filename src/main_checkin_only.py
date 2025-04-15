@@ -129,7 +129,7 @@ def myLoop(app, reader):
                     curr_user["Name"],
                     str(tag),
                     "User Checkin",
-                    curr_user["Affiliation"],
+                    "",
                     "",
                     "",
                 ]
