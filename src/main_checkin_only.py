@@ -7,6 +7,7 @@ from threading import Thread
 from UserWelcome import *
 from ManualFill import *
 from CheckInNoId import *
+from get_info_from_pid import *
 import global_
 import socket
 import logging
@@ -113,6 +114,8 @@ def myLoop(app, reader):
             # All scenarios for ID tap #
             ############################
 
+            get_student_info = global_.getStudentInfo(tag)
+
             if curr_user == "None" and curr_user_w == "None":
                 # for check-in only they cannot make an account
                 logging.info("User was not found in the database")
@@ -130,8 +133,8 @@ def myLoop(app, reader):
                     str(tag),
                     "User Checkin",
                     curr_user["Type"],
-                    "",
-                    "",
+                    get_student_info[4],
+                    get_student_info[5],
                 ]
                 activity_log = global_.sheets.get_activity_db()
                 activity_log.append_row(new_row)
