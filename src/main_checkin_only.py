@@ -11,6 +11,7 @@ import global_
 import socket
 import logging
 import argparse
+from get_info_from_pid import contact_client
 
 
 def is_connected(host="8.8.8.8", port=53, timeout=3):
@@ -123,6 +124,15 @@ def myLoop(app, reader):
                 app.show_frame(AccNoWaiver)
                 app.after(3000, lambda: app.show_frame(AccNoWaiverSwipe))
             else:
+                # Get student info from API
+                client = contact_client()  # Initialize the API client
+                student_info = client.get_student_info(curr_user["Student ID"])
+                if student_info is False:
+                    logging.error("Failed to get student information from API")
+                    lastEnrTrm = "Unknown"  # Default value if we can't get the info
+                else:
+                    lastEnrTrm = student_info[4]  # lastEnrTrm is the 5th element in the returned array
+                
                 new_row = [
                     util.getDatetime(),
                     int(time.time()),
@@ -130,8 +140,8 @@ def myLoop(app, reader):
                     str(tag),
                     "User Checkin",
                     "",
-                    "",
-                    "",
+                    curr_user["Affiliation"],
+                    lastEnrTrm,
                 ]
                 activity_log = global_.sheets.get_activity_db()
                 activity_log.append_row(new_row)
@@ -181,6 +191,7 @@ if __name__ == "__main__":
     global_.setApp(app)
     reader = Reader()
     util = utils()
+    client = contact_client()  # Initialize the API client
     thread = Thread(target=myLoop, args=(app, reader))
     logging.info("Starting thread")
     thread.start()
