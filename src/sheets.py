@@ -57,14 +57,6 @@ class SheetManager:
                 ).sheet1
             )
             logging.info("Activity Database Loaded")
-            
-            # Ensure activity log has correct column headers
-            activity_headers = ["Date", "Epoch Time", "User Name", "UUID", "Event Type", "Notes", "Affiliation", "Last Enrolled Term"]
-            current_headers = self.activity_db.get_sheet().row_values(1)
-            if len(current_headers) < len(activity_headers):
-                self.activity_db.get_sheet().update('A1:H1', [activity_headers])
-                logging.info("Updated activity log column headers")
-            
             self.waiver_db = Sheet(client.open("Waiver Signatures").sheet1)
             logging.info("Waiver Database Loaded")
         except Exception as e:
