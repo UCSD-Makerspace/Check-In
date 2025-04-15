@@ -36,6 +36,8 @@ no_wifi_shown = False
 
 
 def myLoop(app, reader):
+    api = contact_client()
+    global_.api = api
     global no_wifi_shown, no_wifi
     logging.info("Now reading ID cards")
     last_tag = 0
@@ -133,10 +135,8 @@ def myLoop(app, reader):
                     str(tag),
                     "User Checkin",
                     curr_user["Type"],
-                    "",
-                    "",
-                    #get_student_info[4],
-                    #get_student_info[5],
+                    get_student_info[4],
+                    get_student_info[5],
                 ]
                 activity_log = global_.sheets.get_activity_db()
                 activity_log.append_row(new_row)
