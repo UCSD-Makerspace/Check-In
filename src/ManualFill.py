@@ -111,8 +111,8 @@ class ManualFill(Frame):
         image_3 = canvas.create_image(640.0, 430.0, image=image_image_3)
 
         canvas.create_text(
-            250.0,
-            45.0,
+            445.0,
+            55.0,
             anchor="nw",
             text="Account Status:",
             fill="#F5F0E6",
