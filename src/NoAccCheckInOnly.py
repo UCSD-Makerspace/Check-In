@@ -6,7 +6,7 @@ from pathlib import Path
 from tkinter import *
 from ManualFill import ManualFill
 import global_
-from CheckInNoId import CheckInNoId
+import CheckInNoId
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(r"assets/no_acc_assets")
@@ -107,5 +107,5 @@ class NoAccCheckInOnly(Frame):
         controller.show_frame(ManualFill)
 
     def go_to_check_in_no_id(self, controller):
-        global_.app.get_frame(CheckInNoId).clearEntries()
-        controller.show_frame(CheckInNoId)
+        global_.app.get_frame(CheckInNoId.CheckInNoId).clearEntries()
+        controller.show_frame(CheckInNoId.CheckInNoId)
