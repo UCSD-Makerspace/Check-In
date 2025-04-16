@@ -105,9 +105,9 @@ class CheckInNoId(Frame):
         self.email_entry.insert(0, email)
 
     def callCheckIn(self, controller):
-        logging.debug("Enter key pressed on Check In No ID")
+        logging.debug("Checking In Without ID")
         curr_frame = global_.app.get_curr_frame()
-        if curr_frame not in (CheckInNoId):
+        if curr_frame not in (CheckInNoId, ):
             return
         
         email = self.email_entry.get().lstrip("Aa")
