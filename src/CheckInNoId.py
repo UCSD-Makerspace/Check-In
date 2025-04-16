@@ -64,7 +64,7 @@ class CheckInNoId(Frame):
             212.0,
             120.0,
             anchor="nw",
-            text="If you have already made an\naccount, scan your UCSD barcode\nor enter your PID manually",
+            text="If you have already made an\naccount, scan your UCSD barcode\nor enter your email manually",
             fill="#F5F0E6",
             font=("Montserrat", 48 * -1),
             justify="center",
