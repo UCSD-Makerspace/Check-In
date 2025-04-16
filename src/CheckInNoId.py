@@ -92,7 +92,7 @@ class CheckInNoId(Frame):
             relief="flat",
         )
         self.button_1.place(x=465.0, y=598.0, width=349.0, height=71.0)
-        self.bind("<Return>", lambda: self.callCheckIn(controller))
+        # self.bind("<Return>", lambda: self.callCheckIn(controller))
 
         self.email_entry = Entry(self, textvariable=self.email, width=40, font=52)
         self.email_entry.place(x=420.0, y=412.0)
