@@ -84,14 +84,14 @@ class NoAccCheckInOnly(Frame):
         try_again_button.place(x=465.0, y=575.0, width=349.0, height=71.0)
 
         # Add text labels for buttons
-        canvas.create_text(
-            500.0,
-            430.0,
-            anchor="nw",
-            text="Create New Account",
-            fill="#F5F0E6",
-            font=("Montserrat", 24 * -1),
-        )
+        # canvas.create_text(
+        #     500.0,
+        #     430.0,
+        #     anchor="nw",
+        #     text="Create New Account",
+        #     fill="#F5F0E6",
+        #     font=("Montserrat", 24 * -1),
+        # )
 
         # canvas.create_text(
         #     500.0,
