@@ -74,7 +74,7 @@ class CheckInNoId(Frame):
             605.0,
             480.0,
             anchor="nw",
-            text="PID",
+            text="Email",
             fill="#F5F0E6",
             font=("Montserrat", 24 * -1),
         )
