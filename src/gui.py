@@ -10,6 +10,7 @@ from NoAccSwipe import NoAccSwipe
 from QRCodes import QRCodes
 from UserThank import UserThank
 from UserWelcome import UserWelcome
+from NoAccCheckInOnly import NoAccCheckInOnly
 
 
 TIMEOUT_DICT = {QRCodes: 30000, NoAccSwipe: 30000}
@@ -40,6 +41,7 @@ class gui(tk.Tk):
             MainPage,
             ManualFill,
             CheckInNoId,
+            NoAccCheckInOnly,
             CheckInReason,
             NoAccount,
             NoAccSwipe,
