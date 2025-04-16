@@ -1,5 +1,6 @@
 from tkinter import *
 from gui import *
+from swipe import *
 from sheets import *
 from threading import Thread
 from UserWelcome import *
@@ -162,10 +163,12 @@ if __name__ == "__main__":
     app = gui()
     global_.setApp(app)
     global_.traffic_light.set_off()
+    sw = swipe()
     util = utils()
     thread = Thread(target=myLoop, args=(app, ))
     logging.info("Starting thread")
     thread.start()
+    app.bind("<Key>", lambda i: sw.keyboardPress(i))
     app.bind("<Escape>", lambda i: clearAndReturn())
     logging.info("Made it to app start")
     app.start()
