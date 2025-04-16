@@ -123,7 +123,7 @@ class ManualFill(Frame):
 
         self.photoList.append(image_image_4)
 
-        image_4 = canvas.create_image(797.0, 65.0, image=image_image_4)
+        image_4 = canvas.create_image(797.0, 75.0, image=image_image_4)
 
         image_image_6 = PhotoImage(file=relative_to_assets("image_6.png"))
 
