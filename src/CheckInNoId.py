@@ -25,8 +25,8 @@ class CheckInNoId(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.photoList = []
-        self.pid = StringVar()
-        self.pid_entry = 0
+        self.email = StringVar()
+        self.email_entry = 0
 
         self.loadWidgets(controller)
 
@@ -70,8 +70,8 @@ class CheckInNoId(Frame):
             justify="center",
         )
 
-        canvas.create_text(
-            605.0,
+        canvas.create_text( 
+            600.0,
             480.0,
             anchor="nw",
             text="Email",
@@ -93,18 +93,20 @@ class CheckInNoId(Frame):
         )
         self.button_1.place(x=465.0, y=598.0, width=349.0, height=71.0)
 
-        self.pid_entry = Entry(self, textvariable=self.pid, width=40, font=52)
-        self.pid_entry.place(x=420.0, y=412.0)
+        self.email_entry = Entry(self, textvariable=self.email, width=40, font=52)
+        self.email_entry.place(x=420.0, y=412.0)
 
     def clearEntries(self):
-        self.pid_entry.delete(0, END)
+        self.email_entry.delete(0, END)
 
-    def updateEntries(self, pid):
-        self.pid_entry.insert(0, pid)
+    def updateEntries(self, email):
+        self.email_entry.insert(0, email)
 
     def callCheckIn(self, controller):
-        pid = self.pid_entry.get().lstrip("Aa")
-        if not pid:
+        logging.debug("Checking in without ID")
+
+        email = self.email.get().lstrip("Aa")
+        if not email:
             return
 
         util = utils()
@@ -115,11 +117,11 @@ class CheckInNoId(Frame):
 
         user_data = global_.sheets.get_user_db_data()
         for i in user_data:
-            student_id = i["Student ID"].lstrip("Aa")
-            if student_id == pid:
+            user_email = i["Email Address"]
+            if user_email == email:
                 curr_user = i
 
-        if curr_user is None:
+        if not curr_user:
             logging.info("Manual check in user account was not found")
             controller.show_frame(NoAccCheckInOnly)
             return
