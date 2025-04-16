@@ -92,7 +92,7 @@ class utils:
                 existing_user["Student ID"],
                 existing_user["Affiliation"],
                 existing_user["Email Address"],
-                existing_user["Basement Account"]
+                existing_user["Entrepreneurship Center?"]
             ]
         else:
             # Create new user
