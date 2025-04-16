@@ -93,6 +93,7 @@ class CheckInNoId(Frame):
             relief="flat",
         )
         self.button_1.place(x=465.0, y=598.0, width=349.0, height=71.0)
+        self.bind("<Return>", lambda: self.callCheckIn(controller))
 
         self.email_entry = Entry(self, textvariable=self.email, width=40, font=52)
         self.email_entry.place(x=420.0, y=412.0)
@@ -104,6 +105,11 @@ class CheckInNoId(Frame):
         self.email_entry.insert(0, email)
 
     def callCheckIn(self, controller):
+        logging.debug("Enter key pressed on Check In No ID")
+        curr_frame = global_.app.get_curr_frame()
+        if curr_frame not in (CheckInNoId):
+            return
+        
         email = self.email_entry.get().lstrip("Aa")
         if not email:
             return
