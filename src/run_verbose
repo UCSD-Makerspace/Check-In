@@ -6,4 +6,4 @@ echo "" >> "$output_file"
 
 date "+%Y-%m-%d %H:%M:%S" >> "$output_file"
 
-python main.py -v 2>&1 | tee log.txt
+python main.py -v 2>&1 | tee -a log.txt
