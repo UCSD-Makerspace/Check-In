@@ -8,6 +8,7 @@ from UserWelcome import *
 from ManualFill import *
 from CheckInNoId import *
 from get_info_from_pid import *
+from swipe import *
 import global_
 import socket
 import logging
@@ -36,13 +37,13 @@ no_wifi_shown = False
 
 
 def myLoop(app, reader):
-
-
-
     global no_wifi_shown, no_wifi
     logging.info("Now reading ID cards")
     last_tag = 0
     last_time = 0
+    # Add swipe to use API
+    sw = swipe()
+
     while True:
         time.sleep(0.1)
         in_waiting = reader.getSerInWaiting()
@@ -63,10 +64,15 @@ def myLoop(app, reader):
                 continue
 
             tag = reader.grabRFID()
-            
+
             # Used to grab firstEnrTrm and lastEnrTrm
-            contact = contact_client()
-            get_student_info = contact.get_student_info(tag)
+            student_info = sw.pullUser(tag, "Student")
+            if student_info:
+                firstEnrTrm = student_info[4]
+                lastEnrTrm = student_info[5]
+            else:
+                firstEnrTrm = "Unknown"
+                lastEnrTrm = "Unknown"
 
             if " " in tag:
                 continue
@@ -138,8 +144,8 @@ def myLoop(app, reader):
                     str(tag),
                     "User Checkin",
                     curr_user["Type"],
-                    get_student_info[4],
-                    get_student_info[5], 
+                    firstEnrTrm,
+                    lastEnrTrm, 
                 ]
                 activity_log = global_.sheets.get_activity_db()
                 activity_log.append_row(new_row)
