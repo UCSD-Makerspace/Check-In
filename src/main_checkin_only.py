@@ -36,9 +36,9 @@ no_wifi_shown = False
 
 
 def myLoop(app, reader):
-    contact = contact_client()
 
-    get_student_info = contact.get_student_info(tag)
+
+
     global no_wifi_shown, no_wifi
     logging.info("Now reading ID cards")
     last_tag = 0
@@ -63,6 +63,10 @@ def myLoop(app, reader):
                 continue
 
             tag = reader.grabRFID()
+            
+            # Used to grab firstEnrTrm and lastEnrTrm
+            contact = contact_client()
+            get_student_info = contact.get_student_info(tag)
 
             if " " in tag:
                 continue
@@ -116,8 +120,6 @@ def myLoop(app, reader):
             ############################
             # All scenarios for ID tap #
             ############################
-
-            get_student_info = global_.api.get_student_info(tag)
 
             if curr_user == "None" and curr_user_w == "None":
                 # for check-in only they cannot make an account
