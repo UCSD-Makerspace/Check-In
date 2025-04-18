@@ -115,7 +115,7 @@ def myLoop(app, reader):
                         curr_user_w = i
 
             # Used to grab firstEnrTrm and lastEnrTrm
-            student_info = contact.get_student_info_pid(user_id)
+            student_info = contact.get_student_info_pid("A" + user_id)
             if student_info:
                 firstEnrTrm = student_info[4]
                 lastEnrTrm = student_info[5]
