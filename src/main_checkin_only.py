@@ -95,6 +95,7 @@ def myLoop(app, reader):
                 if i["Card UUID"] == tag:
                     curr_user = i
 
+            user_id = ""
             if curr_user != "None":
                 for i in waiver_data:
                     waiver_id = i["A_Number"].lower()

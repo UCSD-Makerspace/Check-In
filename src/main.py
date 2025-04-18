@@ -103,6 +103,7 @@ def myLoop(app, reader):
             end = perf_counter()
             logging.debug(f"Card found in {end - start} seconds")
 
+            user_id = ""
             if curr_user != "None":
                 for i in waiver_data:
                     waiver_id = i["A_Number"].lower()
