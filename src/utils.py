@@ -7,6 +7,7 @@ import tkinter
 from gui import *
 from UserThank import *
 import threading
+from get_info_from_pid import contact_client
 
 import timeit
 
@@ -102,6 +103,14 @@ class utils:
             " ",
             " ",
         ]
+        contact = contact_client()
+        user_info = contact.get_student_info_pid(pid)
+        firstEnrTerm = "Unknown"
+        lastEnrTerm = "Unknown"
+        if user_info:
+            firstEnrTerm = user_info[4]
+            lastEnrTerm = user_info[5]
+
         new_a = [
             self.getDatetime(),
             int(time.time()),
@@ -109,8 +118,8 @@ class utils:
             global_.rfid,
             "New User",
             "",
-            "",
-            "",
+            firstEnrTerm,
+            lastEnrTerm,
         ]
 
         no_wifi = Label(
