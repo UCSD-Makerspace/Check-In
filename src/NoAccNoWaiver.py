@@ -46,7 +46,7 @@ class NoAccNoWaiver(Frame):
 
         # TODO: Don't leave this
         canvas.create_text(
-            160.0,
+            100.0,
             180.0,
             anchor="nw",
             # text="Looks like you don’t have an\n  account nor signed the\n   waiver, let’s solve that",
