@@ -26,6 +26,35 @@ class contact_client:
         self.token = self.oauth2_client.fetch_token(
             api_url + "token", grant_type="client_credentials"
         )
+    
+    def get_student_info_pid(self, pid):
+        if self.token["expires_at"] < time.time() + 60:
+            self.token = self.oauth2_client.fetch_token(
+                api_url + "token", grant_type="client_credentials"
+            )
+
+        token = self.token["access_token"]
+        url = (
+            api_url
+            + "student_contact_info/v1/students/contactinfo_by_pids?studentIds="
+            + str(pid)
+        )
+
+        response = requests.get(
+            url, headers={"Authorization": f"Bearer {token}"}, timeout=1
+        )
+        if not response.ok:
+            return False
+        fname = response.json()[0]["name"]["firstName"]
+        lname = response.json()[0]["name"]["lastName"]
+        # Formatting in API JSON: Under name, in the form of SP25, etc
+        firstEnrTrm = response.json()[0]["name"]["firstEnrTrm"]
+        lastEnrTrm = response.json()[0]["name"]["lastEnrTrm"]
+        emails = []
+        for entries in response.json()[0]["emailAddressList"]:
+            emails.append(entries["emailAddress"])
+        return [fname, lname, emails, pid, firstEnrTrm, lastEnrTrm]
+
 
     def get_student_info(self, barcode):
         if self.token["expires_at"] < time.time() + 60:

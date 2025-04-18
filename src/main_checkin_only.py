@@ -42,7 +42,7 @@ def myLoop(app, reader):
     last_tag = 0
     last_time = 0
     # Add swipe to use API
-    sw = swipe()
+    contact = contact_client()
 
     while True:
         time.sleep(0.1)
@@ -64,15 +64,6 @@ def myLoop(app, reader):
                 continue
 
             tag = reader.grabRFID()
-
-            # Used to grab firstEnrTrm and lastEnrTrm
-            student_info = sw.pullUser(tag, "Student")
-            if student_info:
-                firstEnrTrm = student_info[4]
-                lastEnrTrm = student_info[5]
-            else:
-                firstEnrTrm = "Unknown"
-                lastEnrTrm = "Unknown"
 
             if " " in tag:
                 continue
@@ -122,6 +113,15 @@ def myLoop(app, reader):
 
                     if user_id == waiver_id or user_email == waiver_email:
                         curr_user_w = i
+
+            # Used to grab firstEnrTrm and lastEnrTrm
+            student_info = contact_client.get_student_info_pid(user_id)
+            if student_info:
+                firstEnrTrm = student_info[4]
+                lastEnrTrm = student_info[5]
+            else:
+                firstEnrTrm = "Unknown"
+                lastEnrTrm = "Unknown"
 
             ############################
             # All scenarios for ID tap #
