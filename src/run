@@ -6,4 +6,4 @@ echo "" >> "$output_file"
 
 date "+%Y-%m-%d %H:%M:%S" >> "$output_file"
 
-/home/ecpi/Check-In/bin/python main.py 2>&1 | tee -a log.txt
+python main.py 2>&1 | tee -a log.txt
