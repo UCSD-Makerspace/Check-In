@@ -7,6 +7,7 @@ from threading import Thread
 from UserWelcome import *
 from ManualFill import *
 from CheckInNoId import *
+from get_info_from_pid import contact_client
 import global_
 import socket
 import logging
@@ -45,6 +46,8 @@ def myLoop(app, reader):
     logging.info("Now reading ID cards")
     last_tag = 0
     last_time = 0
+    # For looking up student info
+    contact = contact_client()
     while True:
         time.sleep(0.1)
         in_waiting = reader.getSerInWaiting()
@@ -119,6 +122,15 @@ def myLoop(app, reader):
                     if user_id == waiver_id or user_email == waiver_email:
                         curr_user_w = i
 
+            # Used to grab firstEnrTrm and lastEnrTrm
+            student_info = contact.get_student_info_pid("A" + user_id)
+            if student_info:
+                firstEnrTrm = student_info[4]
+                lastEnrTrm = student_info[5]
+            else:
+                firstEnrTrm = "Unknown"
+                lastEnrTrm = "Unknown"
+
             ############################
             # All scenarios for ID tap #
             ############################
@@ -144,9 +156,9 @@ def myLoop(app, reader):
                     curr_user["Name"],
                     str(tag),
                     "User Checkin",
-                    "",
-                    "",
-                    "",
+                    curr_user["Type"],
+                    firstEnrTrm,
+                    lastEnrTrm, 
                 ]
                 activity_log = global_.sheets.get_activity_db()
                 activity_log.append_row(new_row)

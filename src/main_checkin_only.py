@@ -7,7 +7,7 @@ from threading import Thread
 from UserWelcome import *
 from ManualFill import *
 from CheckInNoId import *
-from get_info_from_pid import *
+from get_info_from_pid import contact_client
 from swipe import *
 import global_
 import socket
@@ -41,7 +41,7 @@ def myLoop(app, reader):
     logging.info("Now reading ID cards")
     last_tag = 0
     last_time = 0
-    # Add swipe to use API
+    # For looking up student info
     contact = contact_client()
 
     while True:
