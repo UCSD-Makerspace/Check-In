@@ -1,0 +1,14 @@
+[Unit]
+Description=Entrepreneurship Center Check-In System
+After=network-online.target
+
+[Service]
+ExecStart=/bin/bash /home/ecpi/Check-In/src/run_verbose
+WorkingDirectory=/home/ecpi/Check-In/src/
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=ecpi
+
+[Install]
+WantedBy=multi-user.target
