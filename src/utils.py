@@ -83,28 +83,16 @@ class utils:
                 existing_user = user
                 break
 
-        if existing_user:
-            # Update existing user with NFID
-            new_row = [
-                existing_user["Name"],
-                self.getDatetime(),
-                global_.rfid,  # Link the NFID to the existing account
-                existing_user["Student ID"],
-                existing_user["Affiliation"],
-                existing_user["Email Address"],
-                existing_user["Entrepreneurship Center?"]
-            ]
-        else:
-            # Create new user
-            new_row = [
-                name,
-                self.getDatetime(),
-                global_.rfid,
-                pid,
-                affiliation,
-                email,
-                True # Account created at entrepreneurship center, not basement
-            ]
+        # Create new user
+        new_row = [
+            name,
+            self.getDatetime(),
+            global_.rfid,
+            pid,
+            affiliation,
+            email,
+            True # Account created at entrepreneurship center, not basement
+        ]
 
         new_a = [
             self.getDatetime(),
@@ -131,7 +119,7 @@ class utils:
                 if existing_user:
                     # Find and update the existing user's row
                     for i, row in enumerate(user_data):
-                        if row["Student ID"].lstrip("Aa") == pid.lstrip("Aa"):
+                        if row["Email Address"] == email:
                             user_db.update_cell(i + 2, 3, global_.rfid)  # Update NFID
                             break
                 else:
