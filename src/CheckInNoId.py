@@ -64,7 +64,7 @@ class CheckInNoId(Frame):
             212.0,
             120.0,
             anchor="nw",
-            text="If you have already made an\naccount, scan your UCSD barcode\nor enter your email manually",
+            text="If you have already made an\naccount, enter your email here.",
             fill="#F5F0E6",
             font=("Montserrat", 48 * -1),
             justify="center",
@@ -140,7 +140,6 @@ class CheckInNoId(Frame):
                 curr_user["Student ID"],
                 "",
             ]
-            activity_log = global_.sheets.get_activity_db()
-            activity_log.append_row(new_row)
-            global_.traffic_light.set_green()
-            global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])
+            check_in_reason = global_.app.get_frame(CheckInReason)
+            check_in_reason.setCheckInUser(new_row)
+            global_.app.show_frame(CheckInReason)
