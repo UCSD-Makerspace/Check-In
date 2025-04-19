@@ -46,11 +46,12 @@ class NoAccNoWaiver(Frame):
 
         # TODO: Don't leave this
         canvas.create_text(
-            100.0,
+            80.0,
             180.0,
             anchor="nw",
             # text="Looks like you don’t have an\n  account nor signed the\n   waiver, let’s solve that",
-            text="Looks like your card isn't registered, \nlet's set up your account.",
+            text="Looks like your card isn't registered, \n" \
+                 "     let's set up your account.",
             fill="#F5F0E6",
             font=("Montserrat", 64 * -1),
         )
