@@ -98,7 +98,7 @@ def myLoop(app: gui):
             logging.info("User was not found in the database")
             global_.traffic_light.set_red()
             app.show_frame(NoAccNoWaiver)
-            app.after(3000, lambda: app.show_frame(NoAccNoWaiver))
+            app.after(3000, lambda: app.show_frame(NoAccNoWaiverSwipe))
         else:
             new_row = [
                 util.getDatetime(),
