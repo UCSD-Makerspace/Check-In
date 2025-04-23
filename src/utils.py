@@ -99,7 +99,7 @@ class utils:
             int(time.time()),
             name if not existing_user else existing_user["Name"],
             global_.rfid,
-            "New User" if not existing_user else "User Checkin",
+            "New User" if not existing_user else "Linked UCSD ID",
             email if not existing_user else existing_user["Email Address"],
             pid if not existing_user else existing_user["Student ID"],
             "",
