@@ -18,6 +18,9 @@ cd Check-In
 git checkout entrepreneur-ship-center
 ```
 
+Install dependencies:
+sudo apt-get install swig pcscd
+
 Install pyscard:
 ```
 sudo apt-get install pcscd swig gcc libpcsclite-dev
