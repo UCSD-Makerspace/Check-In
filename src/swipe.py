@@ -114,7 +114,7 @@ class swipe:
             return
 
         manfill = global_.app.get_frame(ManualFill)
-        manfill.clearEntries()
+        # manfill.clearEntries()
 
         logging.info(
             f"Filling data with {u_data[0]} {u_data[1]} {email_to_use} {u_data[3]}"
