@@ -61,7 +61,7 @@ class CheckInNoId(Frame):
         image_3 = canvas.create_image(640.0, 424.0, image=image_image_3)
 
         canvas.create_text(
-            212.0,
+            260.0,
             120.0,
             anchor="nw",
             text="If you have already made an\naccount, enter your email here.",
