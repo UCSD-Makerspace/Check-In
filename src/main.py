@@ -66,7 +66,6 @@ def myLoop(app: gui):
                 no_wifi.after(4000, lambda: destroyNoWifiError(no_wifi))
             continue    
 
-        app.get_frame(ManualFill).clearEntries()
         tag = card_reader.getRFID()
 
         if " " in tag:
@@ -80,6 +79,7 @@ def myLoop(app: gui):
 
         logging.debug("RFID Check Succeeded")
 
+        app.get_frame(ManualFill).clearEntries()
         global_.setRFID(tag)
 
         # Get a list of all users
