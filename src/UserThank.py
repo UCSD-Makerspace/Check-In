@@ -5,9 +5,6 @@
 from pathlib import Path
 from tkinter import *
 from MainPage import *
-from AccNoWaiver import *
-from AccNoWaiverSwipe import *
-from MainPage import *
 import time
 import global_
 

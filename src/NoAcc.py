@@ -7,14 +7,14 @@ from tkinter import *
 
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"assets/acc_no_waiver_assets")
+ASSETS_PATH = OUTPUT_PATH / Path(r"assets/no_acc_assets")
 
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
 
-class AccNoWaiver(Frame):
+class NoAcc(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.photoList = []
@@ -44,11 +44,13 @@ class AccNoWaiver(Frame):
 
         image_2 = canvas.create_image(639.333984375, 359.333984375, image=image_image_2)
 
+        # TODO: Don't leave this
         canvas.create_text(
-            169.0,
-            258.0,
+            160.0,
+            180.0,
             anchor="nw",
-            text="Looks like you haven’t signed\n  the waiver, let’s solve that",
+            # text="Looks like you don’t have an\n  account nor signed the\n   waiver, let’s solve that",
+            text="Looks like you don't have an\n  account, let's solve that",
             fill="#F5F0E6",
             font=("Montserrat", 64 * -1),
         )

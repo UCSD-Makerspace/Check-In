@@ -7,8 +7,8 @@ from UserWelcome import *
 from ManualFill import *
 from CheckInNoId import *
 from CheckInReason import CheckInReason
-from NoAccNoWaiver import NoAccNoWaiver
-from NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
+from NoAcc import NoAcc
+from NoAccSwipe import NoAccSwipe
 import global_
 import socket
 import logging
@@ -97,8 +97,8 @@ def myLoop(app: gui):
         if curr_user == "None":
             logging.info("User was not found in the database")
             global_.traffic_light.set_red()
-            app.show_frame(NoAccNoWaiver)
-            app.after(3000, lambda: app.show_frame(NoAccNoWaiverSwipe))
+            app.show_frame(NoAcc)
+            app.after(3000, lambda: app.show_frame(NoAccSwipe))
         else:
             new_row = [
                 util.getDatetime(),
