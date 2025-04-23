@@ -154,8 +154,7 @@ class utils:
             inProgress.destroy()
             return
 
-        activity_log = global_.sheets.get_activity_db()
-        activity_log.append_row(new_a)
-        global_.traffic_light.set_green()
-        global_.app.get_frame(UserWelcome).displayName(name if not existing_user else existing_user["Name"])
+        check_in_reason = global_.app.get_frame(CheckInReason)
+        check_in_reason.setCheckInUser(new_a)
+        global_.app.show_frame(CheckInReason)
         inProgress.destroy()
