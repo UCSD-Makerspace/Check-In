@@ -57,7 +57,7 @@ class NoAccNoWaiverSwipe(Frame):
         image_3 = canvas.create_image(640.0, 430.0, image=image_image_3)
 
         canvas.create_text(
-            303.0,
+            315.0,
             350.0,
             anchor="nw",
             text="Please scan your ID barcode",
@@ -66,19 +66,10 @@ class NoAccNoWaiverSwipe(Frame):
         )
 
         canvas.create_text(
-            215.0,
-            45.0,
+            445.0,
+            55.0,
             anchor="nw",
             text="Account Status:",
-            fill="#F5F0E6",
-            font=("Montserrat", 40 * -1),
-        )
-
-        canvas.create_text(
-            690.0,
-            45.0,
-            anchor="nw",
-            text="Waiver Status:",
             fill="#F5F0E6",
             font=("Montserrat", 40 * -1),
         )
@@ -87,13 +78,7 @@ class NoAccNoWaiverSwipe(Frame):
 
         self.photoList.append(image_image_4)
 
-        image_4 = canvas.create_image(576.0, 65.0, image=image_image_4)
-
-        image_image_5 = PhotoImage(file=relative_to_assets("image_5.png"))
-
-        self.photoList.append(image_image_5)
-
-        image_5 = canvas.create_image(1030.0, 65.0, image=image_image_5)
+        image_4 = canvas.create_image(797.0, 75.0, image=image_image_4)
 
         button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))
 
