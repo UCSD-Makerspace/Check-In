@@ -111,19 +111,10 @@ class ManualFill(Frame):
         image_3 = canvas.create_image(640.0, 430.0, image=image_image_3)
 
         canvas.create_text(
-            250.0,
-            45.0,
+            445.0,
+            55.0,
             anchor="nw",
             text="Account Status:",
-            fill="#F5F0E6",
-            font=("Montserrat", 40 * -1),
-        )
-
-        canvas.create_text(
-            670.0,
-            45.0,
-            anchor="nw",
-            text="Waiver Status:",
             fill="#F5F0E6",
             font=("Montserrat", 40 * -1),
         )
@@ -132,13 +123,7 @@ class ManualFill(Frame):
 
         self.photoList.append(image_image_4)
 
-        image_4 = canvas.create_image(605.0, 77.0, image=image_image_4)
-
-        image_image_5 = PhotoImage(file=relative_to_assets("image_5.png"))
-
-        self.photoList.append(image_image_5)
-
-        image_5 = canvas.create_image(1010.0, 77.0, image=image_image_5)
+        image_4 = canvas.create_image(797.0, 75.0, image=image_image_4)
 
         image_image_6 = PhotoImage(file=relative_to_assets("image_6.png"))
 
@@ -274,7 +259,7 @@ class ManualFill(Frame):
             response = util.createAccount(
                 data[0], data[1], data[2], data[3], ManualFill
             )
-            if response != "bad":
+            if response == "good":
                 self.clearEntries()
         except Exception as e:
             logging.warning(
