@@ -255,6 +255,7 @@ class ManualFill(Frame):
         return self.entryList
 
     def clearEntries(self):
+        logging.debug("Clearing manfill entries!")
         self.name_entry.delete(0, END)
         self.email_entry.delete(0, END)
         self.pid_entry.delete(0, END)
