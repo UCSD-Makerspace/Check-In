@@ -1,7 +1,6 @@
 from tkinter import *
-from gui import gui
-from swipe import swipe
-from reader import *
+from gui import *
+from swipe import *
 from sheets import *
 from threading import Thread
 from UserWelcome import *
@@ -15,6 +14,8 @@ import socket
 import logging
 import argparse
 import serial.tools.list_ports as list_ports
+import rfid
+import time
 
 TRAFFIC_LIGHT_VID = 6790
 READER_VID = 4292
@@ -41,88 +42,82 @@ def is_connected(host="8.8.8.8", port=53, timeout=3):
 no_wifi_shown = False
 
 
-def myLoop(app, reader):
+def myLoop(app: gui):
     global no_wifi_shown, no_wifi
     logging.info("Now reading ID cards")
     last_tag = 0
     last_time = 0
+    card_reader = rfid.RFID122U()
+
     while True:
         time.sleep(0.1)
-        in_waiting = reader.getSerInWaiting()
         tag = 0
 
-        if in_waiting >= 14:
-            if not is_connected():
-                logging.info("ERROR wifi is not connected")
-                if not no_wifi_shown:
-                    no_wifi_shown = True
-                    no_wifi = Label(
-                        app.get_frame(MainPage),
-                        text="ERROR! Connection cannot be established, please let staff know.",
-                        font=("Arial", 25),
-                    )
-                    no_wifi.pack(pady=40)
-                    no_wifi.after(4000, lambda: destroyNoWifiError(no_wifi))
-                continue
+        if not is_connected():
+            logging.info("ERROR wifi is not connected")
+            if not no_wifi_shown:
+                no_wifi_shown = True
+                no_wifi = Label(
+                    app.get_frame(MainPage),
+                    text="ERROR! Connection cannot be established, please let staff know.",
+                    font=("Arial", 25),
+                )
+                no_wifi.pack(pady=40)
+                no_wifi.after(4000, lambda: destroyNoWifiError(no_wifi))
+            continue    
 
-            app.get_frame(ManualFill).clearEntries()
-            tag = reader.grabRFID()
+        app.get_frame(ManualFill).clearEntries()
+        tag = card_reader.getRFID()
 
-            if " " in tag:
-                continue
+        if " " in tag:
+            continue
 
-            if tag == last_tag and not reader.canScanAgain(last_time):
-                logging.debug("Suppressing repeat scan")
-                continue
+        curr_time = time.time()
 
-            s_reason = reader.checkRFID(tag)
+        # Don't do repeat scans
+        if tag is last_tag and (curr_time - last_time) < 60:
+            continue
 
-            if s_reason != "good":
-                logging.debug(s_reason)
-                continue
-            else:
-                logging.debug("RFID Check Succeeded")
+        logging.debug("RFID Check Succeeded")
 
-            global_.setRFID(tag)
+        global_.setRFID(tag)
 
-            # Get a list of all users
-            user_data = global_.sheets.get_user_db_data()
-            curr_user = "None"
+        # Get a list of all users
+        user_data = global_.sheets.get_user_db_data()
+        curr_user = "None"
 
-            for i in user_data:
-                if i["Card UUID"] == tag:
-                    curr_user = i
+        for i in user_data:
+            if i["Card UUID"] == tag:
+                curr_user = i
 
-            ############################
-            # All scenarios for ID tap #
-            ############################
+        ############################
+        # All scenarios for ID tap #
+        ############################
 
-            if curr_user == "None":
-                logging.info("User was not found in the database")
-                global_.traffic_light.set_red()
-                app.show_frame(NoAccNoWaiver)
-                app.after(3000, lambda: app.show_frame(NoAccNoWaiverSwipe))
-            else:
-                new_row = [
-                    util.getDatetime(),
-                    int(time.time()),
-                    curr_user["Name"],
-                    str(tag),
-                    "User Checkin",
-                    curr_user["Email Address"],
-                    curr_user["Student ID"],
-                    "",
-                    curr_user["Affiliation"],
-                ]
+        if curr_user == "None":
+            logging.info("User was not found in the database")
+            global_.traffic_light.set_red()
+            app.show_frame(NoAccNoWaiver)
+            app.after(3000, lambda: app.show_frame(NoAccNoWaiver))
+        else:
+            new_row = [
+                util.getDatetime(),
+                int(time.time()),
+                curr_user["Name"],
+                str(tag),
+                "User Checkin",
+                curr_user["Email Address"],
+                curr_user["Student ID"],
+                "",
+                curr_user["Affiliation"],
+            ]
 
-                check_in_reason = global_.app.get_frame(CheckInReason)
-                check_in_reason.setCheckInUser(new_row)
-                app.show_frame(CheckInReason)
+            check_in_reason: CheckInReason = global_.app.get_frame(CheckInReason)
+            check_in_reason.setCheckInUser(new_row)
+            app.show_frame(CheckInReason)
 
-            last_time = time.time()
-            last_tag = tag
-
-            reader.readSerial()
+        last_time = time.time()
+        last_tag = tag
 
 
 def destroyNoWifiError(no_wifi):
@@ -159,14 +154,11 @@ if __name__ == "__main__":
     else:
         logging.basicConfig(level=logging.INFO)
 
-    ports = list(serial.tools.list_ports.comports())
-    reader_usb_id = None
+    ports = list(list_ports.comports())
     traffic_usb_id = None
 
     for p in ports:
-        if p.vid == READER_VID:
-            reader_usb_id = p.device
-        elif p.vid == TRAFFIC_LIGHT_VID:
+        if p.vid == TRAFFIC_LIGHT_VID:
             traffic_usb_id = p.device
 
     global_.init(traffic_usb_id)
@@ -174,9 +166,8 @@ if __name__ == "__main__":
     global_.setApp(app)
     global_.traffic_light.set_off()
     sw = swipe()
-    reader = Reader(reader_usb_id)
     util = utils()
-    thread = Thread(target=myLoop, args=(app, reader))
+    thread = Thread(target=myLoop, args=(app, ))
     logging.info("Starting thread")
     thread.start()
     app.bind("<Key>", lambda i: sw.keyboardPress(i))
