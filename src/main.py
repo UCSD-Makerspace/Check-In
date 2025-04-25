@@ -1,6 +1,7 @@
 from tkinter import *
 from gui import *
 from reader import *
+from swipe import swipe
 from fabman import *
 from sheets import *
 from threading import Thread
@@ -220,11 +221,13 @@ if __name__ == "__main__":
     app = gui()
     global_.setApp(app)
     global_.traffic_light.set_off()
+    sw = swipe()
     reader = Reader(reader_usb_id)
     util = utils()
     thread = Thread(target=myLoop, args=(app, reader))
     logging.info("Starting thread")
     thread.start()
+    app.bind("<Key>", lambda i: sw.keyboardPress(i))
     app.bind("<Escape>", lambda i: clearAndReturn())
     logging.info("Made it to app start")
     app.start()
