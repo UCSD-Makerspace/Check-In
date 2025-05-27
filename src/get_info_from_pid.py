@@ -109,7 +109,7 @@ class contact_client:
         for _ in range(retries):
             try:
                 response = requests.get(
-                    url, headers={"Authorization": f"Bearer {token}"}, timeout=1
+                    url, headers={"Authorization": f"Bearer {token}"}, timeout=4
                 )
                 if response.ok:
                     return response
@@ -118,4 +118,3 @@ class contact_client:
             time.sleep(0.5)  # small pause before retry
         return False
 
-    
