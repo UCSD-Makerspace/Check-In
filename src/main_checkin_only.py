@@ -116,13 +116,17 @@ def myLoop(app, reader):
                         curr_user_w = i
 
             # Used to grab firstEnrTrm and lastEnrTrm
+            # FIRST PART OF HTTPS CONNECTION ERROR -> second at get_student_info_pid
+            firstEnrTrm = "API Error"
+            lastEnrTrm = "API Error"
             student_info = contact.get_student_info_pid("A" + user_id)
             if student_info:
                 firstEnrTrm = student_info[4]
                 lastEnrTrm = student_info[5]
-            else:
-                firstEnrTrm = "Unknown"
-                lastEnrTrm = "Unknown"
+            if not student_info:
+                logging.warning(f"API timeout for user_id: {user_id}")
+                util.showTempError(frame = MainPage, message="ERROR. Please tap again in 3 seconds")
+                continue
 
             ############################
             # All scenarios for ID tap #

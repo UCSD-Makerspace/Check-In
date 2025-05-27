@@ -60,6 +60,15 @@ class utils:
     def getDatetime(self):
         return datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
+    def showTempError(self, frame, message="ERROR: Please retap in 3 seconds", duration=3000):
+        """
+        Displays error message in current frame. Used for HTTPS connection errors or other temporary issues.
+        """
+        error_label = tkinter.Label(frame, text=message, font =("Arial", 25), fg="red")
+        error_label.pack(pady=20)
+        error_label.after(3000, lambda: error_label.destroy())
+        global_.app.update()
+
     def createAccount(self, fname, lname, email, pid, ManualFill):
         start = time.perf_counter()
         validation_rule = DataValidationRule(
