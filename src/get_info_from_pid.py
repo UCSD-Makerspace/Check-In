@@ -40,10 +40,9 @@ class contact_client:
             + str(pid)
         )
 
-        response = requests.get(
-            url, headers={"Authorization": f"Bearer {token}"}, timeout=1
-        )
-        if not response.ok:
+        response = self.safe_get(url, token)
+        if not response or not response.ok:
+            # HTTPS CONNECTION ERROR SECOND PART -> first at get_student_info in main_checkin_only
             return False
         fname = response.json()[0]["name"]["firstName"]
         lname = response.json()[0]["name"]["lastName"]
@@ -64,10 +63,8 @@ class contact_client:
 
         token = self.token["access_token"]
         barcode_url = f"{api_url}student_contact_info/v1/students/{barcode}/student_id"
-        barcode_response = requests.get(
-            barcode_url, headers={"Authorization": f"Bearer {token}"}, timeout=1
-        )
-        if not barcode_response.ok:
+        barcode_response = self.safe_get(barcode_url, token)
+        if not barcode_response or not barcode_response.ok:
             return False
 
         pid = barcode_response.json()["studentId"]
@@ -77,10 +74,10 @@ class contact_client:
             + str(pid)
         )
 
-        response = requests.get(
-            url, headers={"Authorization": f"Bearer {token}"}, timeout=1
-        )
-        if not response.ok:
+        response = self.safe_get(
+            url, token)
+        if not response or not response.ok:
+            # THIS IS PART 2 OF HTTPSCONNECTIONPOOL ERROR
             return False
         fname = response.json()[0]["name"]["firstName"]
         lname = response.json()[0]["name"]["lastName"]
@@ -100,12 +97,25 @@ class contact_client:
             )
         url = api_url + "employee_data/v1/employees/" + str(pid)
         token = self.token["access_token"]
-        response = requests.get(
-            url, headers={"Authorization": f"Bearer {token}"}, timeout=1
-        )
+        response = self.safe_get(url, token)
         if not response.ok:
             return False
         email = response.json()["officialEmail"]
         fname = response.json()["firstName"]
         lname = response.json()["lastName"]
         return [fname, lname, [email]]
+    
+    def safe_get(self, url, token, retries=2):
+        for _ in range(retries):
+            try:
+                response = requests.get(
+                    url, headers={"Authorization": f"Bearer {token}"}, timeout=1
+                )
+                if response.ok:
+                    return response
+            except (requests.exceptions.Timeout, requests.exceptions.ConnectionError):
+                pass
+            time.sleep(0.5)  # small pause before retry
+        return False
+
+    
