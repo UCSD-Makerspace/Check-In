@@ -109,7 +109,7 @@ def myLoop(app, reader):
                 for i in waiver_data:
                     if not isinstance(i, dict) or "A_Number" not in i or "Email" not in i:
                         logging.warning("Invalid waiver data format")
-                        util.showTempError(frame=MainPage, message="ERROR. Please tap again in 3 seconds")
+                        util.showTempError(frame=MainPage, message="ERROR. Please tap again")
                         continue
                     waiver_id = i["A_Number"].lower()
                     waiver_email = i["Email"].lower()
