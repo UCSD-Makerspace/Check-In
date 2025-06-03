@@ -2,6 +2,8 @@ import requests
 from typing import Any
 import time
 import datetime
+import logging
+import utils
 from authlib.integrations.requests_client import OAuth2Session
 import imp
 import obf as oAuth
@@ -28,17 +30,30 @@ class contact_client:
         )
     
     def get_student_info_pid(self, pid):
-        if self.token["expires_at"] < time.time() + 60:
-            self.token = self.oauth2_client.fetch_token(
-                api_url + "token", grant_type="client_credentials"
-            )
+        try:
+            if self.token["expires_at"] < time.time() + 60:
+                self.token = self.oauth2_client.fetch_token(
+                    api_url + "token", grant_type="client_credentials"
+                )
 
-        token = self.token["access_token"]
+            token = self.token["access_token"]
+        except requests.exceptions.ConnectionError as e:
+            # If the connection fails, we return False
+            logging.error(f"Error fetching token: {e}")
+            utils.showTempError(
+                frame=MainPage, message="ERROR. Please try again later."
+            )
+            return False
+        except Exception as e:
+            # Catch any other exceptions that may occur
+            logging.error(f"Unexpected error with get_student_info_pid: {e}")
+            return False
+
         url = (
             api_url
             + "student_contact_info/v1/students/contactinfo_by_pids?studentIds="
             + str(pid)
-        )
+        )   
 
         response = self.safe_get(url, token)
         if not response or not response.ok:
