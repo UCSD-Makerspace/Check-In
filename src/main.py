@@ -135,7 +135,7 @@ def myLoop(app, reader):
                 lastEnrTrm = student_info[5]
             if not student_info:
                 logging.warning(f"API timeout for user_id: {user_id}")
-                util.showTempError(frame = MainPage, message="ERROR. Please tap again in 3 seconds")
+                util.showTempError(frame = global_.app.get_Frame(MainPage), message="ERROR. Please tap again in 3 seconds")
                 continue
 
             ############################
