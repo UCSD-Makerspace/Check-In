@@ -7,6 +7,7 @@ import tkinter
 from gui import *
 from UserThank import *
 import threading
+from get_info_from_pid import contact_client
 
 import timeit
 
@@ -59,6 +60,15 @@ class utils:
     def getDatetime(self):
         return datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
+    def showTempError(self, frame, message="ERROR: Please retap in 3 seconds", duration=3000):
+        """
+        Displays error message in current frame. Used for HTTPS connection errors or other temporary issues.
+        """
+        error_label = tkinter.Label(frame, text=message, font =("Arial", 25), fg="red")
+        error_label.pack(pady=20)
+        error_label.after(3000, lambda: error_label.destroy())
+        global_.app.update()
+
     def createAccount(self, fname, lname, email, pid, ManualFill):
         start = time.perf_counter()
         validation_rule = DataValidationRule(
@@ -102,6 +112,14 @@ class utils:
             " ",
             " ",
         ]
+        contact = contact_client()
+        user_info = contact.get_student_info_pid(pid)
+        firstEnrTerm = "Unknown"
+        lastEnrTerm = "Unknown"
+        if user_info:
+            firstEnrTerm = user_info[4]
+            lastEnrTerm = user_info[5]
+
         new_a = [
             self.getDatetime(),
             int(time.time()),
@@ -109,8 +127,8 @@ class utils:
             global_.rfid,
             "New User",
             "",
-            "",
-            "",
+            firstEnrTerm,
+            lastEnrTerm,
         ]
 
         no_wifi = Label(

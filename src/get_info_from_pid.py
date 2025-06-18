@@ -1,7 +1,7 @@
 import requests
 from typing import Any
 import time
-import datetime
+import logging
 from authlib.integrations.requests_client import OAuth2Session
 import imp
 import obf as oAuth
@@ -26,6 +26,43 @@ class contact_client:
         self.token = self.oauth2_client.fetch_token(
             api_url + "token", grant_type="client_credentials"
         )
+    
+    def get_student_info_pid(self, pid):
+        try:
+            if self.token["expires_at"] < time.time() + 60:
+                self.token = self.oauth2_client.fetch_token(
+                    api_url + "token", grant_type="client_credentials"
+                )
+            token = self.token["access_token"]
+        except requests.exceptions.ConnectionError as e:
+            # If the connection fails, we return False
+            logging.error(f"Error fetching token: {e}")
+            return False
+        except Exception as e:
+            # Catch any other exceptions
+            logging.error(f"Unexpected error with get_student_info_pid: {e}")
+            return False
+
+        url = (
+            api_url
+            + "student_contact_info/v1/students/contactinfo_by_pids?studentIds="
+            + str(pid)
+        )   
+        
+        response = self.safe_get(url, token)
+        if not response or not response.ok:
+            # HTTPS CONNECTION ERROR SECOND PART -> first at get_student_info in main_checkin_only
+            return False
+        fname = response.json()[0]["name"]["firstName"]
+        lname = response.json()[0]["name"]["lastName"]
+        # Formatting in API JSON: Under name, in the form of SP25, etc
+        firstEnrTrm = response.json()[0]["name"]["firstEnrTrm"]
+        lastEnrTrm = response.json()[0]["name"]["lastEnrTrm"]
+        emails = []
+        for entries in response.json()[0]["emailAddressList"]:
+            emails.append(entries["emailAddress"])
+        return [fname, lname, emails, pid, firstEnrTrm, lastEnrTrm]
+
 
     def get_student_info(self, barcode):
         if self.token["expires_at"] < time.time() + 60:
@@ -35,10 +72,8 @@ class contact_client:
 
         token = self.token["access_token"]
         barcode_url = f"{api_url}student_contact_info/v1/students/{barcode}/student_id"
-        barcode_response = requests.get(
-            barcode_url, headers={"Authorization": f"Bearer {token}"}, timeout=1
-        )
-        if not barcode_response.ok:
+        barcode_response = self.safe_get(barcode_url, token)
+        if not barcode_response or not barcode_response.ok:
             return False
 
         pid = barcode_response.json()["studentId"]
@@ -48,17 +83,20 @@ class contact_client:
             + str(pid)
         )
 
-        response = requests.get(
-            url, headers={"Authorization": f"Bearer {token}"}, timeout=1
-        )
-        if not response.ok:
+        response = self.safe_get(
+            url, token)
+        if not response or not response.ok:
+            # THIS IS PART 2 OF HTTPSCONNECTIONPOOL ERROR
             return False
         fname = response.json()[0]["name"]["firstName"]
         lname = response.json()[0]["name"]["lastName"]
+        # Formatting in API JSON: Under name, in the form of SP25, etc
+        firstEnrTrm = response.json()[0]["name"]["firstEnrTrm"]
+        lastEnrTrm = response.json()[0]["name"]["lastEnrTrm"]
         emails = []
         for entries in response.json()[0]["emailAddressList"]:
             emails.append(entries["emailAddress"])
-        return [fname, lname, emails, pid]
+        return [fname, lname, emails, pid, firstEnrTrm, lastEnrTrm]
 
     # not yet tested, still need to be authorized access to employeeData API.
     def get_staff_info(self, pid):
@@ -68,12 +106,24 @@ class contact_client:
             )
         url = api_url + "employee_data/v1/employees/" + str(pid)
         token = self.token["access_token"]
-        response = requests.get(
-            url, headers={"Authorization": f"Bearer {token}"}, timeout=1
-        )
+        response = self.safe_get(url, token)
         if not response.ok:
             return False
         email = response.json()["officialEmail"]
         fname = response.json()["firstName"]
         lname = response.json()["lastName"]
         return [fname, lname, [email]]
+    
+    def safe_get(self, url, token, retries=2):
+        for _ in range(retries):
+            try:
+                response = requests.get(
+                    url, headers={"Authorization": f"Bearer {token}"}, timeout=4
+                )
+                if response.ok:
+                    return response
+            except (requests.exceptions.Timeout, requests.exceptions.ConnectionError):
+                pass
+            time.sleep(0.5)  # small pause before retry
+        return False
+

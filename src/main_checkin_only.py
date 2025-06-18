@@ -1,6 +1,5 @@
 from tkinter import *
 from gui import *
-from swipe import *
 from reader import *
 from fabman import *
 from sheets import *
@@ -8,6 +7,8 @@ from threading import Thread
 from UserWelcome import *
 from ManualFill import *
 from CheckInNoId import *
+from get_info_from_pid import contact_client
+from swipe import *
 import global_
 import socket
 import logging
@@ -40,6 +41,9 @@ def myLoop(app, reader):
     logging.info("Now reading ID cards")
     last_tag = 0
     last_time = 0
+    # For looking up student info
+    contact = contact_client()
+
     while True:
         time.sleep(0.1)
         in_waiting = reader.getSerInWaiting()
@@ -91,8 +95,13 @@ def myLoop(app, reader):
                 if i["Card UUID"] == tag:
                     curr_user = i
 
+            user_id = ""
             if curr_user != "None":
                 for i in waiver_data:
+                    if not isinstance(i, dict) or "A_Number" not in i or "Email" not in i:
+                        logging.warning("Invalid waiver data format")
+                        util.showTempError(frame=MainPage, message="ERROR. Please tap again in 3 seconds")
+                        continue
                     waiver_id = i["A_Number"].lower()
                     waiver_email = i["Email"].lower()
                     user_id = curr_user["Student ID"].lower()
@@ -109,6 +118,19 @@ def myLoop(app, reader):
 
                     if user_id == waiver_id or user_email == waiver_email:
                         curr_user_w = i
+
+            # Used to grab firstEnrTrm and lastEnrTrm
+            # FIRST PART OF HTTPS CONNECTION ERROR -> second at get_student_info_pid
+            firstEnrTrm = "API Error"
+            lastEnrTrm = "API Error"
+            student_info = contact.get_student_info_pid("A" + user_id)
+            if student_info:
+                firstEnrTrm = student_info[4]
+                lastEnrTrm = student_info[5]
+            if not student_info:
+                logging.warning(f"API timeout for user_id: {user_id}")
+                util.showTempError(frame = MainPage, message="ERROR. Please tap again in 3 seconds")
+                continue
 
             ############################
             # All scenarios for ID tap #
@@ -130,9 +152,9 @@ def myLoop(app, reader):
                     curr_user["Name"],
                     str(tag),
                     "User Checkin",
-                    "",
-                    "",
-                    "",
+                    curr_user["Type"],
+                    firstEnrTrm,
+                    lastEnrTrm, 
                 ]
                 activity_log = global_.sheets.get_activity_db()
                 activity_log.append_row(new_row)
@@ -180,13 +202,11 @@ if __name__ == "__main__":
     global_.init()
     app = gui()
     global_.setApp(app)
-    sw = swipe()
     reader = Reader()
     util = utils()
     thread = Thread(target=myLoop, args=(app, reader))
     logging.info("Starting thread")
     thread.start()
-    app.bind("<Key>", lambda i: sw.keyboardPress(i))
     app.bind("<Escape>", lambda i: clearAndReturn())
     logging.info("Made it to app start")
     app.start()

@@ -75,7 +75,7 @@ class swipe:
             logging.warning(
                 "An exception has ocurred with pulling user information", exc_info=True
             )
-            return
+            return None
 
         logging.info(f"Info pull succeeded:\n{u_info}")
         return u_info
@@ -97,25 +97,23 @@ class swipe:
 
         # u_data is a list containing the user type and their ID
         u_data = self.pullUser(user_card_number, "Student")
-        if u_data == False:
+        if not u_data:
             logging.info("Student search returned False, returning...")
             return
         # if u_type == "Student":
         #     u_id = "A" + u_id
-
         if global_.app.get_curr_frame() == CheckInNoId:
             global_.app.get_frame(CheckInNoId).clearEntries()
             global_.app.get_frame(CheckInNoId).updateEntries(u_data[3])
             return
 
-        manfill = global_.app.get_frame(ManualFill)
-        manfill.clearEntries()
-
-        email_to_use = u_data[2][0]
+        email_to_use = "" if len(u_data[2]) == 0 else u_data[2][0]
         for email in u_data[2]:
             if email.endswith("@ucsd.edu"):
                 email_to_use = email
 
+        manfill = global_.app.get_frame(ManualFill)
+        manfill.clearEntries()
         logging.info(
             f"Filling data with {u_data[0]} {u_data[1]} {email_to_use} {u_data[3]}"
         )

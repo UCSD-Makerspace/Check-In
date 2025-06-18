@@ -47,7 +47,7 @@ class Reader(Thread):
 
     def checkRFID(self, tag):
         # Verifies rfid tag
-
+        reason= ""
         if self.ser.in_waiting >= expected_characters:
             second_tag = self.grabRFID()
             logging.debug(f"Comparing {tag} and {second_tag}")
