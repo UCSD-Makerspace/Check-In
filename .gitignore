@@ -4,4 +4,4 @@ fabtoken.txt
 creds.json
 log*
 .venv/
-assets/user_db.json
+/src/assets/user_db.json
