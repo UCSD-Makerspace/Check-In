@@ -1,22 +1,13 @@
-import sys
+import json
 import logging
 import os
-import json
-
-script_dir = os.path.dirname(__file__)
-project_root = os.path.abspath(os.path.join(script_dir, ".."))
-sys.path.insert(0, os.path.abspath(os.path.join(project_root, "src")))
-os.chdir(project_root)
 
 from sheets import SheetManager
 
 EXPORT_PATH = os.path.join(
-    project_root, "assets", "local_user_db.json"
+    os.path.dirname(__file__), "..", "assets", "local_user_db.json"
 )
 
-########################################################
-# Function to write user database to a local JSON file #
-########################################################
 def export_user_db():
     try:
         os.makedirs(os.path.dirname(EXPORT_PATH), exist_ok=True)
@@ -37,9 +28,10 @@ def export_user_db():
 
         with open(EXPORT_PATH, "w", encoding="utf-8") as f:
             json.dump(user_data, f, indent=2)
+
         print("Exported user db locally")
 
-    except Exception as e:
+    except Exception:
         print("Failed to export to local user db")
         logging.exception("Failed to export user DB")
 
