@@ -26,7 +26,7 @@ def export_user_db():
                 "Email Address": row.get("Email Address", ""),
                 "Waiver Signed": row.get("Waiver Signed?", ""),
             })
-        print(f"Length of raw data: {len(user_data)}")
+        print(f"Length of user data: {len(user_data)}")
 
         print(f"Writing to: {os.path.abspath(EXPORT_PATH)}")
         with open(EXPORT_PATH, "w", encoding="utf-8") as f:
