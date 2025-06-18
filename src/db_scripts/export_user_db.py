@@ -5,9 +5,8 @@ import json
 
 script_dir = os.path.dirname(__file__)
 project_root = os.path.abspath(os.path.join(script_dir, ".."))
-os.chdir(project_root)
-
 sys.path.append(os.path.join(project_root, "src"))
+os.chdir(project_root)
 
 from sheets import SheetManager
 
