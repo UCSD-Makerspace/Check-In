@@ -41,8 +41,6 @@ def myLoop(app, reader):
     logging.info("Now reading ID cards")
     last_tag = 0
     last_time = 0
-    # For looking up student info
-    utils.safe_request(contact)
     contact = contact_client()
 
     while True:
@@ -121,7 +119,6 @@ def myLoop(app, reader):
                         curr_user_w = i
 
             # Used to grab firstEnrTrm and lastEnrTrm
-            # FIRST PART OF HTTPS CONNECTION ERROR -> second at get_student_info_pid
             firstEnrTrm = "API Error"
             lastEnrTrm = "API Error"
             student_info = contact.get_student_info_pid("A" + user_id)
