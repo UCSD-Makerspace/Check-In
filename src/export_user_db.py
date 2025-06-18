@@ -4,9 +4,7 @@ import os
 
 from sheets import SheetManager
 
-EXPORT_PATH = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "assets", "local_user_db.json")
-)
+EXPORT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "assets", "local_user_db.json"))
 
 def export_user_db():
     try:
