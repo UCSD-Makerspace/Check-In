@@ -4,8 +4,8 @@ import os
 
 from sheets import SheetManager
 
-EXPORT_PATH = os.path.join(
-    os.path.dirname(__file__), "..", "assets", "local_user_db.json"
+EXPORT_PATH = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "assets", "local_user_db.json")
 )
 
 def export_user_db():
@@ -14,6 +14,7 @@ def export_user_db():
 
         sheet_manager = SheetManager()
         raw_data = sheet_manager.get_user_db_data(force_update=True)
+        print(f"Length of raw data: {len(raw_data)}")
 
         user_data = []
         for row in raw_data:
@@ -25,7 +26,9 @@ def export_user_db():
                 "Email Address": row.get("Email Address", ""),
                 "Waiver Signed": row.get("Waiver Signed?", ""),
             })
+        print(f"Length of raw data: {len(user_data)}")
 
+        print(f"Writing to: {os.path.abspath(EXPORT_PATH)}")
         with open(EXPORT_PATH, "w", encoding="utf-8") as f:
             json.dump(user_data, f, indent=2)
 
