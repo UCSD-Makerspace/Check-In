@@ -42,6 +42,7 @@ def myLoop(app, reader):
     last_tag = 0
     last_time = 0
     # For looking up student info
+    utils.safe_request(contact)
     contact = contact_client()
 
     while True:
@@ -100,7 +101,7 @@ def myLoop(app, reader):
                 for i in waiver_data:
                     if not isinstance(i, dict) or "A_Number" not in i or "Email" not in i:
                         logging.warning("Invalid waiver data format")
-                        util.showTempError(frame=MainPage, message="ERROR. Please tap again in 3 seconds")
+                        util.showTempError(global_.app.get_frame(MainPage), message="ERROR. Please tap again in 3 seconds")
                         continue
                     waiver_id = i["A_Number"].lower()
                     waiver_email = i["Email"].lower()
@@ -129,7 +130,7 @@ def myLoop(app, reader):
                 lastEnrTrm = student_info[5]
             if not student_info:
                 logging.warning(f"API timeout for user_id: {user_id}")
-                util.showTempError(frame = MainPage, message="ERROR. Please tap again in 3 seconds")
+                util.showTempError(global_.app.get_frame(MainPage), message="ERROR. Please tap again in 3 seconds")
                 continue
 
             ############################
