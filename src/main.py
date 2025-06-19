@@ -92,58 +92,46 @@ def myLoop(app, reader):
             ##############################
             # Use local DB for user data #
             ##############################
-            # try:
-            #     with open("assets/local_user_db.json", "r", encoding="utf-8") as f:
-            #         user_data = json.load(f)
-            # except FileNotFoundError:
-            #     logging.error("Local user database not found. Please run export_user_db.py to create it.")
+            try:
+                with open("assets/local_user_db.json", "r", encoding="utf-8") as f:
+                    user_data = json.load(f)
+            except FileNotFoundError:
+                logging.error("Local user database not found. Please run export_user_db.py to create it.")
+                continue 
 
-            # # Get a list of all users
-            user_data = global_.sheets.get_user_db_data()
-
-            # # Get a list of all waiver signatures
-            waiver_data = global_.sheets.get_waiver_db_data()
-
-            curr_user = "None"
+            curr_user = user_data.get(tag, None)
             curr_user_w = "None"
-
-            start = perf_counter()
-            for i in user_data:
-                if i["Card UUID"] == tag:
-                    curr_user = i
-            end = perf_counter()
-            logging.debug(f"Card found in {end - start} seconds")
 
             user_id = ""
             if curr_user != "None":
+                waiver_data = global_.sheets.get_waiver_db_data()
                 for i in waiver_data:
                     if not isinstance(i, dict) or "A_Number" not in i or "Email" not in i:
                         logging.warning("Invalid waiver data format")
                         util.showTempError(frame = global_.app.get_frame(MainPage), message="ERROR. Please tap again")
                         continue
-                    waiver_id = i["A_Number"].lower()
+
+                    waiver_id = i["A_Number"].lower().replace("+e?", "")[:9]
                     waiver_email = i["Email"].lower()
-                    user_id = curr_user["Student ID"].lower()
+
+                    user_id = curr_user["Student ID"].lower().replace("+e?", "")[:9]
                     user_email = curr_user["Email Address"].lower()
 
-                    user_id = user_id.replace("+e?", "")[:9]
-                    waiver_id = waiver_id.replace("+e?", "")[:9]
-
-                    if user_id[0] == "a":
+                    if user_id.startswith("a"):
                         user_id = user_id[1:]
-
-                    if waiver_id[0] == "a":
+                    if waiver_id.startswith("a"):
                         waiver_id = waiver_id[1:]
 
                     if user_id == waiver_id or user_email == waiver_email:
                         curr_user_w = i
+                        break
 
             # Used to grab firstEnrTrm and lastEnrTrm
             student_info = contact.get_student_info_pid("A" + user_id)
             if student_info:
                 firstEnrTrm = student_info[4]
                 lastEnrTrm = student_info[5]
-            if not student_info:
+            else:
                 logging.warning(f"API timeout for user_id: {user_id}")
                 util.showTempError(frame = global_.app.get_frame(MainPage), message="ERROR. Please tap again in 3 seconds")
                 continue

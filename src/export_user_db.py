@@ -14,16 +14,18 @@ def export_user_db():
         raw_data = sheet_manager.get_user_db_data(force_update=True)
         print(f"Length of raw data: {len(raw_data)}")
 
-        user_data = []
+        user_data  = {}
         for row in raw_data:
-            user_data.append({
+            card_uuid = row.get("Card UUID", "")
+            if not card_uuid:
+                continue  # Skip entries with no UUID
+            user_data[card_uuid] = {
                 "Name": row.get("Name", ""),
                 "Timestamp": row.get("Timestamp", ""),
-                "Card UUID": row.get("Card UUID", ""),
                 "Student ID": row.get("Student ID", ""),
                 "Email Address": row.get("Email Address", ""),
                 "Waiver Signed": row.get("Waiver Signed?", ""),
-            })
+            }
         print(f"Length of user data: {len(user_data)}")
 
         print(f"Writing to: {os.path.abspath(EXPORT_PATH)}")
