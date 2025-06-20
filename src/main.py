@@ -117,9 +117,9 @@ def myLoop(app, reader):
                     user_id = curr_user["Student ID"].lower().replace("+e?", "")[:9]
                     user_email = curr_user["Email Address"].lower()
 
-                    if user_id.startswith("a"):
+                    if user_id[0] == "a":
                         user_id = user_id[1:]
-                    if waiver_id.startswith("a"):
+                    if waiver_id[0] == "a":
                         waiver_id = waiver_id[1:]
 
                     if user_id == waiver_id or user_email == waiver_email:
@@ -161,7 +161,7 @@ def myLoop(app, reader):
                     curr_user["Name"],
                     str(tag),
                     "User Checkin",
-                    "",
+                    "Main Check-in",
                     firstEnrTrm,
                     lastEnrTrm, 
                 ]
