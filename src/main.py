@@ -101,17 +101,17 @@ def myLoop(app, reader):
 
             curr_user = user_data.get(tag, None)
             curr_user_w = "None"
+            user_id = curr_user["Student ID"].lower()
             waiver_signed = curr_user.get("Waiver Signed", "").strip().lower() if curr_user else ""
 
             if waiver_signed == "true":
-                logging.info("Continuing. Waiver found locally for " + curr_user["Name"]
+                logging.info("Continuing. Waiver & account found locally for " + curr_user["Name"]
                               + " with PID " + curr_user["Student ID"] + " at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
                 curr_user_w = "waiver_confirmed"
             elif curr_user:
                 logging.info("Waiver not found locally for " + curr_user["Name"]
                               + " with PID " + curr_user["Student ID"] + " at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
                 waiver_data = global_.sheets.get_waiver_db_data()
-                user_id = curr_user["Student ID"].lower()
                 user_email = curr_user["Email Address"].lower()
 
                 for waiver in waiver_data:
@@ -140,7 +140,6 @@ def myLoop(app, reader):
                 for i in user_data:
                     if i["Card UUID"] == tag:
                         curr_user = i
-                        user_id = curr_user["Student ID"].lower()
 
             # Used to grab firstEnrTrm and lastEnrTrm
             student_info = contact.get_student_info_pid("A" + user_id)
