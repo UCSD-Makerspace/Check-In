@@ -103,7 +103,7 @@ def myLoop(app, reader):
             curr_user_w = "None"
 
             if curr_user:
-                user_id = curr_user["Student ID"].lower()
+                user_id = curr_user["Student ID"].strip().lower()
                 waiver_signed = curr_user.get("Waiver Signed", "").strip().lower()
 
                 if waiver_signed == "true":
@@ -145,7 +145,7 @@ def myLoop(app, reader):
                         break
 
             if curr_user:
-                user_id = curr_user["Student ID"].lower()
+                user_id = curr_user["Student ID"].strip().lower()
                 logging.info("user_id is " + user_id)
                 student_info = contact.get_student_info_pid("A" + user_id)
                 if student_info:
