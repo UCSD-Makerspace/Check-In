@@ -101,30 +101,46 @@ def myLoop(app, reader):
 
             curr_user = user_data.get(tag, None)
             curr_user_w = "None"
+            waiver_signed = curr_user.get("Waiver Signed", "").strip().lower() if curr_user else ""
 
-            user_id = ""
-            if curr_user != "None":
+            if waiver_signed == "true":
+                curr_user_w = "waiver_confirmed"
+            elif curr_user:
+                logging.info("Waiver not found in local DB for user " + curr_user["Name"]
+                              + " with PID " + curr_user["Student ID"] + " at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
                 waiver_data = global_.sheets.get_waiver_db_data()
-                for i in waiver_data:
-                    if not isinstance(i, dict) or "A_Number" not in i or "Email" not in i:
-                        logging.warning("Invalid waiver data format")
-                        util.showTempError(frame = global_.app.get_frame(MainPage), message="ERROR. Please tap again")
-                        continue
+                user_id = curr_user["Student ID"].lower()
+                user_email = curr_user["Email Address"].lower()
 
-                    waiver_id = i["A_Number"].lower().replace("+e?", "")[:9]
-                    waiver_email = i["Email"].lower()
+                for waiver in waiver_data:
+                    waiver_id = waiver.get("Student ID", "").strip().lower()
+                    waiver_email = waiver.get("Email", "").strip().lower()
 
-                    user_id = curr_user["Student ID"].lower().replace("+e?", "")[:9]
-                    user_email = curr_user["Email Address"].lower()
-
-                    if user_id[0] == "a":
-                        user_id = user_id[1:]
-                    if waiver_id[0] == "a":
+                    if waiver_id.startswith("a"):
                         waiver_id = waiver_id[1:]
-
+                    if user_id.startswith("a"):
+                        user_id = user_id[1:]
                     if user_id == waiver_id or user_email == waiver_email:
-                        curr_user_w = i
+                        curr_user_w = "waiver_confirmed"
+                        # Update local DB
+                        logging.info(f"Updated local DB with waiver for {curr_user['Name']} ({tag})")
+                        curr_user["Waiver Signed"] = "true"
+                        user_data[tag] = curr_user
+                        # Save back to file
+                        f.seek(0)
+                        json.dump(user_data, f, indent=2)
+                        f.truncate()
                         break
+            else:
+                logging.info("User not found in local DB, checking with UCSD API")
+                # Only load online database if user not found in local DB
+                # If found: Write to local DB and add to new_row queue
+                user_data = global_.sheets.get_user_db_data()
+                waiver_data = global_.sheets.get_waiver_db_data()
+                for i in user_data:
+                    if i["Card UUID"] == tag:
+                        curr_user = i
+                        user_id = curr_user["Student ID"].lower()
 
             # Used to grab firstEnrTrm and lastEnrTrm
             student_info = contact.get_student_info_pid("A" + user_id)
@@ -140,7 +156,7 @@ def myLoop(app, reader):
             # All scenarios for ID tap #
             ############################
 
-            if curr_user == "None" and curr_user_w == "None":
+            if curr_user is None and curr_user_w == "None":
                 logging.info("User was not found in the database")
                 global_.traffic_light.set_red()
                 app.show_frame(NoAccNoWaiver)
@@ -150,7 +166,7 @@ def myLoop(app, reader):
                 global_.traffic_light.set_yellow()
                 app.show_frame(AccNoWaiver)
                 app.after(3000, lambda: app.show_frame(AccNoWaiverSwipe))
-            elif curr_user == "None":
+            elif curr_user is None:
                 logging.info("User has a waiver but no account")
                 app.show_frame(WaiverNoAcc)
                 app.after(3000, lambda: app.show_frame(WaiverNoAccSwipe))

@@ -22,6 +22,7 @@ def export_user_db():
             user_data[card_uuid] = {
                 "Name": row.get("Name", ""),
                 "Timestamp": row.get("Timestamp", ""),
+                "Card UUID": card_uuid,
                 "Student ID": row.get("Student ID", ""),
                 "Email Address": row.get("Email Address", ""),
                 "Waiver Signed": row.get("Waiver Signed?", ""),
