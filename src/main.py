@@ -101,13 +101,13 @@ def myLoop(app, reader):
 
             curr_user = user_data.get(tag, None)
             curr_user_w = "None"
-            user_id = curr_user["Student ID"].lower()
             waiver_signed = curr_user.get("Waiver Signed", "").strip().lower() if curr_user else ""
 
             if waiver_signed == "true":
                 logging.info("Continuing. Waiver & account found locally for " + curr_user["Name"]
                               + " with PID " + curr_user["Student ID"] + " at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
                 curr_user_w = "waiver_confirmed"
+                user_id = curr_user["Student ID"].lower()
             elif curr_user:
                 logging.info("Waiver not found locally for " + curr_user["Name"]
                               + " with PID " + curr_user["Student ID"] + " at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
@@ -116,6 +116,7 @@ def myLoop(app, reader):
 
                 for waiver in waiver_data:
                     waiver_id = waiver.get("Student ID", "").strip().lower()
+                    user_id = curr_user["Student ID"].lower()
                     waiver_email = waiver.get("Email", "").strip().lower()
 
                     if waiver_id.startswith("a"):
@@ -140,15 +141,23 @@ def myLoop(app, reader):
                 for i in user_data:
                     if i["Card UUID"] == tag:
                         curr_user = i
+                        user_id = curr_user["Student ID"].lower()
 
-            # Used to grab firstEnrTrm and lastEnrTrm
-            student_info = contact.get_student_info_pid("A" + user_id)
-            if student_info:
-                firstEnrTrm = student_info[4]
-                lastEnrTrm = student_info[5]
+            if curr_user:
+                user_id = curr_user["Student ID"].lower()
+                student_info = contact.get_student_info_pid("A" + user_id)
+                if student_info:
+                    firstEnrTrm = student_info[4]
+                    lastEnrTrm = student_info[5]
+                else:
+                    logging.warning(f"API timeout for user_id: {user_id}")
+                    util.showTempError(frame = global_.app.get_frame(MainPage), message="ERROR. Please tap again in 3 seconds")
+                    continue
             else:
-                logging.warning(f"API timeout for user_id: {user_id}")
-                util.showTempError(frame = global_.app.get_frame(MainPage), message="ERROR. Please tap again in 3 seconds")
+                logging.warning("No curr_user found after all checks, skipping...")
+                global_.traffic_light.set_red()
+                app.show_frame(NoAccNoWaiver)
+                app.after(3000, lambda: app.show_frame(NoAccNoWaiverSwipe))
                 continue
 
             ############################
