@@ -127,7 +127,7 @@ def myLoop(app, reader):
                         
                         if user_id == waiver_id or user_email == waiver_email:
                             curr_user_w = "waiver_confirmed"
-                            logging.info(f"Updated local DB with waiver for {curr_user['Name']} ({tag})")
+                            logging.info(f"Updated waiver is true in local DB for {curr_user['Name']} ({tag})")
                             curr_user["Waiver Signed"] = "true"
                             curr_user["Student ID"] = "A" + user_id
                             user_data[tag] = curr_user
