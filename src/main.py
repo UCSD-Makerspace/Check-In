@@ -122,14 +122,12 @@ def myLoop(app, reader):
                         user_id = user_id[1:]
                     if user_id == waiver_id or user_email == waiver_email:
                         curr_user_w = "waiver_confirmed"
-                        # Update local DB
+                        # Update local DB to reflect waiver signed
                         logging.info(f"Updated local DB with waiver for {curr_user['Name']} ({tag})")
                         curr_user["Waiver Signed"] = "true"
                         user_data[tag] = curr_user
-                        # Save back to file
-                        f.seek(0)
-                        json.dump(user_data, f, indent=2)
-                        f.truncate()
+                        with open("assets/local_user_db.json", "w", encoding="utf-8") as f:
+                            json.dump(user_data, f, indent=2)
                         break
             else:
                 logging.info("User not found in local DB, checking with UCSD API")
