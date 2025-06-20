@@ -145,9 +145,9 @@ def myLoop(app, reader):
                         break
 
             if curr_user:
-                user_id = curr_user["Student ID"].strip().lower()
+                user_id = curr_user["Student ID"]
                 logging.info("user_id is " + user_id)
-                student_info = contact.get_student_info_pid("A" + user_id)
+                student_info = contact.get_student_info_pid(user_id)
                 if student_info:
                     firstEnrTrm = student_info[4]
                     lastEnrTrm = student_info[5]
