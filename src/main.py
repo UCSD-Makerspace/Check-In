@@ -129,7 +129,8 @@ def myLoop(app, reader):
                             curr_user_w = "waiver_confirmed"
                             logging.info(f"Updated local DB with waiver for {curr_user['Name']} ({tag})")
                             curr_user["Waiver Signed"] = "true"
-                            user_data[tag] = "A" + curr_user
+                            curr_user["Student ID"] = "A" + user_id
+                            user_data[tag] = curr_user
                             with open("assets/local_user_db.json", "w", encoding="utf-8") as f:
                                 json.dump(user_data, f, indent=2)
                             break
