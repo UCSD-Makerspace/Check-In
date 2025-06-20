@@ -104,9 +104,11 @@ def myLoop(app, reader):
             waiver_signed = curr_user.get("Waiver Signed", "").strip().lower() if curr_user else ""
 
             if waiver_signed == "true":
+                logging.info("Continuing. Waiver found locally for " + curr_user["Name"]
+                              + " with PID " + curr_user["Student ID"] + " at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
                 curr_user_w = "waiver_confirmed"
             elif curr_user:
-                logging.info("Waiver not found in local DB for user " + curr_user["Name"]
+                logging.info("Waiver not found locally for " + curr_user["Name"]
                               + " with PID " + curr_user["Student ID"] + " at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
                 waiver_data = global_.sheets.get_waiver_db_data()
                 user_id = curr_user["Student ID"].lower()
