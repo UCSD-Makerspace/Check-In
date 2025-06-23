@@ -128,16 +128,6 @@ def myLoop(app, reader):
                     if user_id == waiver_id or user_email == waiver_email:
                         curr_user_w = i
 
-            # Used to grab firstEnrTrm and lastEnrTrm
-            student_info = contact.get_student_info_pid("A" + user_id)
-            if student_info:
-                firstEnrTrm = student_info[4]
-                lastEnrTrm = student_info[5]
-            if not student_info:
-                logging.warning(f"API timeout for user_id: {user_id}")
-                util.showTempError(global_.app.get_frame(MainPage), message="ERROR. Please tap again in 3 seconds")
-                continue
-
             ############################
             # All scenarios for ID tap #
             ############################
@@ -157,6 +147,15 @@ def myLoop(app, reader):
                 app.show_frame(WaiverNoAcc)
                 app.after(3000, lambda: app.show_frame(WaiverNoAccSwipe))
             else:
+                # Used to grab firstEnrTrm and lastEnrTrm
+                student_info = contact.get_student_info_pid("A" + user_id)
+                if student_info:
+                    firstEnrTrm = student_info[4]
+                    lastEnrTrm = student_info[5]
+                if not student_info:
+                    logging.warning(f"API timeout for user_id: {user_id}")
+                    util.showTempError(global_.app.get_frame(MainPage), message="ERROR. Please tap again in 3 seconds")
+                    continue
                 new_row = [
                     util.getDatetime(),
                     int(time.time()),
