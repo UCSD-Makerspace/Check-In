@@ -116,7 +116,6 @@ def myLoop(app, reader):
                     logging.info("Waiver not found locally for " + curr_user["Name"]
                                 + " with PID " + curr_user["Student ID"] + " at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
                     waiver_data = global_.sheets.get_waiver_db_data()
-                    user_email = curr_user["Email Address"].lower()
 
                     if utils.check_waiver_match(curr_user, waiver_data):
                         logging.info("Waiver found online for " + curr_user["Name"]
