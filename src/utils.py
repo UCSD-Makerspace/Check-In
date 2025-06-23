@@ -139,23 +139,27 @@ class utils:
         except FileNotFoundError:
             logging.error("Local user database not found. Please run export_user_db.py to create it.")
     
+        contact = contact_client()
+        user_info = contact.get_student_info_pid(pid)
+        if user_info:
+            firstEnrTerm = user_info[4]
+            lastEnrTerm = user_info[5]
+        else:
+            firstEnrTerm = None
+            lastEnrTerm = None
+
         user_data[global_.rfid] = {
             "Name": full_name,
             "Student ID": pid,
             "Email Address": email,
             "Waiver Signed": "false",
+            "firstEnrTrm": firstEnrTerm,
+            "lastEnrTrm": lastEnrTerm,
+            "lastCheckIn": None,    
         }
         with open("assets/local_user_db.json", "w", encoding="utf-8") as f:
                         json.dump(user_data, f, indent=2)
         logging.info(f"Local user database updated with {full_name} on account creation")
-
-        contact = contact_client()
-        user_info = contact.get_student_info_pid(pid)
-        firstEnrTerm = "Unknown"
-        lastEnrTerm = "Unknown"
-        if user_info:
-            firstEnrTerm = user_info[4]
-            lastEnrTerm = user_info[5]
 
         new_a = [
             self.getDatetime(),
