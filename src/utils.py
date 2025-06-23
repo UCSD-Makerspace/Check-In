@@ -63,7 +63,7 @@ class utils:
     # Helper function to return true if user matches waiver by ID or email, false otherwise
     def check_waiver_match(curr_user, waiver_data):
         user_id = curr_user["Student ID"].strip().lower().replace("+e9?", "")[:9]
-        user_email = curr_user["Email"].strip().lower()
+        user_email = curr_user["Email Address"].strip().lower()
 
         if user_id.startswith("a"):
             user_id = user_id[1:]
