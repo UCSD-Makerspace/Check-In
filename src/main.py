@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime as dt
 from tkinter import *
 from gui import *
 from reader import *
@@ -144,7 +144,7 @@ def myLoop(app, reader):
                     if student_info:
                         curr_user["firstEnrTrm"] = student_info[4]
                         curr_user["lastEnrTrm"] = student_info[5]
-                    curr_user["lastCheckIn"] = datetime.today().strftime("%Y-%m-%d")
+                    curr_user["lastCheckIn"] = dt.today().strftime("%Y-%m-%d")
                     needs_refresh = True
 
                 if waiver_updated or needs_refresh:
