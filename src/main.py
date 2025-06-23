@@ -102,7 +102,9 @@ def myLoop(app, reader):
             curr_user = user_data.get(tag, None)
             curr_user_w = "None"
 
-            # If found in local DB, check if waiver is signed            
+            ###################################
+            # Case handling for user check-in #      
+            ################################### 
             if curr_user:
                 user_id = curr_user["Student ID"].strip().lower()
                 waiver_signed = curr_user.get("Waiver Signed", "").strip().lower()
@@ -140,12 +142,22 @@ def myLoop(app, reader):
                         user_id = curr_user["Student ID"].lower()
                         break
                 if curr_user and utils.check_waiver_match(curr_user, waiver_data):
-                    logging.info(f"User found online and matched waiver: {curr_user['Name']}")
+                    logging.info(f"User found online: {curr_user['Name']} but not locally at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+                    
+                    # Update the local database if we find the user online but not locally
+                    user_data[tag] = {
+                        "Name": curr_user["Name"],
+                        "Student ID": "A" + user_id.lstrip("a"),
+                        "Email Address": curr_user["Email Address"],
+                        "Waiver Signed": "true",
+                    }
+
+                    with open("assets/local_user_db.json", "w", encoding="utf-8") as f:
+                        json.dump(user_data, f, indent=2)
                     curr_user_w = "waiver_confirmed"
 
             if curr_user:
                 user_id = curr_user["Student ID"]
-                logging.info("user_id is " + user_id)
                 student_info = contact.get_student_info_pid(user_id)
                 if student_info:
                     firstEnrTrm = student_info[4]
