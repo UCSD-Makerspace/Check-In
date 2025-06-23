@@ -126,7 +126,11 @@ def myLoop(app, reader):
                     # User has not checked in since local DB was created
                     needs_refresh = True
 
+                if not curr_user.get("firstEnrTrm") or not curr_user.get("lastEnrTrm"):
+                    needs_refresh = True
+
                 waiver_updated = False
+                
                 if waiver_signed != "true":
                     logging.info("Waiver not found locally for " + curr_user["Name"]
                                 + " with PID " + curr_user["Student ID"] + " at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
