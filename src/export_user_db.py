@@ -22,7 +22,6 @@ def export_user_db():
             user_data[card_uuid] = {
                 "Name": row.get("Name", ""),
                 "Timestamp": row.get("Timestamp", ""),
-                "Card UUID": card_uuid,
                 "Student ID": row.get("Student ID", ""),
                 "Email Address": row.get("Email Address", ""),
                 "Waiver Signed": row.get("Waiver Signed?", ""),
@@ -38,6 +37,18 @@ def export_user_db():
     except Exception:
         print("Failed to export to local user db")
         logging.exception("Failed to export user DB")
+
+def update_local_user_db():
+    """
+    Update the local user database by exporting it from Google Sheets.
+    This function is intended to be run periodically to keep the local database up-to-date.
+    """
+    try:
+        export_user_db()
+        print("Local user database updated successfully.")
+    except Exception as e:
+        print(f"Error updating local user database: {e}")
+        logging.exception("Error updating local user database")
 
 if __name__ == "__main__":
     export_user_db()
