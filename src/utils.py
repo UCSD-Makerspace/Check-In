@@ -1,6 +1,7 @@
 from datetime import datetime
 from gspread_formatting import *
 from fabman import *
+import json
 import time
 import global_
 import tkinter
@@ -87,6 +88,7 @@ class utils:
         global_.app.update()
 
     def createAccount(self, fname, lname, email, pid, ManualFill):
+        user_data = {}
         start = time.perf_counter()
         validation_rule = DataValidationRule(
             BooleanCondition("BOOLEAN", ["TRUE", "FALSE"]),
@@ -129,6 +131,24 @@ class utils:
             " ",
             " ",
         ]
+
+        # Open and write to local database on account creation
+        try:
+            with open("assets/local_user_db.json", "r", encoding="utf-8") as f:
+                user_data = json.load(f)
+        except FileNotFoundError:
+            logging.error("Local user database not found. Please run export_user_db.py to create it.")
+    
+
+        user_data[global_.rfid] = {
+            "Name": full_name,
+            "Student ID": pid,
+            "Email Address": email,
+            "Waiver Signed": "false",
+        }
+        with open("assets/local_user_db.json", "w", encoding="utf-8") as f:
+                        json.dump(user_data, f, indent=2)
+
         contact = contact_client()
         user_info = contact.get_student_info_pid(pid)
         firstEnrTerm = "Unknown"

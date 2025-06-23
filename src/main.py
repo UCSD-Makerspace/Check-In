@@ -110,7 +110,7 @@ def myLoop(app, reader):
                 waiver_signed = curr_user.get("Waiver Signed", "").strip().lower()
 
                 if waiver_signed == "true":
-                    logging.info("Continuing. Waiver & account found locally for " + curr_user["Name"]
+                    logging.info("Waiver & account found locally for " + curr_user["Name"]
                                 + " with PID " + curr_user["Student ID"] + " at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
                     curr_user_w = "waiver_confirmed"
                 # If waiver is not found locally, load and check online waiver DB
@@ -179,7 +179,7 @@ def myLoop(app, reader):
             ############################
 
             if curr_user is None and curr_user_w == "None":
-                logging.info("User was not found in the database")
+                logging.info("User was not found in online database")
                 global_.traffic_light.set_red()
                 app.show_frame(NoAccNoWaiver)
                 app.after(3000, lambda: app.show_frame(NoAccNoWaiverSwipe))
