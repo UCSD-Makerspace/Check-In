@@ -102,6 +102,7 @@ def myLoop(app, reader):
             curr_user = user_data.get(tag, None)
             curr_user_w = "None"
 
+            # If found in local DB, check if waiver is signed            
             if curr_user:
                 user_id = curr_user["Student ID"].strip().lower()
                 waiver_signed = curr_user.get("Waiver Signed", "").strip().lower()
@@ -110,6 +111,7 @@ def myLoop(app, reader):
                     logging.info("Continuing. Waiver & account found locally for " + curr_user["Name"]
                                 + " with PID " + curr_user["Student ID"] + " at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
                     curr_user_w = "waiver_confirmed"
+                # If waiver is not found locally, load and check online waiver DB
                 else:
                     logging.info("Waiver not found locally for " + curr_user["Name"]
                                 + " with PID " + curr_user["Student ID"] + " at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
@@ -134,7 +136,9 @@ def myLoop(app, reader):
                             with open("assets/local_user_db.json", "w", encoding="utf-8") as f:
                                 json.dump(user_data, f, indent=2)
                             break
-
+            # If user is not fuond locally, check the online user DB.
+            # If found online, check waiver status and append both to local DB.
+            # Else, redirect user to usual account creation page
             else:
                 logging.info("User not found in local DB, checking with UCSD API")
                 user_data = global_.sheets.get_user_db_data()
