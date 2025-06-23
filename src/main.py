@@ -133,7 +133,7 @@ def myLoop(app, reader):
             # If found online, check waiver status and append both to local DB.
             # Else, redirect user to usual account creation page
             else:
-                logging.info("User not found in local DB, checking with UCSD API")
+                logging.info("User not found in local DB, checking with online database")
                 user_data_online = global_.sheets.get_user_db_data()
                 waiver_data = global_.sheets.get_waiver_db_data()
                 for i in user_data_online:
