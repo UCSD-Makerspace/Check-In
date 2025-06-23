@@ -140,7 +140,9 @@ def myLoop(app, reader):
                 else:
                     logging.info("Account & waiver found locally for " + curr_user["Name"])
                     curr_user_w = "waiver_confirmed"
+
                 if needs_refresh:
+                    logging.info("Updating firstEnrTrm and lastEnrTrm for " + curr_user["Name"])
                     student_info = contact.get_student_info_pid("A" + user_id.lstrip("a"))
                     if student_info:
                         curr_user["firstEnrTrm"] = student_info[4]
@@ -148,6 +150,7 @@ def myLoop(app, reader):
                     curr_user["lastCheckIn"] = dt.today().strftime("%Y-%m-%d")
                     needs_refresh = True
 
+                # Writing conditions: Either we update enrolled terms or local waiver status
                 if waiver_updated or needs_refresh:
                     user_data[tag] = curr_user
                     with open("assets/local_user_db.json", "w", encoding="utf-8") as f:
