@@ -152,11 +152,7 @@ def myLoop(app, reader):
                 if student_info:
                     firstEnrTrm = student_info[4]
                     lastEnrTrm = student_info[5]
-                if not student_info:
-                    logging.warning(f"API timeout for user_id: {user_id}")
-                    util.showTempError(global_.app.get_frame(MainPage), message="ERROR. Please tap again in 3 seconds")
-                    continue
-                new_row = [
+                    new_row = [
                     util.getDatetime(),
                     int(time.time()),
                     curr_user["Name"],
@@ -165,11 +161,16 @@ def myLoop(app, reader):
                     curr_user["Type"],
                     firstEnrTrm,
                     lastEnrTrm, 
-                ]
-                activity_log = global_.sheets.get_activity_db()
-                activity_log.append_row(new_row)
-                global_.traffic_light.set_green()
-                global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])
+                    ]
+                    activity_log = global_.sheets.get_activity_db()
+                    activity_log.append_row(new_row)
+                    global_.traffic_light.set_green()
+                    global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])
+                else:
+                    logging.warning(f"API timeout for user_id: {user_id}")
+                    util.showTempError(global_.app.get_frame(MainPage), message="ERROR. Please tap again in 3 seconds")
+                    continue
+                
 
             last_time = time.time()
             last_tag = tag
