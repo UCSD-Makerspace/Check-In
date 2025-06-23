@@ -155,6 +155,7 @@ def myLoop(app, reader):
                     with open("assets/local_user_db.json", "w", encoding="utf-8") as f:
                         json.dump(user_data, f, indent=2)
                     curr_user_w = "waiver_confirmed"
+                    logging.info(f"Updated local DB with user: {curr_user['Name']}")
 
             if curr_user:
                 user_id = curr_user["Student ID"]
