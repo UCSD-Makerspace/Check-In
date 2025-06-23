@@ -60,10 +60,27 @@ class utils:
     def getDatetime(self):
         return datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
+    # Helper function to return true if user matches waiver by ID or email, false otherwise
+    def check_waiver_match(curr_user, waiver_data):
+        user_id = curr_user["Studen ID"].strip().lower().replace("+e9?", "")[:9]
+        user_email = curr_user["Email"].strip().lower()
+
+        if user_id.startswith("a"):
+            user_id = user_id[1:]
+
+        for waiver in waiver_data:
+            waiver_id = waiver.get("Student ID", "").strip().lower().replace("+e9?", "")[:9]
+            waiver_email = waiver.get("Email", "").strip().lower()
+
+            if waiver_id.startswith("a"):
+                waiver_id = waiver_id[1:]
+
+            if user_id == waiver_id or user_email == waiver_email:
+                return True
+        return False
+
+    # Displays error message in current frame. Used for HTTPS connection errors or other temporary issues.
     def showTempError(self, frame, message="ERROR: Please retap in 3 seconds", duration=3000):
-        """
-        Displays error message in current frame. Used for HTTPS connection errors or other temporary issues.
-        """
         error_label = tkinter.Label(frame, text=message, font =("Arial", 25), fg="red")
         error_label.pack(pady=20)
         error_label.after(3000, lambda: error_label.destroy())

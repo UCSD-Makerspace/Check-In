@@ -118,36 +118,31 @@ def myLoop(app, reader):
                     waiver_data = global_.sheets.get_waiver_db_data()
                     user_email = curr_user["Email Address"].lower()
 
-                    for waiver in waiver_data:
-                        waiver_id = waiver.get("Student ID", "").strip().lower()
-                        waiver_email = waiver.get("Email", "").strip().lower()
+                    if utils.check_waiver_match(curr_user, waiver_data):
+                        logging.info("Waiver found online for " + curr_user["Name"]
+                                    + " with PID " + curr_user["Student ID"] + " at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+                        curr_user["Waiver Signed"] = "true"
+                        curr_user["Student ID"] = "A" + user_id.lstrip("a")
+                        user_data[tag] = curr_user
+                        with open("assets/local_user_db.json", "w", encoding="utf-8") as f:
+                            json.dump(user_data, f, indent=2)
+                        curr_user_w = "waiver_confirmed"
 
-                        if waiver_id.startswith("a"):
-                            waiver_id = waiver_id[1:]
-                        if user_id.startswith("a"):
-                            user_id = user_id[1:]
-                        
-                        if user_id == waiver_id or user_email == waiver_email:
-                            curr_user_w = "waiver_confirmed"
-                            logging.info(f"Updated waiver is true in local DB for {curr_user['Name']} ({tag})")
-                            curr_user["Waiver Signed"] = "true"
-                            curr_user["Student ID"] = "A" + user_id
-                            user_data[tag] = curr_user
-                            with open("assets/local_user_db.json", "w", encoding="utf-8") as f:
-                                json.dump(user_data, f, indent=2)
-                            break
             # If user is not fuond locally, check the online user DB.
             # If found online, check waiver status and append both to local DB.
             # Else, redirect user to usual account creation page
             else:
                 logging.info("User not found in local DB, checking with UCSD API")
-                user_data = global_.sheets.get_user_db_data()
+                user_data_online = global_.sheets.get_user_db_data()
                 waiver_data = global_.sheets.get_waiver_db_data()
-                for i in user_data:
+                for i in user_data_online:
                     if i["Card UUID"] == tag:
                         curr_user = i
                         user_id = curr_user["Student ID"].lower()
                         break
+                if curr_user and utils.check_waiver_match(curr_user, waiver_data):
+                    logging.info(f"User found online and matched waiver: {curr_user['Name']}")
+                    curr_user_w = "waiver_confirmed"
 
             if curr_user:
                 user_id = curr_user["Student ID"]
