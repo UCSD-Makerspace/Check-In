@@ -1,9 +1,9 @@
+from datetime import datetime
 from tkinter import *
 from gui import *
 from reader import *
 from swipe import swipe
 from fabman import *
-import json
 from sheets import *
 from threading import Thread
 from UserWelcome import *
@@ -11,6 +11,7 @@ from ManualFill import *
 from CheckInNoId import *
 from get_info_from_pid import contact_client
 import global_
+import json
 import socket
 import logging
 import argparse
@@ -108,28 +109,50 @@ def myLoop(app, reader):
             if curr_user:
                 user_id = curr_user["Student ID"].strip().lower()
                 waiver_signed = curr_user.get("Waiver Signed", "").strip().lower()
+                firstEnrTrm = curr_user["firstEnrTrm"]
+                lastEnrTrm = curr_user["lastEnrTrm"] 
 
-                if waiver_signed == "true":
-                    logging.info("Waiver & account found locally for " + curr_user["Name"]
-                                + " with PID " + curr_user["Student ID"] + " at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
-                    curr_user_w = "waiver_confirmed"
-                # If waiver is not found locally, load and check online waiver DB
+                # Used to check if firstEnrTrm and lastEnrTrm are stale and need to be updated
+                last_checked_in_str = curr_user.get("lastCheckIn")
+                needs_refresh = False
+
+                if last_checked_in_str:
+                    last_checked_in_date = datetime.strptime(last_checked_in_str, "%Y-%m-%d").date()
+                    today = datetime.today().date()
+                    diff = (today - last_checked_in_date).days
+                    if diff >= 21:
+                        needs_refresh = True
                 else:
+                    # User has not checked in since local DB was created
+                    needs_refresh = True
+
+                if waiver_signed != "true":
                     logging.info("Waiver not found locally for " + curr_user["Name"]
                                 + " with PID " + curr_user["Student ID"] + " at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
                     waiver_data = global_.sheets.get_waiver_db_data()
-
                     if utils.check_waiver_match(curr_user, waiver_data):
-                        logging.info("Waiver found online for " + curr_user["Name"]
-                                    + " with PID " + curr_user["Student ID"] + " at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+                        logging.info("Waiver found online for " + curr_user["Name"])
                         curr_user["Waiver Signed"] = "true"
                         curr_user["Student ID"] = "A" + user_id.lstrip("a")
-                        user_data[tag] = curr_user
-                        with open("assets/local_user_db.json", "w", encoding="utf-8") as f:
-                            json.dump(user_data, f, indent=2)
                         curr_user_w = "waiver_confirmed"
+                        waiver_updated = True
+                else:
+                    logging.info("Account & waiver found locally for " + curr_user["Name"])
+                    curr_user_w = "waiver_confirmed"
+                if needs_refresh:
+                    student_info = contact.get_student_info_pid("A" + user_id.lstrip("a"))
+                    if student_info:
+                        curr_user["firstEnrTrm"] = student_info[4]
+                        curr_user["lastEnrTrm"] = student_info[5]
+                    curr_user["lastCheckIn"] = datetime.today().strftime("%Y-%m-%d")
+                    needs_refresh = True
 
-            # If user is not fuond locally, check the online user DB.
+                if waiver_updated or needs_refresh:
+                    user_data[tag] = curr_user
+                    with open("assets/local_user_db.json", "w", encoding="utf-8") as f:
+                        json.dump(user_data, f, indent=2)
+
+            # If user is not found locally, check the online user DB.
             # If found online, check waiver status and append both to local DB.
             # Else, redirect user to usual account creation page
             else:
@@ -155,28 +178,7 @@ def myLoop(app, reader):
                     with open("assets/local_user_db.json", "w", encoding="utf-8") as f:
                         json.dump(user_data, f, indent=2)
                     curr_user_w = "waiver_confirmed"
-                    logging.info(f"Updated local DB with user: {curr_user['Name']}")
-
-            if curr_user:
-                user_id = curr_user["Student ID"]
-                student_info = contact.get_student_info_pid(user_id)
-                if student_info:
-                    firstEnrTrm = student_info[4]
-                    lastEnrTrm = student_info[5]
-                else:
-                    logging.warning(f"API timeout for user_id: {user_id}")
-                    util.showTempError(frame = global_.app.get_frame(MainPage), message="ERROR. Please tap again in 3 seconds")
-                    continue
-            else:
-                logging.warning("No curr_user found after all checks, skipping...")
-                global_.traffic_light.set_red()
-                app.show_frame(NoAccNoWaiver)
-                app.after(3000, lambda: app.show_frame(NoAccNoWaiverSwipe))
-                continue
-
-            ############################
-            # All scenarios for ID tap #
-            ############################
+                    logging.info(f"Updated local DB with user: {curr_user['Name']}")  
 
             if curr_user is None and curr_user_w == "None":
                 logging.info("User was not found in online database")

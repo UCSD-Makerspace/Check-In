@@ -25,6 +25,9 @@ def export_user_db():
                 "Student ID": row.get("Student ID", ""),
                 "Email Address": row.get("Email Address", ""),
                 "Waiver Signed": row.get("Waiver Signed?", ""),
+                "firstEnrTrm": "",
+                "lastEnrTrm": "",
+                "lastCheckIn": None,
             }
         print(f"Length of user data: {len(user_data)}")
 
