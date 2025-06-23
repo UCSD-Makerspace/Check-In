@@ -117,8 +117,8 @@ def myLoop(app, reader):
                 needs_refresh = False
 
                 if last_checked_in_str:
-                    last_checked_in_date = datetime.strptime(last_checked_in_str, "%Y-%m-%d").date()
-                    today = datetime.today().date()
+                    last_checked_in_date = dt.strptime(last_checked_in_str, "%Y-%m-%d").date()
+                    today = dt.today().date()
                     diff = (today - last_checked_in_date).days
                     if diff >= 21:
                         needs_refresh = True
