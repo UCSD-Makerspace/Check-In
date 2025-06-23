@@ -148,7 +148,6 @@ def myLoop(app, reader):
                         curr_user["firstEnrTrm"] = student_info[4]
                         curr_user["lastEnrTrm"] = student_info[5]
                     curr_user["lastCheckIn"] = dt.today().strftime("%Y-%m-%d")
-                    needs_refresh = True
 
                 # Writing conditions: Either we update enrolled terms or local waiver status
                 if waiver_updated or needs_refresh:
