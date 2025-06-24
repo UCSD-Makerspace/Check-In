@@ -13,7 +13,7 @@ class CheckInLogger:
 
     def enqueue_row(self, row, tag):
             now = time.time()
-            if tag != self.last_UUID or now - self.last_scan_time > 3:
+            if tag != self.last_UUID or now - self.last_scan_time > 5:
                 self.queue.append(row)
                 self.last_scan_time = now
                 self.last_UUID = tag
