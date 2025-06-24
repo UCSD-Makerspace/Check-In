@@ -11,7 +11,7 @@ class CheckInLogger:
         self.writer_thread = Thread(target=self._queue_writer, daemon = True)
         self.writer_thread.start()
 
-        def enqueue_row(self, row, tag):
+    def enqueue_row(self, row, tag):
             now = time.time()
             if tag != self.last_UUID:
                 self.queue.append(row)
@@ -19,7 +19,7 @@ class CheckInLogger:
                 self.last_UUID = tag
                 logging.debug(f"Enqueued row: {row}")
 
-        def _queue_writer(self):
+    def _queue_writer(self):
             while True:
                 time.sleep(1)
                 now = time.time()
