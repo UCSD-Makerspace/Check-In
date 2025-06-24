@@ -149,7 +149,7 @@ def myLoop(app, reader):
                         curr_user_w = "waiver_confirmed"
                         waiver_updated = True
                 else:
-                    logging.info("Account & waiver found locally for " + curr_user["Name"])
+                    logging.info("Account & waiver found locally for " + curr_user["Name"] + "at " + time.strftime("%H:%M:%S", time.localtime()))
                     curr_user_w = "waiver_confirmed"
 
                 if needs_refresh:
