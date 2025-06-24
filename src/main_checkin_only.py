@@ -1,4 +1,4 @@
-from tkinter import *
+from datetime import datetime as dt
 from checkin_queue import CheckInLogger
 from gui import *
 from reader import *
@@ -11,6 +11,7 @@ from ManualFill import *
 from CheckInNoId import *
 from get_info_from_pid import contact_client
 from swipe import *
+from tkinter import *
 import global_
 import socket
 import logging
