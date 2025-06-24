@@ -102,7 +102,6 @@ def myLoop(app, reader):
                 if i["Card UUID"] == tag:
                     curr_user = i
             t3 = perf_counter()
-            logging.debug(f"Card found in {end - start} seconds")
 
             user_id = ""
             if curr_user != "None":
