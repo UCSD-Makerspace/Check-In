@@ -72,7 +72,9 @@ def myLoop(app, reader):
                 continue
 
             app.get_frame(ManualFill).clearEntries()
+            tag_read_start = perf_counter()
             tag = reader.grabRFID()
+            tag_read_end = perf_counter()
 
             if " " in tag:
                 continue
@@ -94,15 +96,17 @@ def myLoop(app, reader):
             ##############################
             # Use local DB for user data #
             ##############################
+            t0 = perf_counter()
             try:
                 with open("assets/local_user_db.json", "r", encoding="utf-8") as f:
                     user_data = json.load(f)
             except FileNotFoundError:
                 logging.error("Local user database not found. Please run export_user_db.py to create it.")
                 continue 
-
+            t1 = perf_counter()
             curr_user = user_data.get(tag, None)
             curr_user_w = "None"
+            t2 = perf_counter()
 
             ###################################
             # Case handling for user check-in #      
@@ -137,6 +141,7 @@ def myLoop(app, reader):
                                 + " with PID " + curr_user["Student ID"] + " at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
                     waiver_data = global_.sheets.get_waiver_db_data()
                     if utils.check_waiver_match(curr_user, waiver_data):
+                        t4 = perf_counter()
                         logging.info("Waiver found online for " + curr_user["Name"])
                         curr_user["Waiver Signed"] = "true"
                         curr_user["Student ID"] = "A" + user_id.lstrip("a")
@@ -148,7 +153,9 @@ def myLoop(app, reader):
 
                 if needs_refresh:
                     logging.info("Updating firstEnrTrm and lastEnrTrm for " + curr_user["Name"])
+                    t5 = perf_counter()
                     student_info = contact.get_student_info_pid("A" + user_id.lstrip("a"))
+                    t6 = perf_counter()
                     if student_info:
                         curr_user["firstEnrTrm"] = student_info[4]
                         curr_user["lastEnrTrm"] = student_info[5]
@@ -166,6 +173,7 @@ def myLoop(app, reader):
             else:
                 logging.info("User not found in local DB, checking with online database")
                 user_data_online = global_.sheets.get_user_db_data()
+                t3 = perf_counter()
                 waiver_data = global_.sheets.get_waiver_db_data()
                 for i in user_data_online:
                     if i["Card UUID"] == tag:
@@ -214,9 +222,18 @@ def myLoop(app, reader):
                     lastEnrTrm, 
                 ]
                 # Add to check-in queue
+                t7 = perf_counter()
                 checkin_logger.enqueue_row(new_row, tag)
                 global_.traffic_light.set_green()
                 global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])
+                logging.info("[TIMING BREAKDOWN]")
+                logging.info(f"RFID read time: {tag_read_end - tag_read_start:.4f}s")
+                logging.info(f"Load local_user_db.json: {t1 - t0:.4f}s")
+                logging.info(f"Local user lookup: {t2 - t1:.4f}s")
+                logging.info(f"Online waiver check: {t4 - t3:.4f}s")
+                logging.info(f"Student info API call: {t6 - t5:.4f}s")
+                logging.info(f"Enqueue + display: {t7 - t6:.4f}s")
+                logging.info(f"Total time from RFID scan to display: {t7 - tag_read_start:.4f}s")
 
             last_time = time.time()
             last_tag = tag
