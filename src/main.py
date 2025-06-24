@@ -70,7 +70,9 @@ def myLoop(app, reader):
 
             app.get_frame(ManualFill).clearEntries()
             t0 = perf_counter()
+            tag_read_start = perf_counter()
             tag = reader.grabRFID()
+            tag_read_end = perf_counter()
 
             if " " in tag:
                 continue
@@ -167,12 +169,13 @@ def myLoop(app, reader):
                     activity_log.append_row(new_row)
                     global_.traffic_light.set_green()
                     # ================= TIMING LOGS =================
+                    logging.info(f"[Timing] Tag read: {tag_read_end - tag_read_start:.4f} sec")
                     logging.info(f"[Timing] Total time from scan to user found: {t3 - t0:.4f} sec")
                     logging.info(f"[Timing] Sheets user+waiver load: {t2 - t1:.4f} sec")
                     logging.info(f"[Timing] Card UUID match: {t3 - t2:.4f} sec")
                     logging.info(f"[Timing] Waiver match: {t4 - t3:.4f} sec")
                     logging.info(f"[Timing] API (student info) fetch: {t5 - t4:.4f} sec")
-                    logging.info(f"[Timing] Total time to display: {t5 - t0:.4f} sec")
+                    logging.info(f"[Timing] Total time to display: {t5 - tag_read_start:.4f} sec")
                     global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])
 
 
