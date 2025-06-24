@@ -1,7 +1,7 @@
 from datetime import datetime as dt
 from tkinter import *
 from gui import *
-from log_queue import CheckInLogger
+from checkin_queue import CheckInLogger
 from reader import *
 from swipe import swipe
 from fabman import *
