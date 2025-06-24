@@ -1,6 +1,7 @@
 from datetime import datetime as dt
 from tkinter import *
 from gui import *
+from log_queue import CheckInLogger
 from reader import *
 from swipe import swipe
 from fabman import *
@@ -130,7 +131,7 @@ def myLoop(app, reader):
                     needs_refresh = True
 
                 waiver_updated = False
-                
+
                 if waiver_signed != "true":
                     logging.info("Waiver not found locally for " + curr_user["Name"]
                                 + " with PID " + curr_user["Student ID"] + " at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
@@ -212,8 +213,8 @@ def myLoop(app, reader):
                     firstEnrTrm,
                     lastEnrTrm, 
                 ]
-                activity_log = global_.sheets.get_activity_db()
-                activity_log.append_row(new_row)
+                # Add to check-in queue
+                checkin_logger.enqueue_row(new_row, tag)
                 global_.traffic_light.set_green()
                 global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])
 
@@ -271,6 +272,7 @@ if __name__ == "__main__":
     app = gui()
     global_.setApp(app)
     global_.traffic_light.set_off()
+    checkin_logger = CheckInLogger()
     sw = swipe()
     reader = Reader(reader_usb_id)
     util = utils()
