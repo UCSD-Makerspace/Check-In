@@ -1,6 +1,7 @@
 from datetime import datetime
 from gspread_formatting import *
 from fabman import *
+import json
 import time
 import global_
 import tkinter
@@ -60,16 +61,27 @@ class utils:
     def getDatetime(self):
         return datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
-    def showTempError(self, frame, message="ERROR: Please retap in 3 seconds", duration=3000):
-        """
-        Displays error message in current frame. Used for HTTPS connection errors or other temporary issues.
-        """
-        error_label = tkinter.Label(frame, text=message, font =("Arial", 25), fg="red")
-        error_label.pack(pady=20)
-        error_label.after(3000, lambda: error_label.destroy())
-        global_.app.update()
+    # Helper function to return true if user matches waiver by ID or email, false otherwise
+    def check_waiver_match(curr_user, waiver_data):
+        user_id = curr_user["Student ID"].strip().lower().replace("+e9?", "")[:9]
+        user_email = curr_user["Email Address"].strip().lower()
+
+        if user_id.startswith("a"):
+            user_id = user_id[1:]
+
+        for waiver in waiver_data:
+            waiver_id = waiver.get("Student ID", "").strip().lower().replace("+e9?", "")[:9]
+            waiver_email = waiver.get("Email", "").strip().lower()
+
+            if waiver_id.startswith("a"):
+                waiver_id = waiver_id[1:]
+
+            if user_id == waiver_id or user_email == waiver_email:
+                return True
+        return False
 
     def createAccount(self, fname, lname, email, pid, ManualFill):
+        user_data = {}
         start = time.perf_counter()
         validation_rule = DataValidationRule(
             BooleanCondition("BOOLEAN", ["TRUE", "FALSE"]),
@@ -112,13 +124,35 @@ class utils:
             " ",
             " ",
         ]
+
+        # Open and write to local database on account creation
+        try:
+            with open("assets/local_user_db.json", "r", encoding="utf-8") as f:
+                user_data = json.load(f)
+        except FileNotFoundError:
+            logging.error("Local user database not found. Please run export_user_db.py to create it.")
+    
         contact = contact_client()
         user_info = contact.get_student_info_pid(pid)
-        firstEnrTerm = "Unknown"
-        lastEnrTerm = "Unknown"
         if user_info:
             firstEnrTerm = user_info[4]
             lastEnrTerm = user_info[5]
+        else:
+            firstEnrTerm = None
+            lastEnrTerm = None
+
+        user_data[global_.rfid] = {
+            "Name": full_name,
+            "Student ID": pid,
+            "Email Address": email,
+            "Waiver Signed": "false",
+            "firstEnrTrm": firstEnrTerm,
+            "lastEnrTrm": lastEnrTerm,
+            "lastCheckIn": None,    
+        }
+        with open("assets/local_user_db.json", "w", encoding="utf-8") as f:
+                        json.dump(user_data, f, indent=2)
+        logging.info(f"Local user database updated with {full_name} on account creation")
 
         new_a = [
             self.getDatetime(),

@@ -24,7 +24,7 @@ class Sheet:
             or curr_time - self.last_updated > self.CACHE_TIME
         ):
             try:
-                logging.info("Updating database from web")
+                logging.info("Writing to Google Sheets")
                 self.data = self.db.get_all_records(numericise_ignore=["all"])
                 self.last_updated = curr_time
             except Exception as e:

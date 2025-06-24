@@ -51,11 +51,9 @@ class contact_client:
         
         response = self.safe_get(url, token)
         if not response or not response.ok:
-            # HTTPS CONNECTION ERROR SECOND PART -> first at get_student_info in main_checkin_only
             return False
         fname = response.json()[0]["name"]["firstName"]
         lname = response.json()[0]["name"]["lastName"]
-        # Formatting in API JSON: Under name, in the form of SP25, etc
         firstEnrTrm = response.json()[0]["name"]["firstEnrTrm"]
         lastEnrTrm = response.json()[0]["name"]["lastEnrTrm"]
         emails = []
