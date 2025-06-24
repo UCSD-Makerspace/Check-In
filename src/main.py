@@ -107,6 +107,7 @@ def myLoop(app, reader):
             curr_user = user_data.get(tag, None)
             curr_user_w = "None"
             t2 = perf_counter()
+            t3 = t4 = t5 = t6 = t7 = None
 
             ###################################
             # Case handling for user check-in #      
@@ -230,9 +231,14 @@ def myLoop(app, reader):
                 logging.info(f"RFID read time: {tag_read_end - tag_read_start:.4f}s")
                 logging.info(f"Load local_user_db.json: {t1 - t0:.4f}s")
                 logging.info(f"Local user lookup: {t2 - t1:.4f}s")
-                logging.info(f"Online waiver check: {t4 - t3:.4f}s")
-                logging.info(f"Student info API call: {t6 - t5:.4f}s")
-                logging.info(f"Enqueue + display: {t7 - t6:.4f}s")
+                if t3 is not None and t4 is not None:
+                    logging.info(f"Online waiver check: {t4 - t3:.4f}s")
+                if t5 is not None and t6 is not None:
+                    logging.info(f"Student info API call: {t6 - t5:.4f}s")
+                if t6 is not None and t7 is not None:
+                    logging.info(f"Enqueue + display: {t7 - t6:.4f}s")
+                elif t2 is not None and t7 is not None:
+                    logging.info(f"Total check-in time (no API): {t7 - tag_read_start:.4f}s")
                 logging.info(f"Total time from RFID scan to display: {t7 - tag_read_start:.4f}s")
 
             last_time = time.time()
