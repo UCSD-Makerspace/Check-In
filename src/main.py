@@ -69,6 +69,7 @@ def myLoop(app, reader):
                 continue
 
             app.get_frame(ManualFill).clearEntries()
+            t0 = perf_counter()
             tag = reader.grabRFID()
 
             if " " in tag:
@@ -88,20 +89,19 @@ def myLoop(app, reader):
 
             global_.setRFID(tag)
 
-            # Get a list of all users
+            # Start of timer: When we load databases
+            t1 = perf_counter()
             user_data = global_.sheets.get_user_db_data()
-
-            # Get a list of all waiver signatures
             waiver_data = global_.sheets.get_waiver_db_data()
+            t2 = perf_counter()
 
             curr_user = "None"
             curr_user_w = "None"
 
-            start = perf_counter()
             for i in user_data:
                 if i["Card UUID"] == tag:
                     curr_user = i
-            end = perf_counter()
+            t3 = perf_counter()
             logging.debug(f"Card found in {end - start} seconds")
 
             user_id = ""
@@ -127,6 +127,7 @@ def myLoop(app, reader):
 
                     if user_id == waiver_id or user_email == waiver_email:
                         curr_user_w = i
+            t4 = perf_counter()
 
             ############################
             # All scenarios for ID tap #
@@ -149,6 +150,7 @@ def myLoop(app, reader):
             else:
                 # Used to grab firstEnrTrm and lastEnrTrm
                 student_info = contact.get_student_info_pid("A" + user_id)
+                t5 = perf_counter()
                 if student_info:
                     firstEnrTrm = student_info[4]
                     lastEnrTrm = student_info[5]
@@ -165,7 +167,16 @@ def myLoop(app, reader):
                     activity_log = global_.sheets.get_activity_db()
                     activity_log.append_row(new_row)
                     global_.traffic_light.set_green()
+                    # ================= TIMING LOGS =================
+                    logging.info(f"[Timing] Total time from scan to user found: {t3 - t0:.4f} sec")
+                    logging.info(f"[Timing] Sheets user+waiver load: {t2 - t1:.4f} sec")
+                    logging.info(f"[Timing] Card UUID match: {t3 - t2:.4f} sec")
+                    logging.info(f"[Timing] Waiver match: {t4 - t3:.4f} sec")
+                    logging.info(f"[Timing] API (student info) fetch: {t5 - t4:.4f} sec")
+                    logging.info(f"[Timing] Total time to display: {t5 - t0:.4f} sec")
                     global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])
+
+
                 else:
                     logging.warning(f"API timeout for user_id: {user_id}")
                     util.showTempError(global_.app.get_frame(MainPage), message="ERROR. Please tap again in 3 seconds")
