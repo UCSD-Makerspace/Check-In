@@ -154,6 +154,6 @@ class CheckInNoId(Frame):
             curr_user["lastEnrTrm"],
         ]
 
-        global_.checkin_queue.enqueue(new_row)
+        global_.checkin_logger.enqueue_row(new_row, entered_pid)
         global_.traffic_light.set_green()
         global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])
