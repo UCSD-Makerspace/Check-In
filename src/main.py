@@ -139,7 +139,7 @@ def myLoop(app, reader):
 
                 if waiver_signed != "true":
                     logging.info("Waiver not found locally for " + curr_user["Name"]
-                                + " with PID " + curr_user["Student ID"] + " at " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+                                + " with PID " + curr_user["Student ID"] + " at " + utils.getDatetime())
                     waiver_data = global_.sheets.get_waiver_db_data()
                     if utils.check_waiver_match(curr_user, waiver_data):
                         t4 = perf_counter()
@@ -149,7 +149,7 @@ def myLoop(app, reader):
                         curr_user_w = "waiver_confirmed"
                         waiver_updated = True
                 else:
-                    logging.info("Account & waiver found locally for " + curr_user["Name"] + " at " + time.strftime("%H:%M:%S", time.localtime()))
+                    logging.info("Account & waiver found locally for " + curr_user["Name"] + " at " + utils.getDatetime())
                     curr_user_w = "waiver_confirmed"
 
                 if needs_refresh:
