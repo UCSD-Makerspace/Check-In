@@ -112,43 +112,48 @@ class CheckInNoId(Frame):
         util = utils()
         self.clearEntries()
 
+        with open("assets/local_user_db.json", "r", encoding="utf-8") as f:
+            user_data = json.load(f)
+
         curr_user = None
-        curr_user_w = None
-
-        user_data = global_.sheets.get_user_db_data()
-        for i in user_data:
-            student_id = i["Student ID"].lstrip("Aa")
-            if student_id == pid:
-                curr_user = i
-
-        if curr_user:
-            waiver_data = global_.sheets.get_waiver_db_data()
-            for i in waiver_data:
-                waiver_id = i["A_Number"].lstrip("Aa")
-                if pid == waiver_id:
-                    curr_user_w = i
-        else:
+        for uuid, data in user_data.items():
+            student_id = data.get("Student ID", "")
+            if student_id == pid.lower():
+                curr_user = data
+                break
+        if not curr_user:
             logging.info("Manual check in user account was not found")
             controller.show_frame(NoAccCheckInOnly)
             controller.after(5000, lambda: controller.show_frame(MainPage))
             return
+    
+        waiver_status = curr_user.get("Waiver Signed", "").strip().lower()
 
-        if not curr_user_w:
-            logging.info("Manual check in user does not have waiver")
-            controller.show_frame(AccNoWaiver)
-            controller.after(3000, lambda: controller.show_frame(AccNoWaiverSwipe))
+
+        # Check waiver status
+        if waiver_status != "true":
+            waiver_data = global_.sheets.get_waiver_db_data()
+            if utils.check_waiver_match(curr_user, waiver_data):
+                curr_user["Waiver Signed"] = "true"
+                with open("assets/local_user_db.json", "w", encoding="utf-8") as f:
+                    json.dump(user_data, f, indent=2)
         else:
-            new_row = [
-                util.getDatetime(),
-                int(time.time()),
-                curr_user["Name"],
-                "No ID",
-                "User Checkin",
-                "",
-                "",
-                "",
-            ]
-            activity_log = global_.sheets.get_activity_db()
-            activity_log.append_row(new_row)
-            global_.traffic_light.set_green()
-            global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])
+            logging.info("No online waiver found for no PID check-in for " + curr_user["Name"])
+            controller.show_frame(AccNoWaiver)
+            controller.after(3000, lambda: controller.show_frame(NoAccNoWaiverSwipe))
+            return 
+        
+        new_row = [
+            util.getDatetime(),
+            int(time.time()),
+            curr_user["Name"],
+            "No ID",
+            "User Check-in",
+            "Main Check-in",
+            curr_user["firstEnrTrm"],
+            curr_user["lastEnrTrm"],
+        ]
+        
+        global_.checkin_queue.enqueue(new_row)
+        global_.traffic_light.set_green()
+        global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])

@@ -217,16 +217,20 @@ def myLoop(app, reader):
                     int(time.time()),
                     curr_user["Name"],
                     str(tag),
-                    "User Checkin",
-                    "Main Check-in",
+                    "User Check-In",
+                    "Main Check-In",
                     firstEnrTrm,
                     lastEnrTrm, 
                 ]
                 # Add to check-in queue
                 t7 = perf_counter()
-                checkin_logger.enqueue_row(new_row, tag)
+                global_.checkin_logger.enqueue_row(new_row, tag)
                 global_.traffic_light.set_green()
                 global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])
+
+                ###############
+                # TIMING LOGS #
+                ###############
                 logging.info("[TIMING BREAKDOWN]")
                 logging.info(f"RFID read time: {tag_read_end - tag_read_start:.4f}s")
                 logging.info(f"Load local_user_db.json: {t1 - t0:.4f}s")
@@ -295,7 +299,7 @@ if __name__ == "__main__":
     app = gui()
     global_.setApp(app)
     global_.traffic_light.set_off()
-    checkin_logger = CheckInLogger()
+    global_.checkin_logger = CheckInLogger()
     sw = swipe()
     reader = Reader(reader_usb_id)
     util = utils()
