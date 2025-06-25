@@ -217,7 +217,7 @@ def myLoop(app, reader):
                 ]
                 # Add to check-in queue
                 t7 = perf_counter()
-                checkin_logger.enqueue_row(new_row, tag)
+                global_.checkin_logger.enqueue_row(new_row, tag)
                 global_.traffic_light.set_green()
                 global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])
                 logging.info("[TIMING BREAKDOWN]")
@@ -275,7 +275,7 @@ if __name__ == "__main__":
     global_.init()
     app = gui()
     global_.setApp(app)
-    checkin_logger = CheckInLogger()
+    global_.checkin_logger = CheckInLogger()
     reader = Reader()
     util = utils()
     thread = Thread(target=myLoop, args=(app, reader))
