@@ -104,12 +104,10 @@ class CheckInNoId(Frame):
         self.pid_entry.insert(0, pid)
 
     def callCheckIn(self, controller):
-        logging.info("Checking in with No ID.")
         pid = self.pid_entry.get()
         entered_pid = pid.lstrip("Aa").lower()
         if not pid:
             return
-        logging.info("PID: " + pid)
 
         util = utils()
         self.clearEntries()
@@ -134,6 +132,7 @@ class CheckInNoId(Frame):
         if waiver_status != "true":
             waiver_data = global_.sheets.get_waiver_db_data()
             if utils.check_waiver_match(curr_user, waiver_data):
+                logging.info("Updating local waiver status for " + curr_user["Name"])
                 curr_user["Waiver Signed"] = "true"
                 with open("assets/local_user_db.json", "w", encoding="utf-8") as f:
                     json.dump(user_data, f, indent=2)
@@ -143,6 +142,7 @@ class CheckInNoId(Frame):
                 controller.after(3000, lambda: controller.show_frame(NoAccNoWaiverSwipe))
                 return
         
+        logging.info(f"Checking in with no ID for {curr_user['Name']} at " + util.getDatetime)
         new_row = [
             util.getDatetime(),
             int(time.time()),
