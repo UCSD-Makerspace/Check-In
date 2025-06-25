@@ -105,7 +105,7 @@ class CheckInNoId(Frame):
 
     def callCheckIn(self, controller):
         logging.info("Checking in with No ID.")
-        pid = self.pid_entry.get().lstrip("Aa")
+        pid = self.pid_entry.get()
         if not pid:
             return
         logging.info("PID: " + pid)
