@@ -142,7 +142,7 @@ class CheckInNoId(Frame):
                 controller.after(3000, lambda: controller.show_frame(NoAccNoWaiverSwipe))
                 return
         
-        logging.info(f"Checking in with no ID for {curr_user['Name']} at " + util.getDatetime)
+        logging.info(f"Checking in with no ID for {curr_user['Name']} at " + util.getDatetime())
         new_row = [
             util.getDatetime(),
             int(time.time()),
