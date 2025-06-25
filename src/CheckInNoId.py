@@ -108,6 +108,7 @@ class CheckInNoId(Frame):
         pid = self.pid_entry.get().lstrip("Aa")
         if not pid:
             return
+        logging.info("PID: " + pid)
 
         util = utils()
         self.clearEntries()
@@ -153,7 +154,7 @@ class CheckInNoId(Frame):
             curr_user["firstEnrTrm"],
             curr_user["lastEnrTrm"],
         ]
-        
+
         global_.checkin_queue.enqueue(new_row)
         global_.traffic_light.set_green()
         global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])
