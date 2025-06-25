@@ -106,6 +106,7 @@ class CheckInNoId(Frame):
     def callCheckIn(self, controller):
         logging.info("Checking in with No ID.")
         pid = self.pid_entry.get()
+        entered_pid = pid.lstrip("Aa").lower()
         if not pid:
             return
         logging.info("PID: " + pid)
@@ -118,8 +119,8 @@ class CheckInNoId(Frame):
 
         curr_user = None
         for uuid, data in user_data.items():
-            student_id = data.get("Student ID", "")
-            if student_id == pid.lower():
+            student_id = data.get("Student ID", "").lstrip("Aa").lower()
+            if student_id == entered_pid:
                 curr_user = data
                 break
         if not curr_user:
@@ -130,19 +131,17 @@ class CheckInNoId(Frame):
     
         waiver_status = curr_user.get("Waiver Signed", "").strip().lower()
 
-
-        # Check waiver status
         if waiver_status != "true":
             waiver_data = global_.sheets.get_waiver_db_data()
             if utils.check_waiver_match(curr_user, waiver_data):
                 curr_user["Waiver Signed"] = "true"
                 with open("assets/local_user_db.json", "w", encoding="utf-8") as f:
                     json.dump(user_data, f, indent=2)
-        else:
-            logging.info("No online waiver found for no PID check-in for " + curr_user["Name"])
-            controller.show_frame(AccNoWaiver)
-            controller.after(3000, lambda: controller.show_frame(NoAccNoWaiverSwipe))
-            return 
+            else:
+                logging.info("No online waiver found for " + curr_user["Name"])
+                controller.show_frame(AccNoWaiver)
+                controller.after(3000, lambda: controller.show_frame(NoAccNoWaiverSwipe))
+                return
         
         new_row = [
             util.getDatetime(),
