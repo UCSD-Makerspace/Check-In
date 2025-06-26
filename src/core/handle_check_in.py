@@ -55,25 +55,21 @@ def handle_check_in(tag, contact, util):
     waiver_signed = curr_user.get("Waiver Signed", "").strip().lower()
     firstEnrTrm = curr_user["firstEnrTrm"]
     lastEnrTrm = curr_user["lastEnrTrm"] 
+    waiver_updated = False
 
     # Used to check if firstEnrTrm and lastEnrTrm are stale and need to be updated
     last_checked_in_str = curr_user.get("lastCheckIn")
     needs_refresh = False
     
     ##### Check if local user data needs to be refreshed #####
-    if not last_checked_in_str:
+    if not last_checked_in_str or not curr_user.get("firstEnrTrm") or not curr_user.get("lastEnrTrm"):
         needs_refresh = True
-
-    last_checked_in_date = dt.strptime(last_checked_in_str, "%Y-%m-%d").date()
-    today = dt.today().date()
-    diff = (today - last_checked_in_date).days
-    if diff >= 21:
-        needs_refresh = True
-
-    if not curr_user.get("firstEnrTrm") or not curr_user.get("lastEnrTrm"):
-        needs_refresh = True
-
-    waiver_updated = False
+    else:
+        last_checked_in_date = dt.strptime(last_checked_in_str, "%Y-%m-%d").date()
+        today = dt.today().date()
+        diff = (today - last_checked_in_date).days
+        if diff >= 21:
+            needs_refresh = True
 
     if waiver_signed != "true":
         logging.info("Waiver not found locally for " + curr_user["Name"]
