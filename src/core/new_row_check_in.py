@@ -31,6 +31,5 @@ def new_row_check_in(curr_user, curr_user_w, tag, util, firstEnrTrm, lastEnrTrm)
         ]
 
         global_.checkin_logger.enqueue_row(new_row, tag)
-        logging.info(f"Flashing green for {curr_user['Name']}")
         global_.traffic_light.set_green()
         global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])

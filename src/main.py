@@ -95,6 +95,9 @@ def myLoop(app, reader):
             global_.setRFID(tag)
             handle_check_in(tag, contact, util)
 
+            last_tag = tag
+            last_time = time.time()
+
 def destroyNoWifiError(no_wifi):
     global no_wifi_shown
     no_wifi.destroy()
