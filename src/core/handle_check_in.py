@@ -3,10 +3,9 @@ import json
 import logging
 from datetime import datetime as dt
 from time import perf_counter
-from new_row_check_in import new_row_check_in
+from core.new_row_check_in import new_row_check_in
 from gui import *
 from reader import *
-from render_ports import get_usb_ids
 
 def handle_check_in(tag, contact, util):
     """
