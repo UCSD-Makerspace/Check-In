@@ -130,10 +130,10 @@ if __name__ == "__main__":
         logging.basicConfig(level=logging.INFO)
 
     reader_usb_id, traffic_usb_id = get_usb_ids()
-            
+    global_.init(traffic_usb_id) 
     app = gui()
     global_.setApp(app)
-    global_.traffic_light.set_off()
+    global_.traffic_light.set_off()   
     global_.checkin_logger = CheckInLogger()
     sw = swipe()
     reader = Reader(reader_usb_id)
