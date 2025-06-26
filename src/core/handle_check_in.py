@@ -33,6 +33,11 @@ def handle_check_in(tag, contact, util):
                 user_id = curr_user["Student ID"].lower()
                 break
 
+        if not curr_user:
+            logging.info("User not found in local or online database")
+            new_row_check_in(None, "None", tag, util, "", "")
+            return
+
         if curr_user and util.check_waiver_match(curr_user, waiver_data):
             logging.info(f"User found online: {curr_user['Name']} but not locally at " + util.getDatetime())
             
