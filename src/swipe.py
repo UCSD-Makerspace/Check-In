@@ -26,32 +26,30 @@ class swipe:
         curr_frame = global_.app.get_curr_frame()
 
         if curr_frame not in (NoAccNoWaiverSwipe, WaiverNoAccSwipe, CheckInNoId):
-            # If one of the swipe pages is not on top
-            # Then don't do anything
             return
 
-        check = util.IDVet(id_string)
-        if check == "bad":
-            id_string = ""
-            if not swipe_error_shown:
-                swipe_error_shown = True
-                id_error = tkinter.Label(
-                    global_.app.get_frame(NoAccNoWaiverSwipe),
-                    text="Error, please scan again",
-                )
-                id_error.pack(pady=40)
-                id_error_2 = tkinter.Label(
-                    global_.app.get_frame(WaiverNoAccSwipe),
-                    text="Error, please scan again",
-                )
-                id_error_2.pack(pady=40)
-                id_error.after(1500, lambda: self.destroySwipeError(id_error))
-                id_error_2.after(1500, lambda: self.destroySwipeError(id_error_2))
-            return
-
-        id_string = id_string + key.char
+        id_string += key.char
         logging.debug("The array is now: " + repr(str(id_string)))
+
         if id_string.endswith("\r"):
+            if util.IDVet(id_string) == "bad":
+                id_string = ""
+                if not swipe_error_shown:
+                    swipe_error_shown = True
+                    id_error = tkinter.Label(
+                        global_.app.get_frame(NoAccNoWaiverSwipe),
+                        text="Error, please scan again",
+                    )
+                    id_error.pack(pady=40)
+                    id_error_2 = tkinter.Label(
+                        global_.app.get_frame(WaiverNoAccSwipe),
+                        text="Error, please scan again",
+                    )
+                    id_error_2.pack(pady=40)
+                    id_error.after(1500, lambda: self.destroySwipeError(id_error))
+                    id_error_2.after(1500, lambda: self.destroySwipeError(id_error_2))
+                return
+
             self.swipeCard(id_string)
             id_string = ""
 
