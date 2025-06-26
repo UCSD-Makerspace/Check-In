@@ -24,6 +24,7 @@ def back_to_main():
 class UserWelcome(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
+        self.last_name = None
         self.photoList = []
         self.loadWidgets(controller)
         self.offset = 0
@@ -75,9 +76,15 @@ class UserWelcome(Frame):
 
         # Check if there are any remaining "welcome" text objects
         if not self.canvas.find_withtag("welcome"):
+            self.last_name = None
             back_to_main()
 
     def displayName(self, name):
+        if name == self.last_name:
+            return
+        
+        self.last_name = name
+
         text_id = self.canvas.create_text(
             99.0,
             323.0 + self.offset,
