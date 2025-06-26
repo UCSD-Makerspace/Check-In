@@ -5,6 +5,7 @@ from pathlib import Path
 from tkinter import *
 from utils import *
 from NoAccCheckInOnly import NoAccCheckInOnly
+from NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
 from UserWelcome import UserWelcome
 import logging
 
