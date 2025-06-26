@@ -131,7 +131,7 @@ class CheckInNoId(Frame):
 
         if waiver_status != "true":
             waiver_data = global_.sheets.get_waiver_db_data()
-            if utils.check_waiver_match(curr_user, waiver_data):
+            if utils.check_waiver_match(self, curr_user, waiver_data):
                 logging.info("Updating local waiver status for " + curr_user["Name"])
                 curr_user["Waiver Signed"] = "true"
                 with open("assets/local_user_db.json", "w", encoding="utf-8") as f:
