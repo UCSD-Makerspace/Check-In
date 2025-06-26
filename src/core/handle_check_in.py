@@ -6,7 +6,7 @@ from time import perf_counter
 from new_row_check_in import new_row_check_in
 from gui import *
 from reader import *
-from core.render_ports import get_usb_ids
+from render_ports import get_usb_ids
 
 def handle_check_in(tag, contact, util):
     """
