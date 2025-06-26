@@ -62,7 +62,7 @@ class utils:
         return datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
     # Helper function to return true if user matches waiver by ID or email, false otherwise
-    def check_waiver_match(curr_user, waiver_data):
+    def check_waiver_match(self, curr_user, waiver_data):
         user_id = curr_user["Student ID"].strip().lower().replace("+e9?", "")[:9]
         user_email = curr_user["Email Address"].strip().lower()
 

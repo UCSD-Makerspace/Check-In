@@ -10,7 +10,6 @@ api_url = "https://api.ucsd.edu:8243/"
 
 ### Use a UCSD student or staff member ID# (a.k.a.) PID
 ### To find the person's name and email from UCSD's central DB.
-
 ### USAGE: create a contact_client object, then call either get_student_info or get_staff_info with pid as arguement
 
 ### intended return: list of [first name, last name, [list of emails on file]]. Students may have multiple, staff members only one. For consistency, emails will always be a list.
@@ -83,12 +82,11 @@ class contact_client:
 
         response = self.safe_get(
             url, token)
+        
         if not response or not response.ok:
-            # THIS IS PART 2 OF HTTPSCONNECTIONPOOL ERROR
             return False
         fname = response.json()[0]["name"]["firstName"]
         lname = response.json()[0]["name"]["lastName"]
-        # Formatting in API JSON: Under name, in the form of SP25, etc
         firstEnrTrm = response.json()[0]["name"]["firstEnrTrm"]
         lastEnrTrm = response.json()[0]["name"]["lastEnrTrm"]
         emails = []
@@ -124,4 +122,3 @@ class contact_client:
                 pass
             time.sleep(0.5)  # small pause before retry
         return False
-
