@@ -73,9 +73,7 @@ def myLoop(app, reader):
                 continue
 
             app.get_frame(ManualFill).clearEntries()
-            tag_read_start = perf_counter()
             tag = reader.grabRFID()
-            tag_read_end = perf_counter()
 
             if " " in tag:
                 continue
