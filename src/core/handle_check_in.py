@@ -2,7 +2,6 @@ import global_
 import json
 import logging
 from datetime import datetime as dt
-from time import perf_counter
 from core.new_row_check_in import new_row_check_in
 from gui import *
 from reader import *
@@ -40,7 +39,6 @@ def handle_check_in(tag, contact, util):
             new_row_check_in(None, "None", tag, util, "", "")
             return
 
-        # This should rarely run — fallback if the local DB missed a user who is confirmed online + has waiver
         if curr_user and util.check_waiver_match(curr_user, waiver_data):
             logging.info(f"User found online: {curr_user['Name']} but not locally at " + util.getDatetime())
             
@@ -60,24 +58,22 @@ def handle_check_in(tag, contact, util):
     # Main case: User is found in local database #
     ##############################################
     user_id = curr_user["Student ID"].strip().lower()
-    waiver_signed = curr_user.get("Waiver Signed", "").strip().lower()
     firstEnrTrm = curr_user["firstEnrTrm"]
     lastEnrTrm = curr_user["lastEnrTrm"] 
     needs_refresh = False
 
-    # Used to check if firstEnrTrm and lastEnrTrm are stale and need to be updated
+    ### Determine if local data needs to be refreshed ###
     last_checked_in_str = curr_user.get("lastCheckIn")
-    
-    ##### Check if local user data needs to be refreshed #####
-    if not last_checked_in_str or not curr_user.get("firstEnrTrm") or not curr_user.get("lastEnrTrm"):
-        needs_refresh = True
-    else:
-        last_checked_in_date = dt.strptime(last_checked_in_str, "%Y-%m-%d").date()
-        today = dt.today().date()
-        diff = (today - last_checked_in_date).days
-        if diff >= 21:
-            needs_refresh = True
+    firstEnrTrm = curr_user.get("firstEnrTrm")
+    lastEnrTrm = curr_user.get("lastEnrTrm")
+    needs_refresh = False
 
+    if not last_checked_in_str or not firstEnrTrm or not lastEnrTrm:
+        needs_refresh = True
+    elif (dt.today().date() - dt.strptime(last_checked_in_str, "%Y-%m-%d").date()).days >= 21:
+        needs_refresh = True
+
+    waiver_signed = curr_user.get("Waiver Signed", "").strip().lower()
     if waiver_signed != "true":
         logging.info("Waiver not found locally for " + curr_user["Name"]
                     + " with PID " + curr_user["Student ID"] + " at " + util.getDatetime())
@@ -98,12 +94,8 @@ def handle_check_in(tag, contact, util):
             curr_user["firstEnrTrm"] = student_info[4]
             curr_user["lastEnrTrm"] = student_info[5]
         curr_user["lastCheckIn"] = dt.today().strftime("%Y-%m-%d")
-
-    # Writing conditions: Either we update enrolled terms or local waiver status
-    if needs_refresh:
         user_data[tag] = curr_user
         with open(LOCAL_DB_PATH, "w", encoding="utf-8") as f:
             json.dump(user_data, f, indent=2)
 
     new_row_check_in(curr_user, curr_user_w, tag, util, firstEnrTrm, lastEnrTrm)
-
