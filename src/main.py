@@ -1,4 +1,3 @@
-from datetime import datetime as dt
 from tkinter import *
 from gui import *
 from checkin_queue import CheckInLogger
@@ -14,17 +13,10 @@ from get_info_from_pid import contact_client
 from core.handle_check_in import handle_check_in
 from core.render_ports import get_usb_ids
 import global_
-import json
 import socket
 import logging
 import argparse
-import serial.tools.list_ports as list_ports
 from sys import stdout
-from time import perf_counter
-
-TRAFFIC_LIGHT_VID = 6790
-READER_VID = 4292
-
 
 def is_connected(host="8.8.8.8", port=53, timeout=3):
     """
@@ -39,13 +31,11 @@ def is_connected(host="8.8.8.8", port=53, timeout=3):
     except socket.error as ex:
         return False
 
-
 ##############################################################
 # This acts as the main loop of the program, ran in a thread #
 ##############################################################
 
 no_wifi_shown = False
-
 
 def myLoop(app, reader):
     global no_wifi_shown, no_wifi
@@ -101,13 +91,11 @@ def destroyNoWifiError(no_wifi):
     no_wifi.destroy()
     no_wifi_shown = False
 
-
 def clearAndReturn():
     global_.traffic_light.set_off()
     global_.app.show_frame(MainPage)
     global_.app.get_frame(ManualFill).clearEntries()
     global_.app.get_frame(CheckInNoId).clearEntries()
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
