@@ -86,7 +86,7 @@ def handle_check_in(tag, contact, util):
         curr_user_w = "waiver_confirmed"
 
     if needs_refresh:
-        logging.info("Updating firstEnrTrm and lastEnrTrm for " + curr_user["Name"])
+        logging.info("Updating local info for " + curr_user["Name"])
         student_info = contact.get_student_info_pid("A" + user_id.lstrip("aA"))
         if student_info:
             curr_user["firstEnrTrm"] = firstEnrTrm = student_info[4]

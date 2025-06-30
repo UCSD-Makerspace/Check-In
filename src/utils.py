@@ -63,14 +63,14 @@ class utils:
 
     # Helper function to return true if user matches waiver by ID or email, false otherwise
     def check_waiver_match(self, curr_user, waiver_data):
-        user_id = curr_user["Student ID"].strip().lower().replace("+e9?", "")[:9]
+        user_id = curr_user["Student ID"].strip().lower()
         user_email = curr_user["Email Address"].strip().lower()
 
         if user_id.startswith("a"):
             user_id = user_id[1:]
 
         for waiver in waiver_data:
-            waiver_id = waiver.get("Student ID", "").strip().lower().replace("+e9?", "")[:9]
+            waiver_id = waiver.get("A_Number", "").strip().lower()
             waiver_email = waiver.get("Email", "").strip().lower()
 
             if waiver_id.startswith("a"):
@@ -78,6 +78,8 @@ class utils:
 
             if user_id == waiver_id or user_email == waiver_email:
                 return True
+            
+        logging.warning(f"Waiver match failed for user_id={user_id}, email={user_email}")
         return False
 
     def createAccount(self, fname, lname, email, pid, ManualFill):
