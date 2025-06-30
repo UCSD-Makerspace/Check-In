@@ -58,15 +58,12 @@ def handle_check_in(tag, contact, util):
     # Main case: User is found in local database #
     ##############################################
     user_id = curr_user["Student ID"].strip().lower()
-    firstEnrTrm = curr_user["firstEnrTrm"]
-    lastEnrTrm = curr_user["lastEnrTrm"] 
+    firstEnrTrm = curr_user.get("firstEnrTrm")
+    lastEnrTrm = curr_user.get("lastEnrTrm")
     needs_refresh = False
 
     ### Determine if local data needs to be refreshed ###
     last_checked_in_str = curr_user.get("lastCheckIn")
-    firstEnrTrm = curr_user.get("firstEnrTrm")
-    lastEnrTrm = curr_user.get("lastEnrTrm")
-    needs_refresh = False
 
     if not last_checked_in_str or not firstEnrTrm or not lastEnrTrm:
         needs_refresh = True
@@ -91,8 +88,8 @@ def handle_check_in(tag, contact, util):
         logging.info("Updating firstEnrTrm and lastEnrTrm for " + curr_user["Name"])
         student_info = contact.get_student_info_pid("A" + user_id.lstrip("aA"))
         if student_info:
-            curr_user["firstEnrTrm"] = student_info[4]
-            curr_user["lastEnrTrm"] = student_info[5]
+            curr_user["firstEnrTrm"] = firstEnrTrm = student_info[4]
+            curr_user["lastEnrTrm"] = lastEnrTrm = student_info[5]
         curr_user["lastCheckIn"] = dt.today().strftime("%Y-%m-%d")
         user_data[tag] = curr_user
         with open(LOCAL_DB_PATH, "w", encoding="utf-8") as f:
