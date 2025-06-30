@@ -2,7 +2,7 @@ import global_
 import json
 import logging
 from datetime import datetime as dt
-from core.log_checkin import log_checkin
+from core.write_checkin import write_checkin
 from core.new_row_check_in import new_row_check_in
 from gui import *
 from reader import *
@@ -97,4 +97,4 @@ def handle_check_in(tag, contact, util):
             json.dump(user_data, f, indent=2)
 
     new_row_check_in(curr_user, curr_user_w, tag, util, firstEnrTrm, lastEnrTrm)
-    log_checkin(curr_user, tag)
+    write_checkin(curr_user, tag)
