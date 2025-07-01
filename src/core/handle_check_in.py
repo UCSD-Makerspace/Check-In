@@ -10,11 +10,9 @@ from reader import *
 LOCAL_DB_PATH = "assets/local_user_db.json"
 
 def handle_check_in(tag, contact, util):
-    """
-    Handles the check-in process for a user based on their tag.
+    """ Handles the check-in process for a user based on their tag.
     It checks the local user database first, then the online database if not found locally.
-    Updates the waiver status and enrolled terms as necessary.
-    """
+    Updates the waiver status and enrolled terms as necessary. """
 
     with open(LOCAL_DB_PATH, "r", encoding="utf-8") as f:
         user_data = json.load(f)
@@ -22,9 +20,7 @@ def handle_check_in(tag, contact, util):
     curr_user = user_data.get(tag, None)
     curr_user_w = "None"
 
-    ##################################################################
-    # If user is not found locally, scan online and update user_data #
-    ##################################################################
+    ##### If user is not found locally, scan online and update user_data #####
     if not curr_user:
         logging.info("User not found in local DB, checking with online database")
         user_data_online = global_.sheets.get_user_db_data()
@@ -50,20 +46,17 @@ def handle_check_in(tag, contact, util):
                 "Waiver Signed": "true",
             }
 
-            with open(LOCAL_DB_PATH, "w", encoding="utf-8") as f:
-                json.dump(user_data, f, indent=2)
+            dump_json(user_data)
             curr_user_w = "waiver_confirmed"
             logging.info(f"Updated local DB with user: {curr_user['Name']}")  
     
-    ##############################################
-    # Main case: User is found in local database #
-    ##############################################
+    ##### Main case: User is found in local database #####
     user_id = curr_user["Student ID"].strip().lower()
     firstEnrTrm = curr_user.get("firstEnrTrm")
     lastEnrTrm = curr_user.get("lastEnrTrm")
     needs_refresh = False
 
-    ### Determine if local data needs to be refreshed ###
+    # Determine if local data needs to be refreshed #
     last_checked_in_str = curr_user.get("lastCheckIn")
 
     if not last_checked_in_str or not firstEnrTrm or not lastEnrTrm:
@@ -71,30 +64,50 @@ def handle_check_in(tag, contact, util):
     elif (dt.today().date() - dt.strptime(last_checked_in_str, "%Y-%m-%d").date()).days >= 21:
         needs_refresh = True
 
-    waiver_signed = curr_user.get("Waiver Signed", "").strip().lower()
-    if waiver_signed != "true":
-        logging.info("Waiver not found locally for " + curr_user["Name"]
-                    + " with PID " + curr_user["Student ID"] + " at " + util.getDatetime())
-        waiver_data = global_.sheets.get_waiver_db_data()
-        if util.check_waiver_match(curr_user, waiver_data):
-            logging.info("Waiver found online for " + curr_user["Name"])
-            curr_user["Waiver Signed"] = "true"
-            curr_user_w = "waiver_confirmed"
-            needs_refresh = True
-    else:
-        logging.info("Account & waiver found locally for " + curr_user["Name"] + " at " + util.getDatetime())
+    has_waiver, waiver_updated = check_waiver_status(curr_user, util)
+    if has_waiver:
         curr_user_w = "waiver_confirmed"
+    if waiver_updated:
+        needs_refresh = True
 
     if needs_refresh:
         logging.info("Updating local info for " + curr_user["Name"])
-        student_info = contact.get_student_info_pid("A" + user_id.lstrip("aA"))
-        if student_info:
-            curr_user["firstEnrTrm"] = firstEnrTrm = student_info[4]
-            curr_user["lastEnrTrm"] = lastEnrTrm = student_info[5]
-        curr_user["lastCheckIn"] = dt.today().strftime("%Y-%m-%d")
+        refresh_user_terms(curr_user, contact)
         user_data[tag] = curr_user
-        with open(LOCAL_DB_PATH, "w", encoding="utf-8") as f:
-            json.dump(user_data, f, indent=2)
+        dump_json(user_data)
 
     new_row_check_in(curr_user, curr_user_w, tag, util, firstEnrTrm, lastEnrTrm)
     write_checkin(curr_user, tag)
+
+########### Helper Functions ###########
+def dump_json(user_data):
+    with open(LOCAL_DB_PATH, "w", encoding="utf-8") as f:
+        json.dump(user_data, f, indent=2)
+
+def refresh_user_terms(curr_user, contact):
+    user_id = curr_user["Student ID"].strip().lower().lstrip("aA")
+    student_info = contact.get_student_info_pid("A" + user_id)
+    if student_info:
+        curr_user["firstEnrTrm"] = student_info[4]
+        curr_user["lastEnrTrm"] = student_info[5]
+    curr_user["lastCheckIn"] = dt.today().strftime("%Y-%m-%d")
+
+def check_waiver_status(curr_user, util) -> tuple[bool,bool]:
+    """ 
+    Checks if curr_user has a waiver.
+    Returns (has_waiver, waiver_updated), where:
+    - has_waiver: True if waiver is found locally or online
+    - waiver_updated: True only if we just updated the waiver from online
+    """
+    waiver_status = curr_user.get("Waiver Signed", "").strip().lower()
+    if waiver_status != "true":
+        logging.info("Waiver not found locally for " + curr_user["Name"] + " " + curr_user["Student ID"] + " at " + util.getDatetime())
+        waiver_data = global_.sheets.get_waiver_db_data()
+        if util.check_waiver_match(curr_user, waiver_data):
+            logging.info("Waiver found online for " + curr_user["Name"])
+            curr_user["Waiver Signed"] = "true" 
+            return True, True
+        return False, False
+    else:
+        logging.info("Account & waiver found locally for " + curr_user["Name"] + " at " + util.getDatetime())
+        return True, False
