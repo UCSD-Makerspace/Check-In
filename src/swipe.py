@@ -75,7 +75,7 @@ class swipe:
             )
             return None
 
-        logging.info(f"Info pull succeeded:\n" + {u_info[0]}, {u_info[1]}, {u_info[3]})
+        logging.info(f"Info pull succeeded:\n {u_info[0]}, {u_info[1]}, {u_info[3]}")
         return u_info
 
     def swipeCard(self, id_string):
