@@ -32,7 +32,7 @@ class contact_client:
                     api_url + "token", grant_type = "client_credentials"
                 )
                 return token
-            except (requests.exceptions.Timeout, requests.exceptions.ConnectionError)
+            except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
                 logging.warning(f"Token fetch attempt failed: {e}")
                 if (attempt < retries - 1):
                     time.sleep(0.5)
