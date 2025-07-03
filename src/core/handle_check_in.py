@@ -12,7 +12,7 @@ LOCAL_DB_PATH = "assets/local_user_db.json"
 def handle_check_in(tag, contact, util):
     """ Handles the check-in process for a user based on their tag.
     It checks the local user database first, then the online database if not found locally.
-    Updates the waiver status and enrolled terms as necessary. """
+    Updates the local waiver status and enrolled terms as necessary. """
 
     with open(LOCAL_DB_PATH, "r", encoding="utf-8") as f:
         user_data = json.load(f)
@@ -30,12 +30,7 @@ def handle_check_in(tag, contact, util):
                 curr_user = i
                 user_id = curr_user["Student ID"].lower()
                 break
-
-        if not curr_user:
-            logging.info("User not found in local or online database")
-            new_row_check_in(None, "None", tag, util, "", "")
-            return
-
+            
         if curr_user and util.check_waiver_match(curr_user, waiver_data):
             logging.info(f"User found online: {curr_user['Name']} but not locally at " + util.getDatetime())
             
@@ -49,6 +44,10 @@ def handle_check_in(tag, contact, util):
             dump_json(user_data)
             curr_user_w = "waiver_confirmed"
             logging.info(f"Updated local DB with user: {curr_user['Name']}")  
+        else:
+            logging.info("User not found in local or online database")
+            new_row_check_in(None, "None", tag, util, "", "")
+            return
     
     ##### Main case: User is found in local database #####
     user_id = curr_user["Student ID"].strip().lower()
