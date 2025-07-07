@@ -67,7 +67,13 @@ def handle_check_in(tag, contact, util):
     if needs_refresh:
         logging.info("Updating local info for " + curr_user["Name"])
         refresh_user_terms(curr_user, contact)
-        user_data[tag] = curr_user
+
+        cleaned = extract_user_data(curr_user, tag)
+        cleaned["firstEnrTrm"] = curr_user.get("firstEnrTrm", "")
+        cleaned["lastEnrTrm"] = curr_user.get("lastEnrTrm", "")
+        cleaned["lastCheckIn"] = curr_user.get("lastCheckIn", None)
+
+        user_data[tag] = cleaned
         dump_json(user_data)
 
     new_row_check_in(curr_user, curr_user_w, tag, util, firstEnrTrm, lastEnrTrm)
