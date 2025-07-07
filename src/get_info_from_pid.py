@@ -22,26 +22,10 @@ class contact_client:
         self.oauth2_client = OAuth2Session(
             oAuth.client_id, oAuth.client_secret, token_url=api_url + "token"
         )
-        self.token = self.safe_token_request()
+        self.token = self.oauth2_client.fetch_token(
+            api_url + "token", grant_type="client_credentials"
+        )
     
-    def safe_token_request(self, retries = 2):
-        for attempt in range(retries):
-            try:
-                self.oauth2_client.timeout = 10
-                token = self.ouath2_client.fetch_token(
-                    api_url + "token", grant_type = "client_credentials"
-                )
-                return token
-            except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
-                logging.warning(f"Token fetch attempt failed: {e}")
-                if (attempt < retries - 1):
-                    time.sleep(0.5)
-                else:
-                    logging.error("All token fetch requests failed on contact_client")
-                    return None
-            except Exception as e:
-                logging.error(f"Unexpected error fetching token: {e}")
-
     def get_student_info_pid(self, pid):
         try:
             if self.token["expires_at"] < time.time() + 60:
