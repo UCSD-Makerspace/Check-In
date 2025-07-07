@@ -34,7 +34,8 @@ def handle_check_in(tag, contact, util):
         if curr_user and util.check_waiver_match(curr_user, waiver_data):
             logging.info(f"User found online: {curr_user['Name']} but not locally at " + util.getDatetime())
             
-            user_data = extract_user_data(curr_user, tag)
+            user_data[tag] = extract_user_data(curr_user, tag)
+            logging.info(f"Extracted user data: {user_data[tag]}")
             dump_json(user_data)
             curr_user_w = "waiver_confirmed"
             logging.info(f"Updated local DB with user: {curr_user['Name']}")  
@@ -85,18 +86,17 @@ def refresh_user_terms(curr_user, contact):
         curr_user["lastEnrTrm"] = student_info[5]
     curr_user["lastCheckIn"] = dt.today().strftime("%Y-%m-%d")
 
-def extract_user_data(curr_user, tag):
+def extract_user_data(online_user, tag):
+    user_id = online_user["Student ID"].lower()
     return {
-        tag: {
-            "Name": curr_user.get("Name", ""),
-            "Timestamp": curr_user.get("Timestamp", ""),
-            "Student ID": curr_user.get("Student ID", ""),
-            "Email Address": curr_user.get("Email Address", ""),
-            "Waiver Signed": curr_user.get("Waiver Signed?", ""),
-            "firstEnrTrm": curr_user.get("firstEnrTrm", ""),
-            "lastEnrTrm": curr_user.get("lastEnrTrm", ""),
-            "lastCheckIn": None,
-        }
+        "Name": online_user["Name"],
+        "Timestamp": online_user["Timestamp"],
+        "Student ID": "A" + user_id.strip().lstrip("aA"),
+        "Email Address": online_user["Email Address"],
+        "Waiver Signed": "true",
+        "firstEnrTrm": "",
+        "lastEnrTrm": "",
+        "lastCheckIn": None,
     }
 
 def check_waiver_status(curr_user, util) -> tuple[bool,bool]:
