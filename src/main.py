@@ -1,6 +1,6 @@
 from tkinter import *
 from gui import *
-from checkin_queue import CheckInLogger
+from core.checkin_queue import CheckInLogger
 from reader import *
 from swipe import swipe
 from fabman import *
