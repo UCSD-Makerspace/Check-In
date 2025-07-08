@@ -5,7 +5,12 @@ This repository contains the code for the RFID-based check-in station deployed a
 
 ## How it Works
 
-The check-in station is a Python-based application with a main event loop running on its own thread. When a student taps their UCSD ID, the RFID tag is read and passed to `handle_check_in()`. The system then follows this workflow:
+The check-in station is a Python-based application with a main event loop running on its own thread. It integrates with several components to verify and log student check-ins:
+
+- **Traffic Light**: A USB-connected device that shows green, yellow, or red lights indicating the check-in status.
+- **Local User Database**: A cached JSON file storing known student records for quick lookup.
+- **Online User Database**: The authoritative source of student records, accessed via Google Sheets.
+- **Online Waiver Database**: A separate Google Sheet tracking which students have signed the required waiver.
 
 ### 1. Card Scan
 The student taps their UCSD ID, and the RFID tag is read.
