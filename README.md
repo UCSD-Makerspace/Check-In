@@ -13,7 +13,7 @@ The check-in station is a Python-based application with a main event loop runnin
 - **Online Waiver Database**: A separate Google Sheet tracking which students have signed the required waiver.
 
 ### 1. Card Scan
-The student taps their UCSD ID, and the RFID tag is read.
+The student taps their UCSD ID, and the RFID tag is read and queried to our local database.
 
 ### 2. Determine Student Status
 - If the student **is found locally**:
