@@ -150,7 +150,7 @@ class CheckInNoId(Frame):
             curr_user["Name"],
             "No ID",
             "User Check-in",
-            "Main Check-in",
+            "",
             curr_user["firstEnrTrm"],
             curr_user["lastEnrTrm"],
         ]
