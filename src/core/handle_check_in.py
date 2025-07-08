@@ -75,6 +75,7 @@ def handle_check_in(tag, contact, util):
 
         user_data[tag] = cleaned
         dump_json(user_data)
+        curr_user = cleaned
 
     new_row_check_in(curr_user, curr_user_w, tag, util, firstEnrTrm, lastEnrTrm)
     write_checkin(curr_user, tag)
