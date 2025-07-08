@@ -93,16 +93,16 @@ def refresh_user_terms(curr_user, contact):
         curr_user["lastEnrTrm"] = student_info[5]
     curr_user["lastCheckIn"] = dt.today().strftime("%Y-%m-%d")
 
-def extract_user_data(online_user, tag):
-    user_id = online_user["Student ID"].lower()
+def extract_user_data(user_acc, tag) -> dict:
+    user_id = user_acc["Student ID"].lower()
     return {
-        "Name": online_user["Name"],
-        "Timestamp": online_user["Timestamp"],
+        "Name": user_acc["Name"],
+        "Timestamp": user_acc["Timestamp"],
         "Student ID": "A" + user_id.strip().lstrip("aA"),
-        "Email Address": online_user["Email Address"],
+        "Email Address": user_acc["Email Address"],
         "Waiver Signed": "true",
-        "firstEnrTrm": "",
-        "lastEnrTrm": "",
+        "firstEnrTrm": user_acc.get("firstEnrTrm", ""),
+        "lastEnrTrm": user_acc.get("lastEnrTrm", ""),
         "lastCheckIn": None,
     }
 
