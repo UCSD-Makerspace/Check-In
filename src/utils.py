@@ -145,6 +145,7 @@ class utils:
 
         user_data[global_.rfid] = {
             "Name": full_name,
+            "Timestamp": self.getDatetime(),
             "Student ID": pid,
             "Email Address": email,
             "Waiver Signed": "false",
