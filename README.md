@@ -74,7 +74,7 @@ This repository is organized into the following main components:
 - `core/new_row_check_in.py`  
   Handles activity logging and displaying the appropriate GUI status pages based on the check-in result.
 
-- `core/utils.py`  
+- `utils.py`  
   Utility functions for validation, waiver matching, timestamp formatting, and account creation workflow.
 
 - `core/checkin_queue.py`  
