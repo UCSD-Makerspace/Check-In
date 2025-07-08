@@ -1,5 +1,5 @@
 from datetime import datetime as dt
-from checkin_queue import CheckInLogger
+from core.checkin_queue import CheckInLogger
 from core.handle_check_in import handle_check_in
 from core.render_ports import get_usb_ids
 from gui import *
