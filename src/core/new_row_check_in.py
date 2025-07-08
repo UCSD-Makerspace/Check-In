@@ -25,7 +25,7 @@ def new_row_check_in(curr_user, curr_user_w, tag, util, firstEnrTrm, lastEnrTrm)
             curr_user["Name"],
             str(tag),
             "User Check-In",
-            "Main Check-In",
+            "",
             firstEnrTrm,
             lastEnrTrm, 
         ]
