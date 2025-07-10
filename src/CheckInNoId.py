@@ -154,7 +154,7 @@ class CheckInNoId(Frame):
             student_info = contact.get_student_info_pid("A" + entered_pid)
             curr_user["firstEnrTrm"] = student_info[4]
             curr_user["lastEnrTrm"] = student_info[5]
-            logging.info(f"firstEnrTrm: {curr_user["firstEnrTrm"]}, lastEnrTrm: {curr_user["lastEnrTrm"]}")
+            logging.info(f"firstEnrTrm: {curr_user['firstEnrTrm']}, lastEnrTrm: {curr_user['lastEnrTrm']}")
 
         if needs_refresh:
             with open("assets/local_user_db.json", "w", encoding="utf-8") as f:
