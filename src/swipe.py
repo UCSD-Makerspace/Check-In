@@ -74,7 +74,10 @@ class swipe:
                 "An exception has ocurred with pulling user information", exc_info=True
             )
             return None
-
+        if not u_info:
+            logging.info("Student search returned False, returning...")
+            return
+        
         logging.info(f"Info pull succeeded:\n {u_info[0]}, {u_info[1]}, {u_info[3]}")
         return u_info
 
