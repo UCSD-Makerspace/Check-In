@@ -44,7 +44,7 @@ def handle_check_in(tag, contact, util):
         dump_json(user_data)
 
     new_row_check_in(curr_user.data, waiver_status, tag, util, curr_user.data.get("firstEnrTrm"), curr_user.data.get("lastEnrTrm"))
-    write_checkin(curr_user.data, tag, waiver_status, util)
+    write_checkin(curr_user.data, tag)
 
 # Helper function
 def dump_json(user_data):
