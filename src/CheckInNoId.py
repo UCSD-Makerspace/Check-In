@@ -103,11 +103,11 @@ class CheckInNoId(Frame):
     def displayLoading(self):
         if self.loading_text_id is None:
             self.loading_text_id = self.canvas.create_text(
-                425.0,
+                435.0,
                 545.0,
                 anchor="nw",
-                text="PLEASE WAIT: Loading...",
-                fill="#F5F0E6",
+                text="PLEASE WAIT: LOADING...",
+                fill="#FF0000",
                 font=("Montserrat", 24 * -1),
                 justify="center",
             )
