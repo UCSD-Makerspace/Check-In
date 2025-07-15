@@ -121,7 +121,10 @@ class CheckInNoId(Frame):
     def callCheckIn(self, controller):
         contact = contact_client()
         pid = self.pid_entry.get()
+        
         self.displayLoading()
+        self.canvas.update_idletasks()
+
         entered_pid = pid.lstrip("Aa").lower()
         if not pid:
             return
