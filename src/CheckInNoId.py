@@ -108,7 +108,7 @@ class CheckInNoId(Frame):
                 anchor="nw",
                 text="PLEASE WAIT: LOADING...",
                 fill="#FF0000",
-                font=("Montserrat", 24 * -1),
+                font=("Montserrat", 36 * -1, "bold"),
                 justify="center",
             )
 
