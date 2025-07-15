@@ -103,10 +103,10 @@ class CheckInNoId(Frame):
     def displayLoading(self):
         if self.loading_text_id is None:
             self.loading_text_id = self.canvas.create_text(
-                405.0,
-                565.0,
+                425.0,
+                545.0,
                 anchor="nw",
-                text="Loading...",
+                text="PLEASE WAIT: Loading...",
                 fill="#F5F0E6",
                 font=("Montserrat", 24 * -1),
                 justify="center",
@@ -121,7 +121,7 @@ class CheckInNoId(Frame):
     def callCheckIn(self, controller):
         contact = contact_client()
         pid = self.pid_entry.get()
-        
+
         self.displayLoading()
         self.canvas.update_idletasks()
 
