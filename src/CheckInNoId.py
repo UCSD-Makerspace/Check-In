@@ -143,6 +143,9 @@ class CheckInNoId(Frame):
                 break
         if not curr_user:
             logging.info("Manual check in user account was not found")
+            if self.loading_text_id is not None:
+                self.canvas.delete(self.loading_text_id)
+                self.loading_text_id = None
             controller.show_frame(NoAccCheckInOnly)
             controller.after(5000, lambda: controller.show_frame(MainPage))
             return
