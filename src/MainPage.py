@@ -91,7 +91,7 @@ class MainPage(Frame):
 
         self.photoList.append(image_image_5)
 
-        image_5 = canvas.create_image(602.0, 612.0, image=image_image_5)
+        image_5 = canvas.create_image(1130.0, 612.0, image=image_image_5)
 
         button_image_1 = PhotoImage(file=relative_to_assets("image_4.png"))
 
