@@ -71,14 +71,17 @@ This repository is organized into the following main components:
 - `core/handle_check_in.py`  
   Core check-in logic: verifies student account, waiver status, updates local database, and logs check-ins.
 
+- `core/checkin_queue.py`  
+  Implements an asynchronous queue for logging check-ins to Google Sheets, to avoid blocking the main thread.
+
+- `core/UserRecord.py`
+  Class with various information extraction methods, student verifications, and helper functions to assist handling a check-in.
+
 - `core/new_row_check_in.py`  
   Handles activity logging and displaying the appropriate GUI status pages based on the check-in result.
 
 - `utils.py`  
   Utility functions for validation, waiver matching, timestamp formatting, and account creation workflow.
-
-- `core/checkin_queue.py`  
-  Implements an asynchronous queue for logging check-ins to Google Sheets, to avoid blocking the main thread.
 
 - `fabman.py`  
   Client for interacting with the Fabman.io API to provision accounts and grant machine access.
@@ -121,7 +124,7 @@ This repository depends on several sensitive files and credentials that are **no
 These files are excluded from the repository via `.gitignore` and must be provisioned when setting up a new check-in station.
 
 ### Running
-To start the application:
+First, make sure to install the required packages with `pip install -r requirements.txt` in the main directory
 
 On a deployed machine, you can use the provided helper script to run the system and log output:
 

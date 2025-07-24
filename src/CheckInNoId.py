@@ -30,11 +30,11 @@ class CheckInNoId(Frame):
         self.photoList = []
         self.pid = StringVar()
         self.pid_entry = 0
-
+        self.loading_text_id = None
         self.loadWidgets(controller)
 
     def loadWidgets(self, controller):
-        canvas = Canvas(
+        self.canvas = Canvas(
             self,
             bg="#153246",
             height=720,
@@ -43,27 +43,27 @@ class CheckInNoId(Frame):
             highlightthickness=0,
             relief="ridge",
         )
+        self.canvas.place(x=0, y=0)
 
-        canvas.place(x=0, y=0)
         image_image_1 = PhotoImage(file=relative_to_assets("image_1.png"))
 
         self.photoList.append(image_image_1)
 
-        image_1 = canvas.create_image(640.0, 360.0, image=image_image_1)
+        image_1 = self.canvas.create_image(640.0, 360.0, image=image_image_1)
 
         image_image_2 = PhotoImage(file=relative_to_assets("image_2.png"))
 
         self.photoList.append(image_image_2)
 
-        image_2 = canvas.create_image(640.0, 360.0, image=image_image_2)
+        image_2 = self.canvas.create_image(640.0, 360.0, image=image_image_2)
 
         image_image_3 = PhotoImage(file=relative_to_assets("image_3.png"))
 
         self.photoList.append(image_image_3)
 
-        image_3 = canvas.create_image(640.0, 424.0, image=image_image_3)
+        image_3 = self.canvas.create_image(640.0, 424.0, image=image_image_3)
 
-        canvas.create_text(
+        self.canvas.create_text(
             212.0,
             120.0,
             anchor="nw",
@@ -73,7 +73,7 @@ class CheckInNoId(Frame):
             justify="center",
         )
 
-        canvas.create_text(
+        self.canvas.create_text(
             605.0,
             480.0,
             anchor="nw",
@@ -100,6 +100,18 @@ class CheckInNoId(Frame):
         self.pid_entry = Entry(self, textvariable=self.pid, width=40, font=52)
         self.pid_entry.place(x=420.0, y=412.0)
 
+    def displayLoading(self):
+        if self.loading_text_id is None:
+            self.loading_text_id = self.canvas.create_text(
+                420.0,
+                545.0,
+                anchor="nw",
+                text="PLEASE WAIT: LOADING...",
+                fill="#FF0000",
+                font=("Montserrat", 36 * -1, "bold"),
+                justify="center",
+            )
+
     def clearEntries(self):
         self.pid_entry.delete(0, END)
 
@@ -109,6 +121,10 @@ class CheckInNoId(Frame):
     def callCheckIn(self, controller):
         contact = contact_client()
         pid = self.pid_entry.get()
+
+        self.displayLoading()
+        self.canvas.update_idletasks()
+
         entered_pid = pid.lstrip("Aa").lower()
         if not pid:
             return
@@ -127,6 +143,9 @@ class CheckInNoId(Frame):
                 break
         if not curr_user:
             logging.info("Manual check in user account was not found")
+            if self.loading_text_id is not None:
+                self.canvas.delete(self.loading_text_id)
+                self.loading_text_id = None
             controller.show_frame(NoAccCheckInOnly)
             controller.after(5000, lambda: controller.show_frame(MainPage))
             return
@@ -173,4 +192,7 @@ class CheckInNoId(Frame):
 
         global_.checkin_logger.enqueue_row(new_row, entered_pid)
         global_.traffic_light.set_green()
+        if self.loading_text_id is not None:
+            self.canvas.delete(self.loading_text_id)
+            self.loading_text_id = None
         global_.app.get_frame(UserWelcome).displayName(curr_user["Name"])
