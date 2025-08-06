@@ -152,7 +152,7 @@ class utils:
             "Timestamp": self.getDatetime(),
             "Student ID": pid,
             "Email Address": email,
-            "Waiver Signed": "false",
+            "Waiver Signed": " ",
             "firstEnrTrm": firstEnrTerm,
             "lastEnrTrm": lastEnrTerm,
             "lastCheckIn": None,    
