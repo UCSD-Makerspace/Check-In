@@ -26,21 +26,29 @@ class UserRecord():
         return None
     
     def has_waiver(self, util):
-        if self.data.get("Waiver Signed", "").strip().lower() == "true":
+        waiver_signed = self.data.get("Waiver Signed", "").strip().lower()
+        if waiver_signed == "true":
             return True
-        waiver_data = global_.sheets.get_waiver_db_data()
-        if not waiver_data:
-            logging.warning("Waiver data is empty or None, cannot check waiver status in UserRecord.py")
-            return False
         
-        if util.check_waiver_match(self.data, waiver_data):
-            self.data["Waiver Signed"] = "true"
-            return True
-        return False
+        try:    
+            waiver_data = global_.sheets.get_waiver_db_data()
+            if not waiver_data:
+                logging.warning("Waiver data is empty or None, cannot check waiver status in UserRecord.py")
+                if waiver_signed in ["false", ""]:
+                    return False
+                logging.warning(f"Unknown local waiver status: {waiver_signed}")
+                return False
+            if util.check_waiver_match(self.data, waiver_data):
+                self.data["Waiver Signed"] = "true"
+                return True
+        except Exception as e:
+            logging.error(f"Error checking waiver status for user {self.data.get('Name', 'Unknown')}: {e}")
+            if waiver_signed == "true":
+                return True            
 
     def needs_refresh(self):
         last_checked_in = self.data.get("lastCheckIn")
-        if not last_checked_in or not self.data.get("firstEnrTrm") or not self.data.get("lastEnrTrm"):
+        if not last_checked_in or not self.data.get("firstEnrTrm") or not self.data.get("lastEnrTrm") or self.data.get("Waiver Signed") == "false" or self.data.get("Waiver Signed") == " ":
             return True
         diff_days = (dt.today().date() - dt.strptime(last_checked_in, "%Y-%m-%d").date()).days
         return diff_days >= 21
