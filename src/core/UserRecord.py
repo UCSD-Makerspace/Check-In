@@ -64,6 +64,7 @@ class UserRecord():
             return True
 
         if waiver_signed in ["false", ""]:
+            logging.info(f"User {self.data.get('Name', 'Unknown')} has no local waiver signed, needs refresh")
             return True
         
         return False
