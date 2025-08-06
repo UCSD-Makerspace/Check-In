@@ -63,7 +63,7 @@ class UserRecord():
             logging.warning(f"Invalid lastCheckIn date format: {last_checked_in}")
             return True
 
-        if waiver_signed in ["false", ""]:
+        if waiver_signed in ["false", " "]:
             logging.info(f"User {self.data.get('Name', 'Unknown')} has no local waiver signed, needs refresh")
             return True
         
