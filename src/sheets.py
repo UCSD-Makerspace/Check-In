@@ -25,13 +25,52 @@ class Sheet:
         ):
             try:
                 logging.info("Writing to Google Sheets")
-                self.data = self.db.get_all_records(numericise_ignore=["all"])
+                try:
+                    self.data = self.db.get_all_records(numericise_ignore=["all"])
+                except gspread.exceptions.GSpreadException as e:
+                    if "header row in the worksheet is not unique" in str(e):
+                        logging.warning("Duplicate headers found, attempting to get raw values")
+                        all_values = self.db.get_all_values()
+                        if all_values:
+                            headers = all_values[0]
+                            seen_headers = set()
+                            duplicates = []
+                            for header in headers:
+                                if header in seen_headers:
+                                    duplicates.append(header)
+                                seen_headers.add(header)
+                            if duplicates:
+                                logging.error(f"Duplicate headers found: {duplicates}")
+
+                            records = [] 
+                            for row_values in all_values[1:]:
+                                record = {}
+                                header_counts = {}
+                                for i, header in enumerate(headers):
+                                    if header in header_counts:
+                                        header_counts[header] += 1
+                                        unique_header = f"{header}_{header_counts[header]}"
+                                    else:
+                                        header_counts[header] = 1
+                                        unique_header = header
+                                    
+                                    if i < len(row_values):
+                                        record[unique_header] = row_values[i]
+                                    else:
+                                        record[unique_header] = ""
+                                records.append(record)
+                            self.data = records
+                        else:
+                            raise e
+                    else:
+                        raise e
                 self.last_updated = curr_time
             except Exception as e:
                 logging.warning("Unable to update Google Sheets", exc_info=True)
+                if self.data is None:
+                    raise e
 
         return self.data
-
 
 class SheetManager:
     def __init__(self):

@@ -29,6 +29,10 @@ class UserRecord():
         if self.data.get("Waiver Signed", "").strip().lower() == "true":
             return True
         waiver_data = global_.sheets.get_waiver_db_data()
+        if not waiver_data:
+            logging.warning("Waiver data is empty or None, cannot check waiver status in UserRecord.py")
+            return False
+        
         if util.check_waiver_match(self.data, waiver_data):
             self.data["Waiver Signed"] = "true"
             return True

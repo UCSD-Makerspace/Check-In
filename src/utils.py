@@ -64,7 +64,7 @@ class utils:
     # Helper function to return true if user matches waiver by ID or email, false otherwise
     def check_waiver_match(self, curr_user, waiver_data):
         if not waiver_data:
-            logging.warning("Waiver data is empty or None")
+            logging.warning("Waiver data is empty or None in check_waiver_match")
             return False
         
         user_id = curr_user["Student ID"].strip().lower()
