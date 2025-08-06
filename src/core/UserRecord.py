@@ -44,14 +44,29 @@ class UserRecord():
         except Exception as e:
             logging.error(f"Error checking waiver status for user {self.data.get('Name', 'Unknown')}: {e}")
             if waiver_signed == "true":
-                return True            
+                return True   
+        return False         
 
     def needs_refresh(self):
         last_checked_in = self.data.get("lastCheckIn")
-        if not last_checked_in or not self.data.get("firstEnrTrm") or not self.data.get("lastEnrTrm") or self.data.get("Waiver Signed") == "false" or self.data.get("Waiver Signed") == " ":
+        waiver_signed = self.data.get("Waiver Signed", "").strip().lower()
+
+        if not (last_checked_in or
+                not self.data.get("firstEnrTrm") or
+                not self.data.get("lastEnrTrm")):
             return True
-        diff_days = (dt.today().date() - dt.strptime(last_checked_in, "%Y-%m-%d").date()).days
-        return diff_days >= 21
+        try:
+            diff_days = (dt.today().date() - dt.strptime(last_checked_in, "%Y-%m-%d").date()).days
+            if diff_days >= 21:
+                return True
+        except ValueError as e:
+            logging.warning(f"Invalid lastCheckIn date format: {last_checked_in}")
+            return True
+
+        if waiver_signed in ["false", ""]:
+            return True
+        
+        return False
 
     def update_terms(self, contact):
         refresh_user_terms(self.data, contact)
