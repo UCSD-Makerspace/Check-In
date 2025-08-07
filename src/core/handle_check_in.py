@@ -19,6 +19,7 @@ def handle_check_in(tag, contact, util):
         user_data = json.load(f)
 
     curr_user = UserRecord.load_from_local(tag, user_data)
+    logging.info(f"Current user: {curr_user.data if curr_user else 'None'}")
     waiver_status = "None"
 
     if not curr_user:
@@ -35,6 +36,7 @@ def handle_check_in(tag, contact, util):
             return
 
     if curr_user.has_waiver(util):
+        logging.info(f"User {curr_user.data['Name']} has a waiver.")
         waiver_status = "waiver_confirmed"
 
     if curr_user.needs_refresh():

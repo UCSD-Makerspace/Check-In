@@ -39,12 +39,14 @@ class UserRecord():
                 logging.warning(f"Unknown local waiver status: {waiver_signed}")
                 return False
             if util.check_waiver_match(self.data, waiver_data):
+                logging.info(f"User {self.data.get('Name', 'Unknown')} succeeded UserRecord check_waiver_match.")
                 self.data["Waiver Signed"] = "true"
                 return True
         except Exception as e:
             logging.error(f"Error checking waiver status for user {self.data.get('Name', 'Unknown')}: {e}")
             if waiver_signed == "true":
                 return True   
+        logging.info(f"User {self.data.get('Name', 'Unknown')} failed UserRecord has_waiver.")
         return False         
 
     def needs_refresh(self):
