@@ -19,7 +19,6 @@ def handle_check_in(tag, contact, util):
         user_data = json.load(f)
 
     curr_user = UserRecord.load_from_local(tag, user_data)
-    logging.info(f"Current user: {curr_user.data if curr_user else 'None'}")
     waiver_status = "None"
 
     if not curr_user:
