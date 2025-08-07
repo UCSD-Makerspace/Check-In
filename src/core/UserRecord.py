@@ -51,12 +51,15 @@ class UserRecord():
 
     def needs_refresh(self):
         last_checked_in = self.data.get("lastCheckIn")
+        if last_checked_in is None:
+            return True
         waiver_signed = self.data.get("Waiver Signed", "").strip().lower()
 
         if not (last_checked_in or
                 not self.data.get("firstEnrTrm") or
                 not self.data.get("lastEnrTrm")):
             return True
+        
         try:
             diff_days = (dt.today().date() - dt.strptime(last_checked_in, "%Y-%m-%d").date()).days
             if diff_days >= 21:
