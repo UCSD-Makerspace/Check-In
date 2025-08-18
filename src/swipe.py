@@ -1,9 +1,9 @@
 from tkinter import *
-from ManualFill import *
-from NoAccNoWaiverSwipe import *
-from WaiverNoAccSwipe import *
-from AccNoWaiverSwipe import *
-from CheckInNoId import *
+from frontend.ManualFill import *
+from frontend.NoAccNoWaiverSwipe import *
+from frontend.WaiverNoAccSwipe import *
+from frontend.AccNoWaiverSwipe import *
+from frontend.CheckInNoId import *
 from get_info_from_pid import *
 from utils import *
 import global_
