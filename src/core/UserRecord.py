@@ -3,7 +3,7 @@ import json
 import logging
 from datetime import datetime as dt
 
-LOCAL_DB_PATH = "assets/local_user_db.json"
+LOCAL_DB_PATH = "assets/user_db.json"
 
 class UserRecord():
     def __init__(self, uuid: str, data: dict):
