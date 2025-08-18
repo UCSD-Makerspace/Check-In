@@ -125,7 +125,7 @@ class utils:
             if latest_paid_term == curr_term:
                 return True
             else:
-                logging.info(f"User {curr_user.get("Name")} has not paid for {curr_term}")
+                logging.info(f"User {curr_user.get('Name')} has not paid for {curr_term}")
                 return False
 
     def createAccount(self, fname, lname, email, pid, ManualFill):
