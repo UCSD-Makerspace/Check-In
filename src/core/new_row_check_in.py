@@ -8,7 +8,7 @@ def new_row_check_in(curr_user, curr_user_w, tag, util, firstEnrTrm, lastEnrTrm,
         logging.info(f"Payment not found for user {curr_user['Name']}")
         global_.traffic_light.set_red()
         global_.app.show_frame(AccNoPayment)
-        global_.app.after(3000, lambda: global_.app.show_frame(AccNoWaiverSwipe))
+        global_.app.after(3000, lambda: global_.app.show_frame(AccNoPaymentSwipe))
     elif curr_user is None and curr_user_w == "None":
         logging.info("User was not found in databases")
         global_.traffic_light.set_red()
