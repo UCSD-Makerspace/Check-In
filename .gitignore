@@ -5,3 +5,4 @@ creds.json
 log*
 .venv/
 /src/assets/local_user_db.json
+/src/assets/user_db.json

@@ -25,6 +25,20 @@ class UserRecord():
                     return cls(uuid, cleaned)
         return None
     
+    def find_payment(self, sheets, util) -> bool:
+        try:
+            payment_data = sheets.get_user_db_data()
+            if not payment_data:
+                logging.warning("Payment data is empty or None in UserRecord find_payment")
+                return False
+            
+            if util.check_user_payment(self.data, payment_data):
+                return True
+            else: 
+                return False
+        except Exception as e:
+            logging.error(f"Error when using UserRecord find_payment: {e}")
+    
     def has_waiver(self, util):
         waiver_signed = self.data.get("Waiver Signed", "").strip().lower()
         if waiver_signed == "true":
@@ -89,7 +103,7 @@ def refresh_user_terms(curr_user, contact):
         curr_user["lastEnrTrm"] = student_info[5]
     curr_user["lastCheckIn"] = dt.today().strftime("%Y-%m-%d")
 
-def extract_user_data(user_acc, tag) -> dict:
+def extract_user_data(user_acc) -> dict:
     user_id = user_acc["Student ID"].lower()
     return {
         "Name": user_acc["Name"],
@@ -100,4 +114,5 @@ def extract_user_data(user_acc, tag) -> dict:
         "firstEnrTrm": user_acc.get("firstEnrTrm", ""),
         "lastEnrTrm": user_acc.get("lastEnrTrm", ""),
         "lastCheckIn": None,
+        "Last Paid Term": user_acc.get("Last Paid Term", "")
     }

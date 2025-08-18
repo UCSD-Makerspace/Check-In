@@ -31,12 +31,16 @@ def handle_check_in(tag, contact, util):
             logging.info(f"User added from online to local database: {curr_user.data['Name']}")
         if not curr_user:
             logging.info(f"User {tag} not found locally or online.")
-            new_row_check_in(None, "None", tag, util, None, None)
+            new_row_check_in(None, "None", tag, util, None, None, None)
             return
 
     if curr_user.has_waiver(util):
         logging.info(f"User {curr_user.data['Name']} has a waiver.")
         waiver_status = "waiver_confirmed"
+
+    if curr_user.find_payment(global_.sheets, util):
+        payment_status = "paid"
+    else: payment_status = "unpaid"
 
     if curr_user.needs_refresh():
         logging.info(f"Refreshing terms and last check-in for user {curr_user.data['Name']}")
@@ -44,7 +48,7 @@ def handle_check_in(tag, contact, util):
         curr_user.save(user_data)
         dump_json(user_data)
 
-    new_row_check_in(curr_user.data, waiver_status, tag, util, curr_user.data.get("firstEnrTrm"), curr_user.data.get("lastEnrTrm"))
+    new_row_check_in(curr_user.data, waiver_status, tag, util, curr_user.data.get("firstEnrTrm"), curr_user.data.get("lastEnrTrm"), payment_status)
     write_checkin(curr_user.data, tag)
 
 # Helper function

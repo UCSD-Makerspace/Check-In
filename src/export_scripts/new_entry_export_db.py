@@ -2,12 +2,12 @@ import json
 import logging
 import os
 
-IMPORT_PATH = os.path.join(os.path.dirname(__file__), "assets", "local_user_db.json")
-EXPORT_PATH = os.path.join(os.path.dirname(__file__), "assets", "user_db.json")
+IMPORT_PATH = os.path.join(os.path.dirname(__file__), "..", "assets", "local_user_db.json")
+EXPORT_PATH = os.path.join(os.path.dirname(__file__), "..", "assets", "user_db.json")
 
 def export_user_db():
     try:
-        with open(IMPORT_PATH, "r", eocoding="utf-8") as f:
+        with open(IMPORT_PATH, "r", encoding="utf-8") as f:
             data = json.load(f)
 
         for user_data in data.values():
