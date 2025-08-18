@@ -8,7 +8,7 @@ import global_
 
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"assets/main_page_assets")
+ASSETS_PATH = OUTPUT_PATH.parent.parent / "assets" / "main_page_assets"
 
 
 def relative_to_assets(path: str) -> Path:
