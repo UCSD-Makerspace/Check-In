@@ -63,8 +63,8 @@ class utils:
 
     @staticmethod
     def get_current_term() -> str:
-        month = datetime.today().month
-        year = datetime.today().year % 100
+        month = datetime.datetime.today().month
+        year = datetime.datetime.today().year % 100
         if month in [1,2,3]:
             return f"WI{year}"
         elif month in [4,5,6]:
