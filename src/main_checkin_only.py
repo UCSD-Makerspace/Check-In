@@ -8,9 +8,9 @@ from fabman import *
 import json
 from sheets import *
 from threading import Thread
-from UserWelcome import *
-from ManualFill import *
-from CheckInNoId import *
+from frontend.UserWelcome import *
+from frontend.ManualFill import *
+from frontend.CheckInNoId import *
 from get_info_from_pid import contact_client
 from swipe import *
 from tkinter import *

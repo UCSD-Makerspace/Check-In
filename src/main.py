@@ -6,9 +6,9 @@ from swipe import swipe
 from fabman import *
 from sheets import *
 from threading import Thread
-from UserWelcome import *
-from ManualFill import *
-from CheckInNoId import *
+from frontend.UserWelcome import *
+from frontend.ManualFill import *
+from frontend.CheckInNoId import *
 from get_info_from_pid import contact_client
 from core.handle_check_in import handle_check_in
 from core.render_ports import get_usb_ids

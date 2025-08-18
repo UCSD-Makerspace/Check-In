@@ -1,5 +1,5 @@
 from sheets import SheetManager
-from traffic import TrafficLight
+from frontend.traffic import TrafficLight
 
 #############################################################
 # Declare all globals, and try to connect the google sheets #

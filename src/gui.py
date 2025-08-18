@@ -1,19 +1,19 @@
 import uuid
 import tkinter as tk
 import global_
-from AccNoWaiver import AccNoWaiver
-from MainPage import MainPage
-from AccNoWaiverSwipe import AccNoWaiverSwipe
-from ManualFill import ManualFill
-from CheckInNoId import CheckInNoId
-from NoAccCheckInOnly import NoAccCheckInOnly
-from NoAccNoWaiver import NoAccNoWaiver
-from NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
-from QRCodes import QRCodes
-from UserThank import UserThank
-from UserWelcome import UserWelcome
-from WaiverNoAcc import WaiverNoAcc
-from WaiverNoAccSwipe import WaiverNoAccSwipe
+from frontend.AccNoWaiver import AccNoWaiver
+from frontend.MainPage import MainPage
+from frontend.AccNoWaiverSwipe import AccNoWaiverSwipe
+from frontend.ManualFill import ManualFill
+from frontend.CheckInNoId import CheckInNoId
+from frontend.NoAccCheckInOnly import NoAccCheckInOnly
+from frontend.NoAccNoWaiver import NoAccNoWaiver
+from frontend.NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
+from frontend.QRCodes import QRCodes
+from frontend.UserThank import UserThank
+from frontend.UserWelcome import UserWelcome
+from frontend.WaiverNoAcc import WaiverNoAcc
+from frontend.WaiverNoAccSwipe import WaiverNoAccSwipe
 
 
 TIMEOUT_DICT = {AccNoWaiverSwipe: 30000, QRCodes: 30000, NoAccNoWaiverSwipe: 30000}
