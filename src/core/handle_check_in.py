@@ -8,7 +8,7 @@ from core.UserRecord import *
 from gui import *
 from reader import *
 
-LOCAL_DB_PATH = "assets/local_user_db.json"
+LOCAL_DB_PATH = "assets/user_db.json"
 
 def handle_check_in(tag, contact, util):
     """ Handles the check-in process for a user based on their tag.
