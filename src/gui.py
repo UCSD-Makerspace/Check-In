@@ -14,6 +14,7 @@ from frontend.UserThank import UserThank
 from frontend.UserWelcome import UserWelcome
 from frontend.WaiverNoAcc import WaiverNoAcc
 from frontend.WaiverNoAccSwipe import WaiverNoAccSwipe
+from frontend.AccNoPayment import AccNoPayment
 
 
 TIMEOUT_DICT = {AccNoWaiverSwipe: 30000, QRCodes: 30000, NoAccNoWaiverSwipe: 30000}
@@ -54,6 +55,7 @@ class gui(tk.Tk):
             UserWelcome,
             WaiverNoAcc,
             WaiverNoAccSwipe,
+            AccNoPayment
         ):
             frame = F(container, self)
             self.frames[F] = frame
