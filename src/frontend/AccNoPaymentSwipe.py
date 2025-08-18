@@ -114,7 +114,7 @@ class AccNoPaymentSwipe(Frame):
             45.0,
             270.0,
             anchor="nw",
-            text="Please scan the QR code\non the right and proceed \n     to payment",
+            text="Please scan the QR code\non the right and proceed \n         to payment",
             fill="#F5F0E6",
             font=("Montserrat", 48 * -1),
         )
