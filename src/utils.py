@@ -119,7 +119,7 @@ class utils:
                     latest_paid_term = term
 
             if latest_paid_term != local_paid_term:
-                logging.info(f"Updating local payment term for {curr_user.get("Name")} from {local_paid_term} to {latest_paid_term}")
+                logging.info(f"Updating local payment term for {curr_user.get('Name')} from {local_paid_term} to {latest_paid_term}")
                 curr_user["Last Paid Term"] = latest_paid_term
 
             if latest_paid_term == curr_term:
