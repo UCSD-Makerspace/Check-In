@@ -11,7 +11,7 @@ def export_user_db():
             data = json.load(f)
 
         for user_data in data.values():
-            user_data["Last Paid Term"] = None
+            user_data["Last Paid Term"] = ""
 
         with open(EXPORT_PATH, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
