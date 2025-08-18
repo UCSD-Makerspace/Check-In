@@ -61,6 +61,7 @@ class utils:
     def getDatetime(self):
         return datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
+    @staticmethod
     def get_current_term() -> str:
         month = datetime.today().month
         year = datetime.today().year % 100
