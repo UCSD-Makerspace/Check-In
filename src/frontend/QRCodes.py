@@ -6,8 +6,8 @@ from pathlib import Path
 from tkinter import *
 from gui import *
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"assets/qr_codes_assets")
+ROOT_PATH = Path(__file__).resolve().parent.parent
+ASSETS_PATH = ROOT_PATH / "assets" / "qr_codes_assets"
 
 
 def relative_to_assets(path: str) -> Path:

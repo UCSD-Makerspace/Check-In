@@ -8,8 +8,8 @@ from frontend.MainPage import *
 import global_
 
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"assets/acc_no_waiver_swipe_assets")
+ROOT_PATH = Path(__file__).resolve().parent.parent
+ASSETS_PATH = ROOT_PATH / "assets" / "acc_no_waiver_swipe_assets"
 TIMEOUT = 20000
 
 

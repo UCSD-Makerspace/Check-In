@@ -11,10 +11,8 @@ from frontend.MainPage import *
 import time
 import global_
 
-
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"assets/user_thank_assets")
-
+ROOT_PATH = Path(__file__).resolve().parent.parent
+ASSETS_PATH = ROOT_PATH / "assets" / "user_thank_assets"
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)

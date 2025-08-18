@@ -11,9 +11,8 @@ from frontend.UserWelcome import UserWelcome
 import logging
 
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"assets/check_in_no_id_assets")
-
+ROOT_PATH = Path(__file__).resolve().parent.parent
+ASSETS_PATH = ROOT_PATH / "assets" / "check_in_no_id_assets"
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)

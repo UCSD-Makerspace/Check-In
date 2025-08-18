@@ -6,8 +6,9 @@ from tkinter import *
 from utils import *
 import logging
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"assets/manual_fill_assets")
+
+ROOT_PATH = Path(__file__).resolve().parent.parent
+ASSETS_PATH = ROOT_PATH / "assets" / "manual_fill_assets"
 
 
 def relative_to_assets(path: str) -> Path:
