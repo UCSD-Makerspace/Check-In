@@ -80,23 +80,23 @@ class AccNoPaymentSwipe(Frame):
             anchor="nw",
             text="Account Status:",
             fill="#F5F0E6",
-            font=("Montserrat", 40 * -1),
+            font=("Montserrat", 34 * -1),
         )
 
         canvas.create_text(
-            430.0,
+            420.0,
             45.0,
             anchor="nw",
             text="Payment Status:",
             fill="#F5F0E6",
-            font=("Montserrat", 40 * -1),
+            font=("Montserrat", 34 * -1),
         )
 
         image_image_5 = PhotoImage(file=relative_to_assets("image_5.png"))
 
         self.photoList.append(image_image_5)
 
-        image_5 = canvas.create_image(395.0, 70.0, image=image_image_5)
+        image_5 = canvas.create_image(355.0, 70.0, image=image_image_5)
 
         image_image_6 = PhotoImage(file=relative_to_assets("image_6.png"))
 
