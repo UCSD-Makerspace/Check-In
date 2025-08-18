@@ -102,7 +102,7 @@ class utils:
         if not curr_user:
             logging.warning("check_user_payment called with no valid user")
        
-        curr_term = get_current_term()
+        curr_term = self.get_current_term()
         local_paid_term = curr_user.get("Last Paid Term", "").strip().upper()
 
         user_id = curr_user.get("Student ID", "").strip().lower().lstrip("a")
