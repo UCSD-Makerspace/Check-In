@@ -21,7 +21,7 @@ class QRCodes(Frame):
         self.loadWidgets(controller)
 
     def loadWidgets(self, controller):
-        from MainPage import MainPage
+        from frontend.MainPage import MainPage
 
         canvas = Canvas(
             self,
