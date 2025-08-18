@@ -22,14 +22,14 @@ class MainPage(Frame):
         self.loadWidgets(controller)
 
     def go_to_no_id_page(self, controller):
-        from CheckInNoId import CheckInNoId
+        from frontend.CheckInNoId import CheckInNoId
 
         no_id = global_.app.get_frame(CheckInNoId)
         no_id.clearEntries()
         controller.show_frame(CheckInNoId)
 
     def loadWidgets(self, controller):
-        from QRCodes import QRCodes
+        from frontend.QRCodes import QRCodes
 
         canvas = Canvas(
             self,

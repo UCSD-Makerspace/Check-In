@@ -4,10 +4,10 @@
 
 from pathlib import Path
 from tkinter import *
-from MainPage import *
-from AccNoWaiver import *
-from AccNoWaiverSwipe import *
-from MainPage import *
+from frontend.MainPage import *
+from frontend.AccNoWaiver import *
+from frontend.AccNoWaiverSwipe import *
+from frontend.MainPage import *
 import time
 import global_
 

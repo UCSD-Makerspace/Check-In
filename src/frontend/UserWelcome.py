@@ -4,7 +4,7 @@
 
 from pathlib import Path
 from tkinter import *
-from MainPage import *
+from frontend.MainPage import *
 import time
 import global_
 

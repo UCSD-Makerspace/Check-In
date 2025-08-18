@@ -5,9 +5,9 @@ from get_info_from_pid import contact_client
 from pathlib import Path
 from tkinter import *
 from utils import *
-from NoAccCheckInOnly import NoAccCheckInOnly
-from NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
-from UserWelcome import UserWelcome
+from frontend.NoAccCheckInOnly import NoAccCheckInOnly
+from frontend.NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
+from frontend.UserWelcome import UserWelcome
 import logging
 
 

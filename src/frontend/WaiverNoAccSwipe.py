@@ -5,7 +5,7 @@
 from pathlib import Path
 from tkinter import *
 from gui import *
-from ManualFill import *
+from frontend.ManualFill import *
 import global_
 
 
