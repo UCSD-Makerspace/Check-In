@@ -13,7 +13,7 @@ def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
 
-class AccNoWaiver(Frame):
+class AccNoPayment(Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.photoList = []
