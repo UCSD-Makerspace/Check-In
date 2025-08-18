@@ -6,7 +6,7 @@ import time
 import global_
 import tkinter
 from gui import *
-from UserThank import *
+from frontend.UserThank import *
 import threading
 from get_info_from_pid import contact_client
 
