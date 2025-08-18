@@ -39,6 +39,7 @@ def handle_check_in(tag, contact, util):
         waiver_status = "waiver_confirmed"
 
     if curr_user.find_payment(global_.sheets, util):
+        logging.info(f"User {curr_user.data['Name']} has paid for term {curr_user.data['Last Paid Term']}")
         payment_status = "paid"
     else: payment_status = "unpaid"
 

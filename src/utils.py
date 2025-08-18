@@ -102,8 +102,12 @@ class utils:
     def check_user_payment(self, curr_user: dict, payment_data: list) -> bool:
         if not curr_user:
             logging.warning("check_user_payment called with no valid user")
-       
+
         curr_term = self.get_current_term()
+        if not curr_user.get("Last Paid Term"):
+            logging.info(f"User {curr_user.get('Name')} has not paid for {curr_term}")
+            return False
+       
         local_paid_term = curr_user.get("Last Paid Term", "").strip().upper()
 
         user_id = curr_user.get("Student ID", "").strip().lower().lstrip("a")
