@@ -2,8 +2,6 @@ import json
 import logging
 import os
 
-from sheets import SheetManager
-
 IMPORT_PATH = os.path.join(os.path.dirname(__file__), "assets", "local_user_db.json")
 EXPORT_PATH = os.path.join(os.path.dirname(__file__), "assets", "user_db.json")
 
