@@ -7,9 +7,8 @@ from tkinter import *
 import global_
 
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH.parent / "assets" / "main_page_assets"
-
+ROOT_PATH = Path(__file__).resolve().parent.parent
+ASSETS_PATH = ROOT_PATH / "assets" / "main_page_assets"
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
