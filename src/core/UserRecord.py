@@ -33,7 +33,8 @@ class UserRecord():
             if util.check_user_payment(self.data):
                 self.data["Last Paid Term"] = util.get_current_term()
                 return True
-            else: 
+            else:
+                logging.info("Returning false in UserRecord find_payment")
                 return False
         except Exception as e:
             logging.error(f"Error when using UserRecord find_payment: {e}")

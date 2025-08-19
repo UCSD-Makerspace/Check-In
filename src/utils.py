@@ -111,7 +111,7 @@ class utils:
         user_email = curr_user.get("Email Address", "").strip().lower()
         latest_paid_term = local_paid_term
 
-        payment_data = global_.sheets.get_user_db_data
+        payment_data = global_.sheets.get_user_db_data()
         if not payment_data:
             logging.warning("Payment data is empty or None in UserRecord find_payment")
             return False
