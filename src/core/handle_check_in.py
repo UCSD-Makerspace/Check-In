@@ -27,7 +27,7 @@ def handle_check_in(tag, contact, util):
         if curr_user:
             waiver_status = "waiver_confirmed"
             curr_user.save(user_data)
-            dump_json(user_data)
+            dump_json(tag, user_data)
             logging.info(f"User added from online to local database: {curr_user.data['Name']}")
         if not curr_user:
             logging.info(f"User {tag} not found locally or online.")
