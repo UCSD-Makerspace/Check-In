@@ -43,7 +43,7 @@ def handle_check_in(tag, contact, util):
         payment_status = "paid"
     else: 
         payment_status = "unpaid"
-        logging.info(f"{curr_user.get('Name')} failed find_payment in handle_check_in")
+        logging.info(f"{curr_user.data('Name')} failed find_payment in handle_check_in")
 
     if curr_user.needs_refresh():
         logging.info(f"Refreshing terms and last check-in for user {curr_user.data['Name']}")

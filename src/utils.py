@@ -104,9 +104,6 @@ class utils:
             logging.warning("check_user_payment called with no valid user")
 
         curr_term = self.get_current_term()
-        if not curr_user.get("Last Paid Term"):
-            logging.info(f"User {curr_user.get('Name')} local term does not exist")
-            return False
        
         local_paid_term = curr_user.get("Last Paid Term", "").strip().upper()
 
