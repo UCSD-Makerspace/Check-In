@@ -99,7 +99,7 @@ class utils:
         logging.warning(f"Waiver match failed for user_id={user_id}, email={user_email}")
         return False
 
-    def check_user_payment(self, curr_user: dict, payment_data: list) -> bool:
+    def check_user_payment(self, curr_user: dict) -> bool:
         if not curr_user:
             logging.warning("check_user_payment called with no valid user")
 
@@ -114,24 +114,31 @@ class utils:
         user_email = curr_user.get("Email Address", "").strip().lower()
         latest_paid_term = local_paid_term
 
+        payment_data = global_.sheets.get_user_db_data
+        if not payment_data:
+            logging.warning("Payment data is empty or None in UserRecord find_payment")
+            return False
+
         for row in payment_data:
             term = row.get("Type", "").strip().upper()
             pay_id = row.get("Student ID", "").strip().lower().lstrip("a")
             pay_email = row.get("Email Address", "").strip().lower()
 
-            if (user_id and user_id == pay_id) or (user_email and user_email == pay_email):
-                if term and term > latest_paid_term:
+            if user_id == pay_id or user_email == pay_email:
+                if latest_paid_term == "" and term:
+                    latest_paid_term = term
+                elif term and term > latest_paid_term:
                     latest_paid_term = term
 
-            if latest_paid_term != local_paid_term:
-                logging.info(f"Updating local payment term for {curr_user.get('Name')} from {local_paid_term} to {latest_paid_term}")
-                curr_user["Last Paid Term"] = latest_paid_term
+        if latest_paid_term != local_paid_term:
+            logging.info(f"Updating local payment term for {curr_user.get('Name')} from {local_paid_term} to {latest_paid_term}")
+            curr_user["Last Paid Term"] = latest_paid_term
 
-            if latest_paid_term == curr_term:
-                return True
-            else:
-                logging.info(f"User {curr_user.get('Name')} has not paid for {curr_term}")
-                return False
+        if latest_paid_term == curr_term:
+            return True
+
+        logging.info(f"User {curr_user.get('Name')} has not paid for {curr_term}")
+        return False
 
     def createAccount(self, fname, lname, email, pid, ManualFill):
         user_data = {}
