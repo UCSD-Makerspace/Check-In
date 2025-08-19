@@ -49,12 +49,19 @@ def handle_check_in(tag, contact, util):
         logging.info(f"Refreshing terms and last check-in for user {curr_user.data['Name']}")
         curr_user.update_terms(contact)
         curr_user.save(user_data)
-        dump_json(user_data)
+        dump_json(tag, user_data)
 
     new_row_check_in(curr_user.data, waiver_status, tag, util, curr_user.data.get("firstEnrTrm"), curr_user.data.get("lastEnrTrm"), payment_status)
     write_checkin(curr_user.data, tag)
 
 # Helper function
-def dump_json(user_data):
+def dump_json(tag, user_data):
+    with open(LOCAL_DB_PATH, "r", encoding="utf-8") as f:
+        try:
+            db = json.load(f)
+        except json.JSONDecodeError:
+            db = {}
+    
+    db[tag] = user_data
     with open(LOCAL_DB_PATH, "w", encoding="utf-8") as f:
-        json.dump(user_data, f, indent=2)
+        json.dump(db, f, indent=2)
