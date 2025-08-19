@@ -21,7 +21,7 @@ class UserRecord():
             if row["Card UUID"] == uuid:
                 if util.check_waiver_match(row, sheets.get_waiver_db_data()):
                     logging.info(f"User found online: {row['Name']} but not locally at " + util.getDatetime())
-                    cleaned = extract_user_data(row, uuid)
+                    cleaned = extract_user_data(row)
                     return cls(uuid, cleaned)
         return None
     

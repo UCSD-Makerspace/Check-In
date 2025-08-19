@@ -1,6 +1,7 @@
 import logging
 import global_
 import time
+from frontend.UserWelcome import UserWelcome
 from gui import *
 
 def new_row_check_in(curr_user, curr_user_w, tag, util, firstEnrTrm, lastEnrTrm, last_payment):
