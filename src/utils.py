@@ -9,6 +9,7 @@ from gui import *
 from frontend.UserThank import *
 import threading
 from get_info_from_pid import contact_client
+from core.handle_check_in import dump_json
 
 import timeit
 
@@ -128,8 +129,9 @@ class utils:
                     latest_paid_term = term
 
         if latest_paid_term != local_paid_term:
-            logging.info(f"Updating local payment term for {curr_user.get('Name')} from {local_paid_term} to {latest_paid_term}")
+            logging.info(f"Updating local payment term for {curr_user.get('Name')} from {local_paid_term}to{latest_paid_term}")
             curr_user["Last Paid Term"] = latest_paid_term
+            dump_json(curr_user)
 
         if latest_paid_term == curr_term:
             return True
