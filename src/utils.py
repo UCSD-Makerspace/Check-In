@@ -105,7 +105,7 @@ class utils:
 
         curr_term = self.get_current_term()
         if not curr_user.get("Last Paid Term"):
-            logging.info(f"User {curr_user.get('Name')} has not paid for {curr_term}")
+            logging.info(f"User {curr_user.get('Name')} local term does not exist")
             return False
        
         local_paid_term = curr_user.get("Last Paid Term", "").strip().upper()
