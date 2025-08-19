@@ -25,17 +25,12 @@ class UserRecord():
                     return cls(uuid, cleaned)
         return None
     
-    def find_payment(self, sheets, util) -> bool:
+    def find_payment(self, util) -> bool:
         try:
             if self.data.get("Last Paid Term") == util.get_current_term():
                 return True
             
-            payment_data = sheets.get_user_db_data()
-            if not payment_data:
-                logging.warning("Payment data is empty or None in UserRecord find_payment")
-                return False
-            
-            if util.check_user_payment(self.data, payment_data):
+            if util.check_user_payment(self.data):
                 self.data["Last Paid Term"] = util.get_current_term()
                 return True
             else: 
