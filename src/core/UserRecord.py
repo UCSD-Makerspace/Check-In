@@ -21,7 +21,7 @@ class UserRecord():
             if row["Card UUID"] == uuid:
                 if util.check_waiver_match(row, sheets.get_waiver_db_data()):
                     logging.info(f"User found online: {row['Name']} but not locally at " + util.getDatetime())
-                    cleaned = extract_user_data(row, uuid)
+                    cleaned = extract_user_data(row)
                     return cls(uuid, cleaned)
         return None
     
@@ -89,7 +89,7 @@ def refresh_user_terms(curr_user, contact):
         curr_user["lastEnrTrm"] = student_info[5]
     curr_user["lastCheckIn"] = dt.today().strftime("%Y-%m-%d")
 
-def extract_user_data(user_acc, tag) -> dict:
+def extract_user_data(user_acc) -> dict:
     user_id = user_acc["Student ID"].lower()
     return {
         "Name": user_acc["Name"],
