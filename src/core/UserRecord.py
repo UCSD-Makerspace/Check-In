@@ -30,7 +30,7 @@ class UserRecord():
             if self.data.get("Last Paid Term") == util.get_current_term():
                 return True
             
-            if util.check_user_payment(self.data):
+            if util.check_user_payment(self.uuid, self.data):
                 self.data["Last Paid Term"] = util.get_current_term()
                 return True
             else:

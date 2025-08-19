@@ -100,7 +100,7 @@ class utils:
         logging.warning(f"Waiver match failed for user_id={user_id}, email={user_email}")
         return False
 
-    def check_user_payment(self, curr_user: dict) -> bool:
+    def check_user_payment(self, card_uuid: str, curr_user: dict) -> bool:
         if not curr_user:
             logging.warning("check_user_payment called with no valid user")
 
@@ -129,9 +129,9 @@ class utils:
                     latest_paid_term = term
 
         if latest_paid_term != local_paid_term:
-            logging.info(f"Updating local payment term for {curr_user.get('Name')} from {local_paid_term}to{latest_paid_term}")
+            logging.info(f"Updating local payment term for {curr_user.get('Name')} from {local_paid_term} to {latest_paid_term}")
             curr_user["Last Paid Term"] = latest_paid_term
-            dump_json(curr_user)
+            dump_json(card_uuid, curr_user)
 
         if latest_paid_term == curr_term:
             return True
