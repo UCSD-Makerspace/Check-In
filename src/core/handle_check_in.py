@@ -27,7 +27,7 @@ def handle_check_in(tag, contact, util):
         if curr_user:
             waiver_status = "waiver_confirmed"
             curr_user.save(user_data)
-            dump_json(tag, user_data)
+            dump_json(tag, curr_user.data)
             logging.info(f"User added from online to local database: {curr_user.data['Name']}")
         if not curr_user:
             logging.info(f"User {tag} not found locally or online.")
@@ -49,19 +49,19 @@ def handle_check_in(tag, contact, util):
         logging.info(f"Refreshing terms and last check-in for user {curr_user.data['Name']}")
         curr_user.update_terms(contact)
         curr_user.save(user_data)
-        dump_json(tag, user_data)
+        dump_json(tag, curr_user.data)
 
     new_row_check_in(curr_user.data, waiver_status, tag, util, curr_user.data.get("firstEnrTrm"), curr_user.data.get("lastEnrTrm"), payment_status)
     write_checkin(curr_user.data, tag)
 
 # Helper function
-def dump_json(tag, user_data):
+def dump_json(tag, user_record):
     with open(LOCAL_DB_PATH, "r", encoding="utf-8") as f:
         try:
             db = json.load(f)
         except json.JSONDecodeError:
             db = {}
     
-    db[tag] = user_data
+    db[tag] = user_record
     with open(LOCAL_DB_PATH, "w", encoding="utf-8") as f:
         json.dump(db, f, indent=2)
