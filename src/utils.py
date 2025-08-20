@@ -107,7 +107,6 @@ class utils:
         curr_term = self.get_current_term()
        
         local_paid_term = curr_user.get("Last Paid Term", "").strip().upper()
-
         user_id = curr_user.get("Student ID", "").strip().lower().lstrip("a")
         user_email = curr_user.get("Email Address", "").strip().lower()
         latest_paid_term = local_paid_term
@@ -138,7 +137,7 @@ class utils:
         if latest_paid_term == curr_term:
             return True
 
-        logging.info(f"User {curr_user.get('Name')} has not paid for {curr_term}")
+        logging.info(f"User {curr_user.get('Name')} has not paid for {curr_term}. Latest paid term: {latest_paid_term}")
         return False
 
     def createAccount(self, fname, lname, email, pid, ManualFill):
