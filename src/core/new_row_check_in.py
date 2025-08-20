@@ -2,6 +2,14 @@ import logging
 import global_
 import time
 from frontend.UserWelcome import UserWelcome
+from frontend.AccNoPayment import AccNoPayment
+from frontend.AccNoPaymentSwipe import AccNoPaymentSwipe
+from frontend.NoAccNoWaiver import NoAccNoWaiver
+from frontend.NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
+from frontend.AccNoWaiver import AccNoWaiver
+from frontend.AccNoWaiverSwipe import AccNoWaiverSwipe
+from frontend.WaiverNoAcc import WaiverNoAcc
+from frontend.WaiverNoAccSwipe import WaiverNoAccSwipe
 from gui import *
 
 def new_row_check_in(curr_user, curr_user_w, tag, util, firstEnrTrm, lastEnrTrm, last_payment):
