@@ -72,6 +72,24 @@ class Sheet:
 
         return self.data
 
+    def append_payment_to_sheet(self, name, latest_term, student_id = None, email = None) -> bool:
+        rows = self.get_all_values()
+        found_row = None
+
+        for i, row in enumerate(rows):
+            if i == 0: continue
+
+            if (name and name == row[0]) or (student_id and student_id == row[3]) or (email and email == row[5]):
+                found_row = i + 1
+                break
+
+        if found_row:
+            self.update_cell(found_row, 5, latest_term)
+            return True
+        else:
+            logging.info("Student not found when attempting to append payment to online DB")
+            return False
+            
 class SheetManager:
     def __init__(self):
         scope = [
@@ -121,3 +139,8 @@ class SheetManager:
 
     def get_waiver_db_data(self, force_update=False):
         return self.waiver_db.get_data(force_update)
+
+        
+        
+
+        
