@@ -129,7 +129,7 @@ class utils:
                 elif term and term > latest_paid_term:
                     latest_paid_term = term
 
-        if latest_paid_term != local_paid_term:
+        if latest_paid_term != local_paid_term and latest_paid_term not in last_terms:
             if local_paid_term == "":
                 local_paid_term = "None"
             logging.info(f"Updating local payment term for {curr_user.get('Name')} from {local_paid_term} to {latest_paid_term}")
