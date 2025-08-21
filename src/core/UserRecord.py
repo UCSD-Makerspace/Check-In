@@ -27,17 +27,23 @@ class UserRecord():
     
     def find_payment(self, util) -> bool:
         try:
-            if self.data.get("Last Paid Term") == util.get_current_term():
+            last_terms = self.data.get("Last Paid Term", [])
+            current_term = util.get_current_term()
+
+            if current_term in last_terms:
+                return True
+            if util.check_user_payment(self.uuid, self.data):
+                if current_term not in last_terms:
+                    last_terms.append(current_term)
+                    self.data["Last Paid Term"] = last_terms
                 return True
             
-            if util.check_user_payment(self.uuid, self.data):
-                self.data["Last Paid Term"] = util.get_current_term()
-                return True
-            else:
-                logging.info("Returning false in UserRecord find_payment")
-                return False
+            logging.info("find_payment returning False")
+            return False
+        
         except Exception as e:
             logging.error(f"Error when using UserRecord find_payment: {e}")
+            return False
     
     def has_waiver(self, util):
         waiver_signed = self.data.get("Waiver Signed", "").strip().lower()

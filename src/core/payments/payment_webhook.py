@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 import global_
-from utils.local_db import update_local_payment_terms
 
 app = Flask(__name__)
 

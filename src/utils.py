@@ -106,7 +106,9 @@ class utils:
 
         curr_term = self.get_current_term()
        
-        local_paid_term = curr_user.get("Last Paid Term", "").strip().upper()
+        last_terms = curr_user.get("Last Paid Term", [])
+        local_paid_term = last_terms[-1] if last_terms else ""
+
         user_id = curr_user.get("Student ID", "").strip().lower().lstrip("a")
         user_email = curr_user.get("Email Address", "").strip().lower()
         latest_paid_term = local_paid_term
@@ -131,7 +133,8 @@ class utils:
             if local_paid_term == "":
                 local_paid_term = "None"
             logging.info(f"Updating local payment term for {curr_user.get('Name')} from {local_paid_term} to {latest_paid_term}")
-            curr_user["Last Paid Term"] = latest_paid_term
+            last_terms.append(latest_paid_term)
+            curr_user["Last Paid Term"] = last_terms
             dump_json(card_uuid, curr_user)
 
         if latest_paid_term == curr_term:
