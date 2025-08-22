@@ -102,19 +102,19 @@ class SheetManager:
             creds = ServiceAccountCredentials.from_json_keyfile_name(
                 os.path.abspath("creds.json"), scope
             )
-            client = gspread.authorize(creds)
+            self.client = gspread.authorize(creds)
             self.user_db = Sheet(
-                client.open("User Database").sheet1
+                self.client.open("User Database").sheet1
             )  # Open the spreadsheet
 
             logging.info("User Database Loaded")
             self.activity_db = Sheet(
-                client.open_by_url(
+                self.client.open_by_url(
                     "https://docs.google.com/spreadsheets/d/1aLBb1J2ifoUG2UAxHHbwxNO3KrIIWoI0pnZ14c5rpOM/edit?usp=drive_web&ouid=104398832910104737872"
                 ).sheet1
             )
             logging.info("Activity Database Loaded")
-            self.waiver_db = Sheet(client.open("Waiver Signatures").sheet1)
+            self.waiver_db = Sheet(self.client.open("Waiver Signatures").sheet1)
             logging.info("Waiver Database Loaded")
         except Exception as e:
             logging.warning(
