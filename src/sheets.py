@@ -141,25 +141,13 @@ class SheetManager:
         return self.waiver_db.get_data(force_update)
 
     def reload_user_db(self):
-        scope = [
-            "https://spreadsheets.google.com/feeds",
-            "https://www.googleapis.com/auth/spreadsheets",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive",
-        ]
         try:
-            creds = ServiceAccountCredentials.from_json_keyfile_name(
-                os.path.abspath("creds.json"), scope
-            )
-            client = gspread.authorize(creds)
-            self.user_db = Sheet(
-                client.open("User Database").sheet1
-            ) 
+            self.user_db = Sheet(self.client.open("User Database").sheet1)
+            logging.info("User Database reloaded from Google Sheets")
         except Exception as e:
-            logging.warning(
-                "An ERROR has ocurred connecting to google sheets", exc_info=True
-            )
-            raise Exception("Failed to connect to Google Sheets... check the wifi?")    
+            logging.warning(f"Error reloading Google Sheets: {e}", exc_info=True)
+            raise Exception("Failed to refresh User Database")
+
 
         
         
