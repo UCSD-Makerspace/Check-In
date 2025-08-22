@@ -105,7 +105,7 @@ class SheetManager:
             client = gspread.authorize(creds)
             self.user_db = Sheet(
                 client.open("User Database").sheet1
-            )  # Open the spreadhseet
+            )  # Open the spreadsheet
 
             logging.info("User Database Loaded")
             self.activity_db = Sheet(
@@ -139,6 +139,27 @@ class SheetManager:
 
     def get_waiver_db_data(self, force_update=False):
         return self.waiver_db.get_data(force_update)
+
+    def reload_user_db(self):
+        scope = [
+            "https://spreadsheets.google.com/feeds",
+            "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive",
+        ]
+        try:
+            creds = ServiceAccountCredentials.from_json_keyfile_name(
+                os.path.abspath("creds.json"), scope
+            )
+            client = gspread.authorize(creds)
+            self.user_db = Sheet(
+                client.open("User Database").sheet1
+            ) 
+        except Exception as e:
+            logging.warning(
+                "An ERROR has ocurred connecting to google sheets", exc_info=True
+            )
+            raise Exception("Failed to connect to Google Sheets... check the wifi?")    
 
         
         
