@@ -29,3 +29,17 @@ def fake_payment_webhook():
     global_.sheets.reload_user_db()
 
     return jsonify({"status": "success", "student_id": student_id, "term": term})
+
+if __name__ == "__main__":
+    with app.test_client() as client:
+        # Simulate a fake payment
+        response = client.post("/test/payment", json={
+            "student_id": "A12345678",
+            "name": "Test Student",
+            "email": "test@student.edu",
+            "term": "SU25"
+        })
+        print("Test response:", response.json)
+
+    # Optionally start the server for real HTTP requests
+    app.run(debug=True)
