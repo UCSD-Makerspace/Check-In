@@ -29,3 +29,14 @@ def handle_payment_webhook():
         return jsonify({"status": "success"}), 200
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+if __name__ == "__main__":
+    with app.test_client() as client:
+        # Example fake payment
+        response = client.post("/handle_payment_webhook", json={
+            "email": "test@student.edu",
+            "name": "Test Student",
+            "pid": "A12345678", 
+            "term": "SU25"
+        })
+        print(response.json)
