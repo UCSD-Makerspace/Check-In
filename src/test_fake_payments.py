@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import global_
 
+global_.init()
 app = Flask(__name__)
 
 @app.route('/test/payment', methods=['POST'])
@@ -18,9 +19,9 @@ def fake_payment_webhook():
 
     success = global_.sheets.user_db.append_payment_to_sheet(
         name = student_name,
-        email = student_email,
+        latest_term = term,
         id = student_id,
-        latest_term = term
+        email = student_email,
     )
 
     if not success:
