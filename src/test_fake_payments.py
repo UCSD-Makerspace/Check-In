@@ -20,7 +20,7 @@ def fake_payment_webhook():
     success = global_.sheets.user_db.append_payment_to_sheet(
         name = student_name,
         latest_term = term,
-        id = student_id,
+        student_id = student_id,
         email = student_email,
     )
 
@@ -35,10 +35,10 @@ if __name__ == "__main__":
     with app.test_client() as client:
         # Simulate a fake payment
         response = client.post("/test/payment", json={
-            "student_id": "A12345678",
             "name": "Test Student",
+            "term": "SU25",
+            "student_id": "A12345678",
             "email": "test@student.edu",
-            "term": "SU25"
         })
         print("Test response:", response.json)
 
