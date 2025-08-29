@@ -73,7 +73,7 @@ class Sheet:
         return self.data
 
     def append_payment_to_sheet(self, name, latest_term, student_id, email) -> bool:
-        rows = self.get_all_values()
+        rows = self.db.get_all_values()
         found_row = None
 
         for i, row in enumerate(rows):
