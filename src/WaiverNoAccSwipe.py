@@ -64,7 +64,7 @@ class WaiverNoAccSwipe(Frame):
             anchor="nw",
             text="Please scan your ID barcode",
             fill="#F5F0E6",
-            font=("Montserrat", 48 * -1),
+            font=("Inter", 48 * -1),
         )
 
         canvas.create_text(
@@ -73,7 +73,7 @@ class WaiverNoAccSwipe(Frame):
             anchor="nw",
             text="Account Status:",
             fill="#F5F0E6",
-            font=("Montserrat", 40 * -1),
+            font=("Inter", 40 * -1),
         )
 
         canvas.create_text(
@@ -82,7 +82,7 @@ class WaiverNoAccSwipe(Frame):
             anchor="nw",
             text="Waiver Status:",
             fill="#F5F0E6",
-            font=("Montserrat", 40 * -1),
+            font=("Inter", 40 * -1),
         )
 
         image_image_4 = PhotoImage(file=relative_to_assets("image_4.png"))

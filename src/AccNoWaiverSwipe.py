@@ -84,7 +84,7 @@ class AccNoWaiverSwipe(Frame):
             anchor="nw",
             text="Account Status:",
             fill="#F5F0E6",
-            font=("Montserrat", 40 * -1),
+            font=("Inter", 40 * -1),
         )
 
         canvas.create_text(
@@ -93,7 +93,7 @@ class AccNoWaiverSwipe(Frame):
             anchor="nw",
             text="Waiver Status:",
             fill="#F5F0E6",
-            font=("Montserrat", 40 * -1),
+            font=("Inter", 40 * -1),
         )
 
         image_image_5 = PhotoImage(file=relative_to_assets("image_5.png"))
@@ -120,5 +120,5 @@ class AccNoWaiverSwipe(Frame):
             anchor="nw",
             text="Please scan the QR code\non the right and sign our \n     waiver",
             fill="#F5F0E6",
-            font=("Montserrat", 48 * -1),
+            font=("Inter", 48 * -1),
         )

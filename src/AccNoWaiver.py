@@ -50,5 +50,5 @@ class AccNoWaiver(Frame):
             anchor="nw",
             text="Looks like you haven’t signed\n  the waiver, let’s solve that",
             fill="#F5F0E6",
-            font=("Montserrat", 64 * -1),
+            font=("Inter", 64 * -1),
         )

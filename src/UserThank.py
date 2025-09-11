@@ -65,7 +65,7 @@ class UserThank(Frame):
             anchor="nw",
             text="Thank you for registering",
             fill="#F5F0E6",
-            font=("Montserrat", 45 * -1),
+            font=("Inter", 45 * -1),
         )
 
         self.canvas.create_text(
@@ -74,7 +74,7 @@ class UserThank(Frame):
             anchor="nw",
             text="Scripps Sandbox Makerspace",
             fill="#F5F0E6",
-            font=("Montserrat", 45 * -1),
+            font=("Inter", 45 * -1),
         )
 
     def displayName(self, name, nextPage):
@@ -84,7 +84,7 @@ class UserThank(Frame):
             anchor="nw",
             text=name,
             fill="#F5F0E6",
-            font=("Montserrat", 73 * -1),
+            font=("Inter", 73 * -1),
             tag="thank",
         )
 

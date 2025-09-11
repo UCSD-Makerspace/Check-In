@@ -50,5 +50,5 @@ class WaiverNoAcc(Frame):
             anchor="nw",
             text="Looks like you don’t have an\n    account, let’s solve that",
             fill="#F5F0E6",
-            font=("Montserrat", 64 * -1),
+            font=("Inter", 64 * -1),
         )

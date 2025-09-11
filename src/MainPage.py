@@ -53,7 +53,7 @@ class MainPage(Frame):
             anchor="nw",
             text="Please tap ID on the black box to start",
             fill="#F5F0E6",
-            font=("Montserrat", 32 * -1),
+            font=("Inter", 32 * -1),
         )
 
         canvas.create_text(
@@ -66,7 +66,7 @@ class MainPage(Frame):
             text="Scripps Sandbox",
 >>>>>>> theirs
             fill="#F5F0E6",
-            font=("Montserrat", 113 * -1, "bold"),
+            font=("Refrigerator Deluxe", 113 * -1, "bold"),
         )
 
         canvas.create_text(
@@ -75,7 +75,7 @@ class MainPage(Frame):
             anchor="nw",
             text="Welcome Desk",
             fill="#F5F0E6",
-            font=("Montserrat", 73 * -1),
+            font=("Inter", 73 * -1),
         )
 
         image_image_3 = PhotoImage(file=relative_to_assets("image_3.png"))
@@ -111,7 +111,7 @@ class MainPage(Frame):
             relief="flat",
             highlightthickness=0,
             bd=0,
-            font=("Montserrat", 36 * -1),
+            font=("Inter", 36 * -1),
         )
 
         button_2.place(x=1130.0, y=40.0)

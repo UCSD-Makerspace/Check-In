@@ -66,7 +66,7 @@ class CheckInNoId(Frame):
             anchor="nw",
             text="If you have already made an\naccount, scan your UCSD barcode\nor enter your PID manually",
             fill="#F5F0E6",
-            font=("Montserrat", 48 * -1),
+            font=("Inter", 48 * -1),
             justify="center",
         )
 
@@ -76,7 +76,7 @@ class CheckInNoId(Frame):
             anchor="nw",
             text="PID",
             fill="#F5F0E6",
-            font=("Montserrat", 24 * -1),
+            font=("Inter", 24 * -1),
         )
 
         button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))

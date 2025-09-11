@@ -60,7 +60,7 @@ class UserWelcome(Frame):
             anchor="nw",
             text="Welcome back",
             fill="#F5F0E6",
-            font=("Montserrat", 45 * -1),
+            font=("Inter", 45 * -1),
         )
 
     def removeName(self, text_id):
@@ -84,7 +84,7 @@ class UserWelcome(Frame):
             anchor="nw",
             text=name,
             fill="#F5F0E6",
-            font=("Montserrat", 73 * -1),
+            font=("Inter", 73 * -1),
             tag=f"welcome",
         )
 
