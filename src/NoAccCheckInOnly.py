@@ -50,5 +50,5 @@ class NoAccCheckInOnly(Frame):
             anchor="nw",
             text="Looks like you don't have an\n account, please scan your ID\nat the main desk",
             fill="#F5F0E6",
-            font=("Montserrat", 64 * -1),
+            font=("Inter", 64 * -1),
         )

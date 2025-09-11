@@ -70,7 +70,7 @@ class QRCodes(Frame):
             anchor="nw",
             text="Website",
             fill="#F5F0E6",
-            font=("Montserrat", 40 * -1),
+            font=("Inter", 40 * -1),
         )
 
         canvas.create_text(
@@ -79,7 +79,7 @@ class QRCodes(Frame):
             anchor="nw",
             text="Waiver",
             fill="#F5F0E6",
-            font=("Montserrat", 40 * -1),
+            font=("Inter", 40 * -1),
         )
 
         button_image_1 = PhotoImage(file=relative_to_assets("image_6.png"))

@@ -77,7 +77,7 @@ class utils:
         inProgress = tkinter.Label(
             global_.app.get_frame(ManualFill),
             text="Account creation in progress!",
-            font=("Arial", 25),
+            font=("Inter", 25 * -1),
         )
         inProgress.pack(pady=40)
         global_.app.update()
@@ -109,7 +109,7 @@ class utils:
         no_wifi = Label(
             global_.app.get_frame(ManualFill),
             text="ERROR! Connection cannot be established, please let staff know.",
-            font=("Arial", 25),
+            font=("Inter", 25 * -1),
         )
 
         retries = 1

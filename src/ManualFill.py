@@ -72,7 +72,7 @@ class ManualFill(Frame):
             anchor="nw",
             text="Account Status:",
             fill="#F5F0E6",
-            font=("Montserrat", 40 * -1),
+            font=("Inter", 40 * -1),
         )
 
         canvas.create_text(
@@ -81,7 +81,7 @@ class ManualFill(Frame):
             anchor="nw",
             text="Waiver Status:",
             fill="#F5F0E6",
-            font=("Montserrat", 40 * -1),
+            font=("Inter", 40 * -1),
         )
 
         image_image_4 = PhotoImage(file=relative_to_assets("image_4.png"))
@@ -126,7 +126,7 @@ class ManualFill(Frame):
             anchor="nw",
             text="First Name",
             fill="#F5F0E6",
-            font=("Montserrat", 24 * -1),
+            font=("Inter", 24 * -1),
         )
 
         canvas.create_text(
@@ -135,7 +135,7 @@ class ManualFill(Frame):
             anchor="nw",
             text="Last Name",
             fill="#F5F0E6",
-            font=("Montserrat", 24 * -1),
+            font=("Inter", 24 * -1),
         )
 
         canvas.create_text(
@@ -144,7 +144,7 @@ class ManualFill(Frame):
             anchor="nw",
             text="Email",
             fill="#F5F0E6",
-            font=("Montserrat", 24 * -1),
+            font=("Inter", 24 * -1),
         )
 
         canvas.create_text(
@@ -153,7 +153,7 @@ class ManualFill(Frame):
             anchor="nw",
             text="PID",
             fill="#F5F0E6",
-            font=("Montserrat", 24 * -1),
+            font=("Inter", 24 * -1),
         )
 
         button_image_1 = PhotoImage(file=relative_to_assets("button_1.png"))
