@@ -60,7 +60,11 @@ class MainPage(Frame):
             67.0,
             170.0,
             anchor="nw",
+<<<<<<< ours
             text="Scripps Sandbox\nMakerspace",
+=======
+            text="Scripps Sandbox",
+>>>>>>> theirs
             fill="#F5F0E6",
             font=("Montserrat", 113 * -1, "bold"),
         )
