@@ -19,6 +19,9 @@ class swipe:
     def __init__(self):
         global id_string
         id_string = ""
+        self.last_barcode = None
+        self.last_scan = 0
+        self.scan_cooldown = 1.0
 
     def keyboardPress(self, key):
         util = utils()
@@ -74,10 +77,7 @@ class swipe:
                 "An exception has ocurred with pulling user information", exc_info=True
             )
             return None
-        if not u_info:
-            logging.info("Student search returned False, returning...")
-            return
-        
+
         logging.info(f"Info pull succeeded:\n {u_info[0]}, {u_info[1]}, {u_info[3]}")
         return u_info
 
@@ -97,10 +97,18 @@ class swipe:
         # u_id = u_id.replace("+E?", "")[:9]
 
         # u_data is a list containing the user type and their ID
+        if self.last_barcode == user_card_number and (time.time() - self.last_scan) < self.scan_cooldown:
+            logging.info("Suppressing repeat swipeCard barcode scan")
+            return
+
         u_data = self.pullUser(user_card_number, "Student")
         if not u_data:
             logging.info("Student search returned False, returning...")
             return
+        
+        self.last_barcode = user_card_number
+        self.last_scan = time.time()
+
         # if u_type == "Student":
         #     u_id = "A" + u_id
         if global_.app.get_curr_frame() == CheckInNoId:
