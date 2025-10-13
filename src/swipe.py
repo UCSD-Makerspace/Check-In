@@ -38,7 +38,7 @@ class swipe:
         try:
             focused_widget = global_.app.focus_get()
             if focused_widget and isinstance(focused_widget, (Entry, Text)):
-                focused_widget.master.focus_set()  # Move focus to parent
+                focused_widget.master.focus_set()
         except:
             pass
         
@@ -107,6 +107,34 @@ class swipe:
         finally:
             global_.app.after(500, self.reset_processing)
     
+    def pullUser(self, barcode, u_type):
+    # This function takes in the User's ID and
+    # if they are a Student or Staff
+    # and runs David's query funciton accordingly
+    # It returns a list containing:
+    # [fname, lname, [emails]]
+        u_info = []
+
+        logging.info(f"Card barcode read is: {barcode}. Trying to pull user...")
+
+        contact = contact_client()
+        try:
+            if u_type == "Staff":
+                u_info = contact.get_staff_info(barcode)
+            elif u_type == "Student":
+                u_info = contact.get_student_info(barcode)
+        except Exception as e:
+            logging.warning(
+                "An exception has ocurred with pulling user information", exc_info=True
+            )
+            return None
+        if not u_info:
+            logging.info("Student search returned False, returning...")
+            return
+        
+        logging.info(f"Info pull succeeded:\n {u_info[0]}, {u_info[1]}, {u_info[3]}")
+        return u_info
+
     def reset_processing(self):
         self.is_processing = False
 
