@@ -100,17 +100,22 @@ class CheckInNoId(Frame):
         self.pid_entry = Entry(self, textvariable=self.pid, width=40, font=52)
         self.pid_entry.place(x=420.0, y=412.0)
 
-    def displayLoading(self):
-        if self.loading_text_id is None:
-            self.loading_text_id = self.canvas.create_text(
-                420.0,
-                545.0,
-                anchor="nw",
-                text="PLEASE WAIT: LOADING...",
-                fill="#FF0000",
-                font=("Montserrat", 36 * -1, "bold"),
-                justify="center",
-            )
+    def displayLoading(self, show = True):
+        if show:
+            if self.loading_text_id is None:
+                self.loading_text_id = self.canvas.create_text(
+                    420.0,
+                    545.0,
+                    anchor="nw",
+                    text="PLEASE WAIT: LOADING...",
+                    fill="#FF0000",
+                    font=("Montserrat", 36 * -1, "bold"),
+                    justify="center",
+                )
+        else:
+            if self.loading_text_id is not None:
+                self.canvas.delete(self.loading_text_id)
+                self.loading_text_id = None
 
     def clearEntries(self):
         self.pid_entry.delete(0, END)
