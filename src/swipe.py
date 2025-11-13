@@ -7,6 +7,7 @@ from CheckInNoId import *
 from get_info_from_pid import *
 from utils import *
 import global_
+import time
 
 ############################################
 # This class helps handle reading magswipe #
@@ -30,8 +31,15 @@ class swipe:
         
         if self.is_processing:
             return
-        
+
         curr_frame = global_.app.get_curr_frame()
+
+        if curr_frame == ManualFill:
+            focused_widget = global_.app.focus_get()
+            if focused_widget and isinstance(focused_widget, Entry):
+                id_string = ""
+                return
+
         if curr_frame not in (NoAccNoWaiverSwipe, WaiverNoAccSwipe, CheckInNoId):
             return
         
@@ -72,7 +80,7 @@ class swipe:
         
         current_time = time.time()
         if (user_card_number == self.last_barcode and 
-            current_time - self.last_scan_time < self.cooldown_period):
+            current_time - self.last_scan_time < self.scan_cooldown):
             logging.debug("Suppressing repeat barcode scan")
             return
         
