@@ -10,7 +10,7 @@ from reader import *
 
 LOCAL_DB_PATH = "assets/local_user_db.json"
 
-def handle_check_in(tag, contact, util):
+def handle_check_in(tag, contact, util, check_in_only: bool):
     """ Handles the check-in process for a user based on their tag.
     It checks the local user database first, then the online database if not found locally.
     Updates the local waiver status and enrolled terms as necessary. """
@@ -30,6 +30,8 @@ def handle_check_in(tag, contact, util):
             dump_json(user_data)
             logging.info(f"User added from online to local database: {curr_user.data['Name']}")
         if not curr_user:
+            if check_in_only:
+                global_.app.show_frame(NoAccCheckInOnly)
             logging.info(f"User {tag} not found locally or online.")
             new_row_check_in(None, "None", tag, util, None, None)
             return
