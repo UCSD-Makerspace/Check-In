@@ -87,12 +87,6 @@ class MainPage(Frame):
 
         image_3 = canvas.create_image(88.0, 90.0, image=image_image_3)
 
-        image_image_5 = PhotoImage(file=relative_to_assets("image_5.png"))
-
-        self.photoList.append(image_image_5)
-
-        image_5 = canvas.create_image(1130.0, 580.0, image=image_image_5)
-
         button_image_1 = PhotoImage(file=relative_to_assets("image_4.png"))
 
         self.photoList.append(button_image_1)
