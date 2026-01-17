@@ -87,7 +87,7 @@ def myLoop(app, reader):
                 logging.debug("RFID Check Succeeded")
 
             global_.setRFID(tag)
-            handle_check_in(tag, contact, util, check_in_only=True)
+            handle_check_in(tag, contact, util)
 
             last_tag = tag
             last_time = time.time()
