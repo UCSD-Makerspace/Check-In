@@ -32,6 +32,8 @@ def handle_check_in(tag, contact, util, check_in_only=False):
             dump_json(user_data)
             logging.info(f"User added from online to local database: {curr_user.data['Name']}")
         if not curr_user:
+            if check_in_only:
+                global_.app.show_frame(NoAccCheckInOnly)
             logging.info(f"User {tag} not found locally or online.")
             if check_in_only:
                 try:
