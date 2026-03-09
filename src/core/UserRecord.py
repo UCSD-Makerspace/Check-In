@@ -17,12 +17,13 @@ class UserRecord():
     
     @classmethod
     def load_from_online(cls, uuid, sheets, util):
-        for row in sheets.get_user_db_data():
-            if row["Card UUID"] == uuid:
-                if util.check_waiver_match(row, sheets.get_waiver_db_data()):
-                    logging.info(f"User found online: {row['Name']} but not locally at " + util.getDatetime())
-                    cleaned = extract_user_data(row)
-                    return cls(uuid, cleaned)
+        row = sheets.get_user_by_card(uuid)
+        if row is None:
+            return None
+        if sheets.check_waiver(row["Student ID"], row["Email Address"]):
+            logging.info(f"User found online: {row['Name']} but not locally at " + util.getDatetime())
+            cleaned = extract_user_data(row)
+            return cls(uuid, cleaned)
         return None
     
     def has_waiver(self, util):
@@ -30,15 +31,8 @@ class UserRecord():
         if waiver_signed == "true":
             return True
         
-        try:    
-            waiver_data = global_.sheets.get_waiver_db_data()
-            if not waiver_data:
-                logging.warning("Waiver data is empty or None, cannot check waiver status in UserRecord.py")
-                if waiver_signed in ["false", ""]:
-                    return False
-                logging.warning(f"Unknown local waiver status: {waiver_signed}")
-                return False
-            if util.check_waiver_match(self.data, waiver_data):
+        try:
+            if global_.sheets.check_waiver(self.data["Student ID"], self.data["Email Address"]):
                 logging.info(f"User {self.data.get('Name', 'Unknown')} succeeded UserRecord check_waiver_match.")
                 self.data["Waiver Signed"] = "true"
                 return True

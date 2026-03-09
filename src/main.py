@@ -17,6 +17,7 @@ import socket
 import logging
 import argparse
 from sys import stdout
+from sheets import check_api_health
 
 def is_connected(host="8.8.8.8", port=53, timeout=3):
     """
@@ -119,7 +120,8 @@ if __name__ == "__main__":
         logging.basicConfig(level=logging.INFO)
 
     reader_usb_id, traffic_usb_id = get_usb_ids()
-    global_.init(traffic_usb_id) 
+    check_api_health()
+    global_.init(traffic_usb_id)
     app = gui()
     global_.setApp(app)
     global_.traffic_light.set_off()   

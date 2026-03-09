@@ -157,8 +157,7 @@ class CheckInNoId(Frame):
 
         if waiver_status != "true":
             needs_refresh = True
-            waiver_data = global_.sheets.get_waiver_db_data()
-            if utils.check_waiver_match(self, curr_user, waiver_data):
+            if global_.sheets.check_waiver(curr_user["Student ID"], curr_user["Email Address"]):
                 logging.info("Updating local waiver status for " + curr_user["Name"])
                 curr_user["Waiver Signed"] = "true"
             else:

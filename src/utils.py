@@ -1,5 +1,4 @@
 from datetime import datetime
-from gspread_formatting import *
 from fabman import *
 import json
 import time
@@ -59,7 +58,7 @@ class utils:
         return "good"
 
     def getDatetime(self):
-        return datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+        return datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
     # Helper function to return true if user matches waiver by ID or email, false otherwise
     def check_waiver_match(self, curr_user, waiver_data):
@@ -89,10 +88,6 @@ class utils:
     def createAccount(self, fname, lname, email, pid, ManualFill):
         user_data = {}
         start = time.perf_counter()
-        validation_rule = DataValidationRule(
-            BooleanCondition("BOOLEAN", ["TRUE", "FALSE"]),
-        )
-
         idValid = self.IDCheck(pid)
         emailValid = self.emailCheck(email)
         nameValid = self.nameCheck(fname, lname)
@@ -199,25 +194,6 @@ class utils:
                 end4 = time.perf_counter()
                 logging.debug(f"Time to add row to gsheets: {end4 - end3}")
 
-                global_.sheets.get_user_db_data(force_update=True)
-                end5 = time.perf_counter()
-                logging.debug(f"Time to force update gsheets: {end5 - end4}")
-
-                name_cell = user_db.find(full_name, in_column=1)
-                s_name_cell = str(name_cell.address)
-                s_name_cell = s_name_cell[1 : len(s_name_cell)]
-
-                end6 = time.perf_counter()
-                logging.debug(f"Time to find user: {end6 - end5}")
-
-                update_range = "I" + s_name_cell + ":AA" + s_name_cell
-                set_data_validation_for_cell_range(
-                    user_db, update_range, validation_rule
-                )
-
-                end7 = time.perf_counter()
-                logging.debug(f"Time to set data validation: {end7 - end6}")
-
                 def update_activity():
                     delay = timeit.timeit(
                         lambda: global_.sheets.get_activity_db().append_row(new_a), 
@@ -249,14 +225,10 @@ class utils:
         end8 = time.perf_counter()
         logging.debug(f"Total time to send data: {end8 - end2}")
 
-        w_data = global_.sheets.get_waiver_db_data()
         toGoTo = AccNoWaiverSwipe
-        for i in w_data:
-            if str(i["A_Number"])[1:] == pid[1:]:
-                logging.info(
-                    "User " + full_name + " made an account but had signed the waiver"
-                )
-                toGoTo = MainPage
+        if global_.sheets.check_waiver(pid, email):
+            logging.info("User " + full_name + " made an account but had signed the waiver")
+            toGoTo = MainPage
 
         end9 = time.perf_counter()
         logging.debug(f"Time to check waiver data: {end9 - end8}")
