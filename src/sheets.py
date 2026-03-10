@@ -31,23 +31,18 @@ def check_api_health(retries=3, delay=3):
     sys.exit(1)
 
 
-class _SheetProxy:
-    def __init__(self, endpoint):
-        self._endpoint = endpoint
-
-    def append_row(self, row):
-        try:
-            _req("POST", f"{API_BASE_URL}{self._endpoint}", json={"row": row}, timeout=10)
-        except Exception as e:
-            logging.error(f"Error appending row to {self._endpoint}: {e}")
-
-
 class SheetManager:
-    def get_user_db(self):
-        return _SheetProxy("/users")
+    def append_user_row(self, row):
+        try:
+            _req("POST", f"{API_BASE_URL}/users", json={"row": row}, timeout=10)
+        except Exception as e:
+            logging.error(f"Error appending user row: {e}")
 
-    def get_activity_db(self):
-        return _SheetProxy("/activity")
+    def append_activity_row(self, row):
+        try:
+            _req("POST", f"{API_BASE_URL}/activity", json={"row": row}, timeout=10)
+        except Exception as e:
+            logging.error(f"Error appending activity row: {e}")
 
     def get_user_by_card(self, uuid):
         try:

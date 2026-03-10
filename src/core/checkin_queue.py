@@ -26,7 +26,7 @@ class CheckInLogger:
                 if self.queue and now - self.last_scan_time > 5:
                     row = self.queue.pop(0)
                     try:
-                        global_.sheets.get_activity_db().append_row(row)
+                        global_.sheets.append_activity_row(row)
                         logging.debug(f"Row written to Google Sheets: {row}")
                         time.sleep(3)
                     except Exception as e:

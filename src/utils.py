@@ -185,18 +185,15 @@ class utils:
                 )
                 fabman_thread.start()
 
-                user_db = global_.sheets.get_user_db()
-
                 end3 = time.perf_counter()
-                logging.debug(f"Time to pull user db: {end3 - end2}")
 
-                user_db.append_row(new_row)
+                global_.sheets.append_user_row(new_row)
                 end4 = time.perf_counter()
                 logging.debug(f"Time to add row to gsheets: {end4 - end3}")
 
                 def update_activity():
                     delay = timeit.timeit(
-                        lambda: global_.sheets.get_activity_db().append_row(new_a), 
+                        lambda: global_.sheets.append_activity_row(new_a),
                         number=1
                     )
                     logging.debug(f"Time to add activity to gsheets (threaded): {delay}")
