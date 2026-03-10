@@ -2,6 +2,7 @@ from threading import Thread
 from os.path import exists
 import logging
 import serial
+import sys
 import time
 
 expected_characters = 14
@@ -22,12 +23,28 @@ class Reader(Thread):
         logging.info("Card reader init finished")
 
     def loadScanner(self):
+        if self.usb_id is None:
+            logging.error("No card reader USB ID configured, exiting")
+            sys.exit(1)
         file_exists = exists(self.usb_id)
         if file_exists:
             self.tty = self.usb_id
         else:
-            logging.warning("Scanner not connected")
-            quit()
+            logging.error("Card reader not found at %s, exiting", self.usb_id)
+            sys.exit(1)
+
+    def reconnect(self):
+        try:
+            self.ser.close()
+        except Exception:
+            pass
+        if not exists(self.usb_id):
+            return False
+        try:
+            self.ser = serial.Serial(self.tty, 115200)
+            return True
+        except Exception:
+            return False
 
     def getSerInWaiting(self):
         return self.ser.in_waiting

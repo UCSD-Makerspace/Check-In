@@ -45,9 +45,23 @@ def myLoop(app, reader):
     last_time = 0
     contact = contact_client()
 
+    scanner_error = False
     while True:
         time.sleep(0.1)
-        in_waiting = reader.getSerInWaiting()
+
+        if scanner_error:
+            if reader.reconnect():
+                logging.info("Card reader reconnected")
+                scanner_error = False
+            continue
+
+        try:
+            in_waiting = reader.getSerInWaiting()
+        except OSError:
+            if not scanner_error:
+                logging.error("Card reader disconnected, disabling until reconnection")
+                scanner_error = True
+            continue
 
         if in_waiting >= 14:
             if not is_connected():
