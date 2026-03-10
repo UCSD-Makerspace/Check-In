@@ -1,12 +1,13 @@
-from tkinter import *
-from gui import *
+from tkinter import Label
+from gui import gui
 from reader import *
 from swipe import swipe
 from sheets import *
 from threading import Thread
-from UserWelcome import *
-from ManualFill import *
-from CheckInNoId import *
+from MainPage import MainPage
+from ManualFill import ManualFill
+from CheckInNoId import CheckInNoId
+from utils import utils
 from core.handle_check_in import handle_check_in
 from core.render_ports import get_usb_ids
 import global_
@@ -64,11 +65,11 @@ def myLoop(app, reader):
                 if not no_wifi_shown:
                     no_wifi_shown = True
                     no_wifi = Label(
-                        app.get_frame(MainPage),
+                        app.canvas,
                         text="ERROR! Connection cannot be established, please let staff know.",
-                        font=("Arial", 25),
+                        bg="#153246", fg="white", font=("Arial", 25),
                     )
-                    no_wifi.pack(pady=40)
+                    no_wifi.place(relx=0.5, rely=0.1, anchor="center")
                     no_wifi.after(4000, lambda: destroyNoWifiError(no_wifi))
                 continue
 

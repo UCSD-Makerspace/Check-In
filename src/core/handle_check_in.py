@@ -2,7 +2,6 @@ import global_
 import logging
 from tkinter import Label
 from core.write_checkin import write_checkin
-from gui import *
 
 
 def handle_check_in(tag):
@@ -10,15 +9,22 @@ def handle_check_in(tag):
     status = result.get("status")
 
     def update_ui():
+        from MainPage import MainPage
+        from NoAccNoWaiver import NoAccNoWaiver
+        from NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
+        from AccNoWaiver import AccNoWaiver
+        from AccNoWaiverSwipe import AccNoWaiverSwipe
+        from UserWelcome import UserWelcome
+
         if status == "api_error":
             logging.error("API error during check-in")
             global_.traffic_light.set_red()
             error_label = Label(
-                global_.app.get_frame(MainPage),
+                global_.app.canvas,
                 text="System error, please let staff know.",
-                font=("Arial", 25),
+                bg="#153246", fg="white", font=("Arial", 25),
             )
-            error_label.pack(pady=40)
+            error_label.place(relx=0.5, rely=0.1, anchor="center")
             error_label.after(4000, error_label.destroy)
             return
 

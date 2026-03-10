@@ -1,12 +1,13 @@
-from tkinter import *
-from ManualFill import *
-from NoAccNoWaiverSwipe import *
-from WaiverNoAccSwipe import *
-from AccNoWaiverSwipe import *
-from CheckInNoId import *
-from get_info_from_pid import *
-from utils import *
+import tkinter
+from ManualFill import ManualFill
+from NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
+from WaiverNoAccSwipe import WaiverNoAccSwipe
+from AccNoWaiverSwipe import AccNoWaiverSwipe
+from CheckInNoId import CheckInNoId
+from get_info_from_pid import contact_client
+from utils import utils
 import global_
+import logging
 
 ############################################
 # This class helps handle reading magswipe #
@@ -36,16 +37,13 @@ class swipe:
                 id_string = ""
                 if not swipe_error_shown:
                     swipe_error_shown = True
+                    canvas = global_.app.canvas
                     id_error = tkinter.Label(
-                        global_.app.get_frame(NoAccNoWaiverSwipe),
-                        text="Error, please scan again",
+                        canvas, text="Error, please scan again",
+                        bg="#153246", fg="white", font=("Arial", 20),
                     )
-                    id_error.pack(pady=40)
-                    id_error_2 = tkinter.Label(
-                        global_.app.get_frame(WaiverNoAccSwipe),
-                        text="Error, please scan again",
-                    )
-                    id_error_2.pack(pady=40)
+                    id_error.place(relx=0.5, rely=0.85, anchor="center")
+                    id_error_2 = id_error  # single label serves both swipe screens
                     id_error.after(1500, lambda: self.destroySwipeError(id_error))
                     id_error_2.after(1500, lambda: self.destroySwipeError(id_error_2))
                 return
