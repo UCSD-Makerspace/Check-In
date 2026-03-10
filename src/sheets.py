@@ -7,11 +7,19 @@ import requests
 from config import API_BASE_URL
 
 
+def _req(method, url, **kwargs):
+    start = time.time()
+    resp = requests.request(method, url, **kwargs)
+    ms = (time.time() - start) * 1000
+    logging.info(f"[CLIENT] {method.upper()} {url} -> {resp.status_code} ({ms:.0f}ms)")
+    return resp
+
+
 def check_api_health(retries=3, delay=3):
     logging.info(API_BASE_URL)
     for attempt in range(1, retries + 1):
         try:
-            resp = requests.get(f"{API_BASE_URL}/health", timeout=5)
+            resp = _req("GET", f"{API_BASE_URL}/health", timeout=5)
             if resp.ok:
                 logging.info(f"API reachable at {API_BASE_URL}")
                 return
@@ -29,7 +37,7 @@ class _SheetProxy:
 
     def append_row(self, row):
         try:
-            requests.post(f"{API_BASE_URL}{self._endpoint}", json={"row": row}, timeout=10)
+            _req("POST", f"{API_BASE_URL}{self._endpoint}", json={"row": row}, timeout=10)
         except Exception as e:
             logging.error(f"Error appending row to {self._endpoint}: {e}")
 
@@ -43,7 +51,7 @@ class SheetManager:
 
     def get_user_by_card(self, uuid):
         try:
-            resp = requests.get(f"{API_BASE_URL}/users/{uuid}", timeout=10)
+            resp = _req("GET", f"{API_BASE_URL}/users/{uuid}", timeout=10)
             if resp.status_code == 404:
                 return None
             resp.raise_for_status()
@@ -54,7 +62,7 @@ class SheetManager:
 
     def check_waiver(self, pid, email):
         try:
-            resp = requests.get(f"{API_BASE_URL}/waivers/check", params={"pid": pid, "email": email}, timeout=10)
+            resp = _req("GET", f"{API_BASE_URL}/waivers/check", params={"pid": pid, "email": email}, timeout=10)
             resp.raise_for_status()
             return resp.json()["has_waiver"]
         except Exception as e:

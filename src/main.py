@@ -9,7 +9,6 @@ from threading import Thread
 from UserWelcome import *
 from ManualFill import *
 from CheckInNoId import *
-from get_info_from_pid import contact_client
 from core.handle_check_in import handle_check_in
 from core.render_ports import get_usb_ids
 import global_
@@ -43,8 +42,6 @@ def myLoop(app, reader):
     logging.info("Now reading ID cards")
     last_tag = 0
     last_time = 0
-    contact = contact_client()
-
     scanner_error = False
     while True:
         time.sleep(0.1)
@@ -96,7 +93,7 @@ def myLoop(app, reader):
                 logging.debug("RFID Check Succeeded")
 
             global_.setRFID(tag)
-            handle_check_in(tag, contact, util)
+            handle_check_in(tag, util)
 
             last_tag = tag
             last_time = time.time()

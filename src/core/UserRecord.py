@@ -24,18 +24,8 @@ class UserRecord():
             logging.error(f"Error checking waiver for {self.data.get('Name', 'Unknown')}: {e}")
             return False
 
-    def update_terms(self, contact):
-        refresh_user_terms(self.data, contact)
-
 
 ########### Helper Functions ###########
-def refresh_user_terms(curr_user, contact):
-    user_id = curr_user["Student ID"].strip().lower().lstrip("a")
-    student_info = contact.get_student_info_pid("A" + user_id)
-    if student_info:
-        curr_user["firstEnrTrm"] = student_info[4]
-        curr_user["lastEnrTrm"] = student_info[5]
-
 def extract_user_data(row) -> dict:
     user_id = row["Student ID"].lower()
     return {

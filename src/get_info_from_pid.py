@@ -1,14 +1,23 @@
 import logging
+import time
 
 import requests
 
 from config import API_BASE_URL
 
 
+def _req(method, url, **kwargs):
+    start = time.time()
+    resp = requests.request(method, url, **kwargs)
+    ms = (time.time() - start) * 1000
+    logging.info(f"[CLIENT] {method.upper()} {url} -> {resp.status_code} ({ms:.0f}ms)")
+    return resp
+
+
 class contact_client:
     def get_student_info(self, barcode):
         try:
-            resp = requests.get(f"{API_BASE_URL}/students/barcode/{barcode}", timeout=5)
+            resp = _req("GET", f"{API_BASE_URL}/students/barcode/{barcode}", timeout=5)
             if not resp.ok:
                 return False
             d = resp.json()
@@ -19,7 +28,7 @@ class contact_client:
 
     def get_student_info_pid(self, pid):
         try:
-            resp = requests.get(f"{API_BASE_URL}/students/pid/{pid}", timeout=5)
+            resp = _req("GET", f"{API_BASE_URL}/students/pid/{pid}", timeout=5)
             if not resp.ok:
                 return False
             d = resp.json()
