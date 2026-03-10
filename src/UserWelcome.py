@@ -82,8 +82,10 @@ class UserWelcome(Frame):
     def displayName(self, name):
         if name == self.last_name:
             return
-        
+
         self.last_name = name
+
+        global_.app.show_frame(UserWelcome)
 
         text_id = self.canvas.create_text(
             99.0,
@@ -96,5 +98,4 @@ class UserWelcome(Frame):
         )
 
         self.offset += 73
-        global_.app.show_frame(UserWelcome)
         self.canvas.after(3000, lambda: self.removeName(text_id))

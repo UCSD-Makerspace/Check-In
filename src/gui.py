@@ -71,6 +71,7 @@ class gui(tk.Tk):
         self.curr_frame = cont
         self.frame_uuid = uuid.uuid4().hex
         frame.tkraise()
+        self.update_idletasks()
 
         if cont in TIMEOUT_DICT:
             curr_uuid = self.frame_uuid

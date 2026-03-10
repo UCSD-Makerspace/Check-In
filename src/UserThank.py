@@ -8,7 +8,6 @@ from MainPage import *
 from AccNoWaiver import *
 from AccNoWaiverSwipe import *
 from MainPage import *
-import time
 import global_
 
 
@@ -78,7 +77,13 @@ class UserThank(Frame):
         )
 
     def displayName(self, name, nextPage):
-        u_name = self.canvas.create_text(
+        global_.app.show_frame(UserThank)
+        if nextPage == MainPage:
+            global_.traffic_light.set_green()
+        else:
+            global_.traffic_light.set_yellow()
+
+        self.canvas.create_text(
             99.0,
             323.0,
             anchor="nw",
@@ -87,14 +92,6 @@ class UserThank(Frame):
             font=("Montserrat", 73 * -1),
             tag="thank",
         )
-
-        time.sleep(0.500)
-
-        global_.app.show_frame(UserThank)
-        if nextPage == MainPage:
-            global_.traffic_light.set_green()
-        else:
-            global_.traffic_light.set_yellow()
 
         self.canvas.after(4500, lambda: self.canvas.delete("thank"))
         global_.app.after(4000, lambda: go_to_next(nextPage))
