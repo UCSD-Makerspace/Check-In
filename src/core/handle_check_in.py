@@ -1,5 +1,6 @@
 import global_
 import logging
+from tkinter import Label
 from core.write_checkin import write_checkin
 from gui import *
 
@@ -7,6 +8,18 @@ from gui import *
 def handle_check_in(tag):
     result = global_.sheets.checkin_by_uuid(tag)
     status = result.get("status")
+
+    if status == "api_error":
+        logging.error("API error during check-in")
+        global_.traffic_light.set_red()
+        error_label = Label(
+            global_.app.get_frame(MainPage),
+            text="System error, please let staff know.",
+            font=("Arial", 25),
+        )
+        error_label.pack(pady=40)
+        error_label.after(4000, error_label.destroy)
+        return
 
     if status == "no_account":
         logging.info(f"User {tag} not found.")

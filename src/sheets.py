@@ -39,7 +39,7 @@ class SheetManager:
             return resp.json()
         except Exception as e:
             logging.error(f"Error during check-in for uuid {uuid}: {e}")
-            return {"status": "no_account"}
+            return {"status": "api_error"}
 
     def checkin_by_pid(self, pid):
         try:
@@ -48,7 +48,7 @@ class SheetManager:
             return resp.json()
         except Exception as e:
             logging.error(f"Error during check-in for pid {pid}: {e}")
-            return {"status": "no_account"}
+            return {"status": "api_error"}
 
     def create_account(self, first_name, last_name, email, pid, rfid):
         try:
