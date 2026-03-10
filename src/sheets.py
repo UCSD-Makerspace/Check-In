@@ -32,34 +32,40 @@ def check_api_health(retries=3, delay=3):
 
 
 class SheetManager:
-    def append_user_row(self, row):
+    def checkin_by_uuid(self, uuid):
         try:
-            _req("POST", f"{API_BASE_URL}/users", json={"row": row}, timeout=10)
-        except Exception as e:
-            logging.error(f"Error appending user row: {e}")
-
-    def append_activity_row(self, row):
-        try:
-            _req("POST", f"{API_BASE_URL}/activity", json={"row": row}, timeout=10)
-        except Exception as e:
-            logging.error(f"Error appending activity row: {e}")
-
-    def get_user_by_card(self, uuid):
-        try:
-            resp = _req("GET", f"{API_BASE_URL}/users/{uuid}", timeout=10)
-            if resp.status_code == 404:
-                return None
+            resp = _req("GET", f"{API_BASE_URL}/check-in/uuid/{uuid}", timeout=10)
             resp.raise_for_status()
             return resp.json()
         except Exception as e:
-            logging.error(f"Error fetching user by card {uuid}: {e}")
-            return None
+            logging.error(f"Error during check-in for uuid {uuid}: {e}")
+            return {"status": "no_account"}
 
-    def check_waiver(self, pid, email):
+    def checkin_by_pid(self, pid):
         try:
-            resp = _req("GET", f"{API_BASE_URL}/waivers/check", params={"pid": pid, "email": email}, timeout=10)
+            resp = _req("GET", f"{API_BASE_URL}/check-in/pid/{pid}", timeout=10)
             resp.raise_for_status()
-            return resp.json()["has_waiver"]
+            return resp.json()
         except Exception as e:
-            logging.error(f"Error checking waiver for pid={pid}: {e}")
-            return False
+            logging.error(f"Error during check-in for pid {pid}: {e}")
+            return {"status": "no_account"}
+
+    def create_account(self, first_name, last_name, email, pid, rfid):
+        try:
+            resp = _req(
+                "POST",
+                f"{API_BASE_URL}/accounts",
+                json={
+                    "first_name": first_name,
+                    "last_name": last_name,
+                    "email": email,
+                    "pid": pid,
+                    "rfid": rfid,
+                },
+                timeout=30,
+            )
+            resp.raise_for_status()
+            return resp.json()
+        except Exception as e:
+            logging.error(f"Error creating account: {e}")
+            return None

@@ -1,15 +1,10 @@
 from datetime import datetime
-from fabman import *
-import json
 import time
 import global_
 import tkinter
 from gui import *
 from UserThank import *
-import threading
-from get_info_from_pid import contact_client
-
-import timeit
+import logging
 
 ######################################################
 # Utilities that I couldn't get to fit anywhere else #
@@ -21,11 +16,6 @@ class utils:
         pass
 
     def emailCheck(self, email):
-        # Checks if the email is an @
-        # and checks if it has a .
-        # if not, return invalid
-        # otherwise return good
-
         validations = (
             (lambda s: "@" in s, "Email is invalid"),
             (lambda s: "." in s, "Email is invalid"),
@@ -60,33 +50,7 @@ class utils:
     def getDatetime(self):
         return datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
-    # Helper function to return true if user matches waiver by ID or email, false otherwise
-    def check_waiver_match(self, curr_user, waiver_data):
-        if not waiver_data:
-            logging.warning("Waiver data is empty or None in check_waiver_match")
-            return False
-        
-        user_id = curr_user["Student ID"].strip().lower()
-        user_email = curr_user["Email Address"].strip().lower()
-
-        if user_id.startswith("a"):
-            user_id = user_id[1:]
-
-        for waiver in waiver_data:
-            waiver_id = waiver.get("A_Number", "").strip().lower()
-            waiver_email = waiver.get("Email", "").strip().lower()
-
-            if waiver_id.startswith("a"):
-                waiver_id = waiver_id[1:]
-
-            if user_id == waiver_id or user_email == waiver_email:
-                return True
-            
-        logging.warning(f"Waiver match failed for user_id={user_id}, email={user_email}")
-        return False
-
     def createAccount(self, fname, lname, email, pid, ManualFill):
-        user_data = {}
         start = time.perf_counter()
         idValid = self.IDCheck(pid)
         emailValid = self.emailCheck(email)
@@ -111,61 +75,9 @@ class utils:
         )
         inProgress.pack(pady=40)
         global_.app.update()
-        fab = fabman()
+
         full_name = fname + " " + lname
         logging.info(f"Creating user account for {full_name}")
-
-        new_row = [
-            full_name,
-            self.getDatetime(),
-            global_.rfid,
-            pid,
-            "",
-            email,
-            " ",
-            " ",
-        ]
-
-        # Open and write to local database on account creation
-        try:
-            with open("assets/local_user_db.json", "r", encoding="utf-8") as f:
-                user_data = json.load(f)
-        except FileNotFoundError:
-            logging.error("Local user database not found. Please run export_user_db.py to create it.")
-    
-        contact = contact_client()
-        user_info = contact.get_student_info_pid(pid)
-        if user_info:
-            firstEnrTerm = user_info[4]
-            lastEnrTerm = user_info[5]
-        else:
-            firstEnrTerm = None
-            lastEnrTerm = None
-
-        user_data[global_.rfid] = {
-            "Name": full_name,
-            "Timestamp": self.getDatetime(),
-            "Student ID": pid,
-            "Email Address": email,
-            "Waiver Signed": " ",
-            "firstEnrTrm": firstEnrTerm,
-            "lastEnrTrm": lastEnrTerm,
-            "lastCheckIn": None,    
-        }
-        with open("assets/local_user_db.json", "w", encoding="utf-8") as f:
-                        json.dump(user_data, f, indent=2)
-        logging.info(f"Local user database updated with {full_name} on account creation")
-
-        new_a = [
-            self.getDatetime(),
-            int(time.time()),
-            full_name,
-            global_.rfid,
-            "New User",
-            "",
-            firstEnrTerm,
-            lastEnrTerm,
-        ]
 
         no_wifi = Label(
             global_.app.get_frame(ManualFill),
@@ -179,29 +91,12 @@ class utils:
         retries = 1
         while retries < 6:
             try:
-                fabman_thread = threading.Thread(
-                    target=fab.createFabmanAccount,
-                    args=(fname, lname, email, global_.rfid),
-                )
-                fabman_thread.start()
-
+                result = global_.sheets.create_account(fname, lname, email, pid, global_.rfid)
                 end3 = time.perf_counter()
+                logging.debug(f"Time to create account: {end3 - end2}")
 
-                global_.sheets.append_user_row(new_row)
-                end4 = time.perf_counter()
-                logging.debug(f"Time to add row to gsheets: {end4 - end3}")
-
-                def update_activity():
-                    delay = timeit.timeit(
-                        lambda: global_.sheets.append_activity_row(new_a),
-                        number=1
-                    )
-                    logging.debug(f"Time to add activity to gsheets (threaded): {delay}")
-
-                add_row_thread = threading.Thread(
-                    target=update_activity
-                )
-                add_row_thread.start()
+                if result is None:
+                    raise Exception("Account creation returned no result")
 
                 break
             except Exception as e:
@@ -219,16 +114,14 @@ class utils:
             inProgress.destroy()
             return
 
-        end8 = time.perf_counter()
-        logging.debug(f"Total time to send data: {end8 - end2}")
+        end4 = time.perf_counter()
+        logging.debug(f"Total time to send data: {end4 - end2}")
 
-        toGoTo = AccNoWaiverSwipe
-        if global_.sheets.check_waiver(pid, email):
-            logging.info("User " + full_name + " made an account but had signed the waiver")
-            toGoTo = MainPage
+        checkin_result = global_.sheets.checkin_by_uuid(global_.rfid)
+        toGoTo = AccNoWaiverSwipe if checkin_result.get("status") == "no_waiver" else MainPage
 
-        end9 = time.perf_counter()
-        logging.debug(f"Time to check waiver data: {end9 - end8}")
+        end5 = time.perf_counter()
+        logging.debug(f"Time to check waiver via check-in: {end5 - end4}")
 
         global_.app.get_frame(UserThank).displayName(full_name, toGoTo)
         inProgress.destroy()

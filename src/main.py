@@ -1,9 +1,7 @@
 from tkinter import *
 from gui import *
-from core.checkin_queue import CheckInLogger
 from reader import *
 from swipe import swipe
-from fabman import *
 from sheets import *
 from threading import Thread
 from UserWelcome import *
@@ -93,7 +91,7 @@ def myLoop(app, reader):
                 logging.debug("RFID Check Succeeded")
 
             global_.setRFID(tag)
-            handle_check_in(tag, util)
+            handle_check_in(tag)
 
             last_tag = tag
             last_time = time.time()
@@ -136,7 +134,7 @@ if __name__ == "__main__":
     app = gui()
     global_.setApp(app)
     global_.traffic_light.set_off()   
-    global_.checkin_logger = CheckInLogger()
+
     sw = swipe()
     reader = Reader(reader_usb_id)
     util = utils()

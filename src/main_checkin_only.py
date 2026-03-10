@@ -1,17 +1,14 @@
 from datetime import datetime as dt
-from core.checkin_queue import CheckInLogger
 from core.handle_check_in import handle_check_in
 from core.render_ports import get_usb_ids
 from gui import *
 from reader import *
-from fabman import *
 import json
 from sheets import *
 from threading import Thread
 from UserWelcome import *
 from ManualFill import *
 from CheckInNoId import *
-from get_info_from_pid import contact_client
 from swipe import *
 from tkinter import *
 import global_
@@ -47,8 +44,6 @@ def myLoop(app, reader):
     logging.info("Now reading ID cards")
     last_tag = 0
     last_time = 0
-    contact = contact_client()
-
     while True:
         time.sleep(0.1)
         in_waiting = reader.getSerInWaiting()
@@ -133,7 +128,7 @@ if __name__ == "__main__":
     global_.init(traffic_usb_id)
     app = gui()
     global_.setApp(app)
-    global_.checkin_logger = CheckInLogger()
+
     reader = Reader()
     util = utils()
     thread = Thread(target=myLoop, args=(app, reader))
