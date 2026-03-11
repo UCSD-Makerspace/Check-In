@@ -1,7 +1,7 @@
 import serial.tools.list_ports
 
-TRAFFIC_LIGHT_VID = 6790
-READER_VID = 4292
+TRAFFIC_LIGHT_VID = 123 # TODO: switched this to dummy vid as system needs rewrite since it overlaps reader vid
+READER_VID = 6790
 
 def get_usb_ids():
     reader_usb_id = None
