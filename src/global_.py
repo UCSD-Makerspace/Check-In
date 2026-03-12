@@ -1,3 +1,4 @@
+import threading
 from sheets import SheetManager
 from traffic import TrafficLight
 
@@ -11,21 +12,24 @@ class _TrafficProxy:
     def connected(self):
         return self._light.ser is not None
 
+    def _post(self, color):
+        threading.Thread(
+            target=self._sheets.set_traffic_light,
+            args=(color,),
+            daemon=True,
+        ).start()
+
     def set_red(self):
-        self._light.set_red()
-        self._sheets.set_traffic_light("red")
+        self._post("red")
 
     def set_green(self):
-        self._light.set_green()
-        self._sheets.set_traffic_light("green")
+        self._post("green")
 
     def set_yellow(self):
-        self._light.set_yellow()
-        self._sheets.set_traffic_light("yellow")
+        self._post("yellow")
 
     def set_off(self):
-        self._light.set_off()
-        self._sheets.set_traffic_light("off")
+        self._post("off")
 
 
 def init(traffic_usb_id=None):
