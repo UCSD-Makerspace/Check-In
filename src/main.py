@@ -157,10 +157,11 @@ if __name__ == "__main__":
     reader = Reader(reader_usb_id)
     util = utils()
     thread = Thread(target=myLoop, args=(app, reader))
-    poller = Thread(target=trafficLightPoller, daemon=True)
     logging.info("Starting thread")
     thread.start()
-    poller.start()
+    if global_.traffic_light.connected:
+        poller = Thread(target=trafficLightPoller, daemon=True)
+        poller.start()
     app.bind("<Key>", lambda i: sw.keyboardPress(i))
     app.bind("<Escape>", lambda i: clearAndReturn())
     logging.info("Made it to app start")

@@ -58,7 +58,7 @@ class SheetManager:
 
     def get_traffic_light(self):
         try:
-            resp = _req("GET", f"{API_BASE_URL}/traffic-light", timeout=5)
+            resp = requests.get(f"{API_BASE_URL}/traffic-light", timeout=5)
             return resp.json().get("color", "off")
         except Exception as e:
             logging.error(f"Error getting traffic light: {e}")
