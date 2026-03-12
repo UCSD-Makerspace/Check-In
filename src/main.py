@@ -97,6 +97,23 @@ def myLoop(app, reader):
             last_tag = tag
             last_time = time.time()
 
+def trafficLightPoller():
+    last_color = None
+    while True:
+        time.sleep(0.1)
+        color = global_.sheets.get_traffic_light()
+        if color != last_color:
+            last_color = color
+            if color == "red":
+                global_.traffic_light.set_red()
+            elif color == "green":
+                global_.traffic_light.set_green()
+            elif color == "yellow":
+                global_.traffic_light.set_yellow()
+            else:
+                global_.traffic_light.set_off()
+
+
 def destroyNoWifiError(no_wifi):
     global no_wifi_shown
     no_wifi.destroy()
@@ -140,8 +157,10 @@ if __name__ == "__main__":
     reader = Reader(reader_usb_id)
     util = utils()
     thread = Thread(target=myLoop, args=(app, reader))
+    poller = Thread(target=trafficLightPoller, daemon=True)
     logging.info("Starting thread")
     thread.start()
+    poller.start()
     app.bind("<Key>", lambda i: sw.keyboardPress(i))
     app.bind("<Escape>", lambda i: clearAndReturn())
     logging.info("Made it to app start")
