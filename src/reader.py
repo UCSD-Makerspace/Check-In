@@ -41,7 +41,10 @@ class Reader(Thread):
             return False
 
     def getSerInWaiting(self):
-        uid = self._pn532.read_passive_target(timeout=0.1)
+        try:
+            uid = self._pn532.read_passive_target(timeout=0.1)
+        except Exception as e:
+            raise OSError(f"PN532 error: {e}")
         if uid:
             self._pending_tag = "".join(f"{b:02X}" for b in uid)
             return expected_characters
