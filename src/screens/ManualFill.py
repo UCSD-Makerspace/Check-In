@@ -1,12 +1,11 @@
 from pathlib import Path
 from tkinter import Button, Entry, StringVar, END
-from screen import Screen
+from .screen import Screen
 from utils import utils
 import logging
 import timeit
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path("assets/manual_fill_assets")
+ASSETS_PATH = Path(__file__).parent.parent / "assets" / "manual_fill_assets"
 
 
 #######################################################

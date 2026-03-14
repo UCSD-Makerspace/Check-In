@@ -1,14 +1,13 @@
 from pathlib import Path
 from tkinter import Button
-from screen import Screen
+from .screen import Screen
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path("assets/qr_codes_assets")
+ASSETS_PATH = Path(__file__).parent.parent / "assets" / "qr_codes_assets"
 
 
 class QRCodes(Screen):
     def _build(self, controller):
-        from MainPage import MainPage
+        from .MainPage import MainPage
 
         img3 = self._photo(ASSETS_PATH / "image_3.png")
         self._image(88.0, 90.0, image=img3)

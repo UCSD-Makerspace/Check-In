@@ -3,7 +3,7 @@ import tkinter as tk
 from pathlib import Path
 import global_
 
-ASSETS_PATH = Path(__file__).parent / "assets" / "main_page_assets"
+ASSETS_PATH = Path(__file__).parent / "assets" / "shared"
 
 
 #################################################
@@ -42,20 +42,19 @@ class gui(tk.Tk):
         self.curr_frame = None
         self.frame_uuid = uuid.uuid4().hex
 
-        # Import here to avoid circular imports at module level
-        from MainPage import MainPage
-        from AccNoWaiver import AccNoWaiver
-        from AccNoWaiverSwipe import AccNoWaiverSwipe
-        from ManualFill import ManualFill
-        from CheckInNoId import CheckInNoId
-        from NoAccCheckInOnly import NoAccCheckInOnly
-        from NoAccNoWaiver import NoAccNoWaiver
-        from NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
-        from QRCodes import QRCodes
-        from UserThank import UserThank
-        from UserWelcome import UserWelcome
-        from WaiverNoAcc import WaiverNoAcc
-        from WaiverNoAccSwipe import WaiverNoAccSwipe
+        from screens.MainPage import MainPage
+        from screens.AccNoWaiver import AccNoWaiver
+        from screens.AccNoWaiverSwipe import AccNoWaiverSwipe
+        from screens.ManualFill import ManualFill
+        from screens.CheckInNoId import CheckInNoId
+        from screens.NoAccCheckInOnly import NoAccCheckInOnly
+        from screens.NoAccNoWaiver import NoAccNoWaiver
+        from screens.NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
+        from screens.QRCodes import QRCodes
+        from screens.UserThank import UserThank
+        from screens.UserWelcome import UserWelcome
+        from screens.WaiverNoAcc import WaiverNoAcc
+        from screens.WaiverNoAccSwipe import WaiverNoAccSwipe
 
         self._timeouts = {
             AccNoWaiverSwipe: 30000,
@@ -83,6 +82,7 @@ class gui(tk.Tk):
         self.show_frame(MainPage)
 
     def timeout_fn(self, curr_uuid):
+        from screens.MainPage import MainPage
         if curr_uuid == self.frame_uuid:
             self.show_frame(MainPage)
             global_.traffic_light.set_off()

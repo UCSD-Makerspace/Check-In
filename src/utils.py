@@ -2,9 +2,9 @@ from datetime import datetime
 import time
 import global_
 import tkinter
-from MainPage import MainPage
-from AccNoWaiverSwipe import AccNoWaiverSwipe
-from UserThank import UserThank
+from screens.MainPage import MainPage
+from screens.AccNoWaiverSwipe import AccNoWaiverSwipe
+from screens.UserThank import UserThank
 import logging
 
 ######################################################

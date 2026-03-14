@@ -1,11 +1,10 @@
 from pathlib import Path
 from tkinter import Button, Entry, StringVar, END
-from screen import Screen
+from .screen import Screen
 import global_
 import logging
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path("assets/check_in_no_id_assets")
+ASSETS_PATH = Path(__file__).parent.parent / "assets" / "check_in_no_id_assets"
 
 
 ########################################################
@@ -14,10 +13,10 @@ ASSETS_PATH = OUTPUT_PATH / Path("assets/check_in_no_id_assets")
 
 class CheckInNoId(Screen):
     def _build(self, controller):
-        from NoAccCheckInOnly import NoAccCheckInOnly
-        from NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
-        from UserWelcome import UserWelcome
-        from AccNoWaiver import AccNoWaiver
+        from .NoAccCheckInOnly import NoAccCheckInOnly
+        from .NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
+        from .UserWelcome import UserWelcome
+        from .AccNoWaiver import AccNoWaiver
 
         self.loading_text_id = None
         self.pid = StringVar()
@@ -64,11 +63,11 @@ class CheckInNoId(Screen):
         self.pid_entry.insert(0, pid)
 
     def _call_check_in(self, controller):
-        from NoAccCheckInOnly import NoAccCheckInOnly
-        from NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
-        from UserWelcome import UserWelcome
-        from AccNoWaiver import AccNoWaiver
-        from MainPage import MainPage
+        from .NoAccCheckInOnly import NoAccCheckInOnly
+        from .NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
+        from .UserWelcome import UserWelcome
+        from .AccNoWaiver import AccNoWaiver
+        from .MainPage import MainPage
 
         pid = self.pid_entry.get()
         if not pid:

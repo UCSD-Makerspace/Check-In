@@ -4,9 +4,9 @@ from reader import *
 from swipe import swipe
 from sheets import *
 from threading import Thread
-from MainPage import MainPage
-from ManualFill import ManualFill
-from CheckInNoId import CheckInNoId
+from screens.MainPage import MainPage
+from screens.ManualFill import ManualFill
+from screens.CheckInNoId import CheckInNoId
 from utils import utils
 from core.handle_check_in import handle_check_in
 from core.render_ports import get_usb_ids

@@ -1,4 +1,4 @@
-from screen import Screen
+from .screen import Screen
 import global_
 
 
@@ -20,7 +20,7 @@ class UserThank(Screen):
         self.canvas.delete("thank")
 
     def displayName(self, name, nextPage):
-        from MainPage import MainPage
+        from .MainPage import MainPage
         global_.app.show_frame(UserThank)
 
         if nextPage == MainPage:
@@ -40,7 +40,7 @@ class UserThank(Screen):
         global_.app.after(4000, lambda: self._go_to_next(nextPage))
 
     def _go_to_next(self, nextPage):
-        from MainPage import MainPage
+        from .MainPage import MainPage
         global_.app.show_frame(nextPage)
         if nextPage == MainPage:
             global_.traffic_light.set_off()

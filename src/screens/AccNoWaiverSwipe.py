@@ -1,10 +1,9 @@
 from pathlib import Path
 from tkinter import Button
-from screen import Screen
+from .screen import Screen
 import global_
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path("assets/acc_no_waiver_swipe_assets")
+ASSETS_PATH = Path(__file__).parent.parent / "assets" / "acc_no_waiver_swipe_assets"
 
 
 class AccNoWaiverSwipe(Screen):
@@ -50,6 +49,6 @@ class AccNoWaiverSwipe(Screen):
         self._window(875.0, 581.0, btn, width=344, height=71)
 
     def _back_to_main(self):
-        from MainPage import MainPage
+        from .MainPage import MainPage
         global_.traffic_light.set_off()
         global_.app.show_frame(MainPage)

@@ -1,13 +1,12 @@
 from pathlib import Path
 from tkinter import Button
-from screen import Screen
+from .screen import Screen
 import global_
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path("assets/waiver_no_acc_swipe_assets")
+ASSETS_PATH = Path(__file__).parent.parent / "assets" / "no_acc_no_waiver_swipe_assets"
 
 
-class WaiverNoAccSwipe(Screen):
+class NoAccNoWaiverSwipe(Screen):
     def _build(self, controller):
         img2 = self._photo(ASSETS_PATH / "image_2.png")
         self._image(640.0, 76.0, image=img2)
@@ -22,7 +21,7 @@ class WaiverNoAccSwipe(Screen):
         self._image(1030.0, 65.0, image=img5)
 
         self._text(
-            420.0, 350.0, anchor="nw",
+            303.0, 350.0, anchor="nw",
             text="Please scan your ID barcode",
             fill="#F5F0E6", font=("Montserrat", 48 * -1),
         )
@@ -44,6 +43,6 @@ class WaiverNoAccSwipe(Screen):
         self._window(465.0, 554.0, btn, width=349, height=71)
 
     def _go_to_manual_fill(self, controller):
-        from ManualFill import ManualFill
+        from .ManualFill import ManualFill
         global_.app.get_frame(ManualFill).clearEntries()
         controller.show_frame(ManualFill)

@@ -1,9 +1,9 @@
 import tkinter
-from ManualFill import ManualFill
-from NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
-from WaiverNoAccSwipe import WaiverNoAccSwipe
-from AccNoWaiverSwipe import AccNoWaiverSwipe
-from CheckInNoId import CheckInNoId
+from screens.ManualFill import ManualFill
+from screens.NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
+from screens.WaiverNoAccSwipe import WaiverNoAccSwipe
+from screens.AccNoWaiverSwipe import AccNoWaiverSwipe
+from screens.CheckInNoId import CheckInNoId
 from get_info_from_pid import contact_client
 from utils import utils
 import global_
