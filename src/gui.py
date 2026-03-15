@@ -15,7 +15,7 @@ class gui(tk.Tk):
 
         self.title("Check-In")
         self.geometry("1280x720")
-        self.after(10000, lambda: self.attributes("-fullscreen", True))
+        self.bind("<Map>", self._on_map)
 
         # Single shared canvas — background is always painted here, never redrawn
         self.canvas = tk.Canvas(
@@ -80,6 +80,10 @@ class gui(tk.Tk):
             self.frames[F] = F(self.canvas, self)
 
         self.show_frame(MainPage)
+
+    def _on_map(self, event):
+        self.unbind("<Map>")
+        self.attributes("-fullscreen", True)
 
     def timeout_fn(self, curr_uuid):
         from screens.MainPage import MainPage
