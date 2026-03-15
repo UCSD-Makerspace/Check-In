@@ -2,14 +2,12 @@ from tkinter import PhotoImage
 
 
 class Screen:
-    """Base class for all check-in screens drawn on the shared canvas."""
-
     def __init__(self, canvas, controller):
         self.canvas = canvas
         self.controller = controller
-        self._items = []    # canvas item IDs (text, image)
-        self._windows = []  # canvas window IDs (Button, Entry)
-        self._photos = []   # PhotoImage refs — prevent garbage collection
+        self._items = []
+        self._windows = []
+        self._photos = []
         self._build(controller)
         self.hide()
 
