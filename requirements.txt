@@ -1,4 +1,4 @@
 pyserial==3.5
 requests==2.32.5
 adafruit-circuitpython-pn532
-RPi.GPIO
+RPi.GPIO; sys_platform == 'linux'
