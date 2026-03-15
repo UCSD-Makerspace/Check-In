@@ -5,80 +5,62 @@ import serial
 import sys
 import time
 
-expected_characters = 14
-timeout = 1
+from adafruit_pn532.uart import PN532_UART
 
-##################################################################
-# This class helps read information from RFID using serial ports #
-##################################################################
+expected_characters = 14
 
 
 class Reader(Thread):
     def __init__(self, usb_id="/dev/ttyUSB0"):
         super().__init__()
-        self.tty = ""
-        self.usb_id = usb_id
-        self.loadScanner()
-        self.ser = serial.Serial(self.tty, 115200)
-        logging.info("Card reader init finished")
-
-    def loadScanner(self):
-        if self.usb_id is None:
+        self._usb_id = usb_id
+        self._pn532 = None
+        self._pending_tag = None
+        if usb_id is None:
             logging.error("No card reader USB ID configured, exiting")
             sys.exit(1)
-        file_exists = exists(self.usb_id)
-        if file_exists:
-            self.tty = self.usb_id
-        else:
-            logging.error("Card reader not found at %s, exiting", self.usb_id)
+        if not exists(usb_id):
+            logging.error("Card reader not found at %s, exiting", usb_id)
             sys.exit(1)
+        self._init_pn532()
+        logging.info("Card reader init finished")
+
+    def _init_pn532(self):
+        uart = serial.Serial(self._usb_id, baudrate=115200, timeout=1)
+        self._pn532 = PN532_UART(uart, debug=False)
+        self._pn532.SAM_configuration()
 
     def reconnect(self):
-        try:
-            self.ser.close()
-        except Exception:
-            pass
-        if not exists(self.usb_id):
+        if not exists(self._usb_id):
             return False
         try:
-            self.ser = serial.Serial(self.tty, 115200)
+            self._init_pn532()
             return True
         except Exception:
+            self._pn532 = None
             return False
 
     def getSerInWaiting(self):
-        return self.ser.in_waiting
-
-    def readSerial(self):
-        self.ser.read(self.ser.in_waiting)
+        try:
+            uid = self._pn532.read_passive_target(timeout=0.1)
+        except Exception as e:
+            raise OSError(f"PN532 error: {e}")
+        if uid:
+            self._pending_tag = "".join(f"{b:02X}" for b in uid)
+            return expected_characters
+        self._pending_tag = None
+        return 0
 
     def grabRFID(self):
-        logging.debug(
-            "RFID data incoming. Bytes in waiting: " + str(self.ser.in_waiting)
-        )
-        tagBytes = self.ser.read(14)
-        self.ser.read(self.ser.in_waiting)
-        RFID = tagBytes.decode(encoding="latin-1").replace("\r\n", "")
-        logging.info("Parsed tag: " + RFID)
-        return str(RFID)
+        tag = self._pending_tag
+        self._pending_tag = None
+        logging.info("Parsed tag: " + str(tag))
+        return str(tag)
 
     def checkRFID(self, tag):
-        # Verifies rfid tag
-        reason= ""
-        if self.ser.in_waiting >= expected_characters:
-            second_tag = self.grabRFID()
-            logging.debug(f"Comparing {tag} and {second_tag}")
-            if tag != second_tag:
-                reason = "The two scanned tags did not match"
-        elif len(tag) != expected_characters:
-            reason = "Tag was not the expected number of chars"
-        else:
-            reason = "good"
-
-        return reason
+        if not tag or len(tag) != expected_characters:
+            return "Tag was not the expected number of chars"
+        return "good"
 
     def canScanAgain(self, lastTime):
         return time.time() - lastTime > 3
-
-    def getRFID(self):
-        return self.tag

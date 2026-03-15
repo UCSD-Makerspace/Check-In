@@ -2,8 +2,9 @@ from datetime import datetime
 import time
 import global_
 import tkinter
-from gui import *
-from UserThank import *
+from screens.MainPage import MainPage
+from screens.AccNoWaiverSwipe import AccNoWaiverSwipe
+from screens.UserThank import UserThank
 import logging
 
 ######################################################
@@ -56,12 +57,14 @@ class utils:
         emailValid = self.emailCheck(email)
         nameValid = self.nameCheck(fname, lname)
 
+        canvas = global_.app.canvas
+
         for validation in (idValid, emailValid, nameValid):
             if validation != "good":
                 invalidID = tkinter.Label(
-                    global_.app.get_frame(ManualFill), text=validation
+                    canvas, text=validation, bg="#153246", fg="white", font=("Arial", 20)
                 )
-                invalidID.pack(pady=20)
+                invalidID.place(relx=0.5, rely=0.83, anchor="center")
                 invalidID.after(3000, lambda: invalidID.destroy())
                 return
 
@@ -69,20 +72,20 @@ class utils:
         logging.debug(f"Time to validate info: {end1 - start}")
 
         inProgress = tkinter.Label(
-            global_.app.get_frame(ManualFill),
+            canvas,
             text="Account creation in progress!",
-            font=("Arial", 25),
+            bg="#153246", fg="white", font=("Arial", 25),
         )
-        inProgress.pack(pady=40)
+        inProgress.place(relx=0.5, rely=0.87, anchor="center")
         global_.app.update()
 
         full_name = fname + " " + lname
         logging.info(f"Creating user account for {full_name}")
 
-        no_wifi = Label(
-            global_.app.get_frame(ManualFill),
+        no_wifi = tkinter.Label(
+            canvas,
             text="ERROR! Connection cannot be established, please let staff know.",
-            font=("Arial", 25),
+            bg="#153246", fg="white", font=("Arial", 25),
         )
 
         end2 = time.perf_counter()
@@ -102,7 +105,7 @@ class utils:
             except Exception as e:
                 logging.warning("Exception occurred while in account creation")
                 logging.exception("Exception occurred while in account creation")
-                no_wifi.pack(pady=20)
+                no_wifi.place(relx=0.5, rely=0.91, anchor="center")
                 global_.app.update()
                 time.sleep(retries)
                 retries += 1

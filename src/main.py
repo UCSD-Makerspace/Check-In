@@ -1,12 +1,13 @@
-from tkinter import *
-from gui import *
+from tkinter import Label
+from gui import gui
 from reader import *
 from swipe import swipe
 from sheets import *
 from threading import Thread
-from UserWelcome import *
-from ManualFill import *
-from CheckInNoId import *
+from screens.MainPage import MainPage
+from screens.ManualFill import ManualFill
+from screens.CheckInNoId import CheckInNoId
+from utils import utils
 from core.handle_check_in import handle_check_in
 from core.render_ports import get_usb_ids
 import global_
@@ -64,11 +65,11 @@ def myLoop(app, reader):
                 if not no_wifi_shown:
                     no_wifi_shown = True
                     no_wifi = Label(
-                        app.get_frame(MainPage),
+                        app.canvas,
                         text="ERROR! Connection cannot be established, please let staff know.",
-                        font=("Arial", 25),
+                        bg="#153246", fg="white", font=("Arial", 25),
                     )
-                    no_wifi.pack(pady=40)
+                    no_wifi.place(relx=0.5, rely=0.1, anchor="center")
                     no_wifi.after(4000, lambda: destroyNoWifiError(no_wifi))
                 continue
 
@@ -95,6 +96,24 @@ def myLoop(app, reader):
 
             last_tag = tag
             last_time = time.time()
+
+def trafficLightPoller():
+    last_color = None
+    light = global_.traffic_light._light
+    while True:
+        time.sleep(0.1)
+        color = global_.sheets.get_traffic_light()
+        if color != last_color:
+            last_color = color
+            if color == "red":
+                light.set_red()
+            elif color == "green":
+                light.set_green()
+            elif color == "yellow":
+                light.set_yellow()
+            else:
+                light.set_off()
+
 
 def destroyNoWifiError(no_wifi):
     global no_wifi_shown
@@ -141,6 +160,9 @@ if __name__ == "__main__":
     thread = Thread(target=myLoop, args=(app, reader))
     logging.info("Starting thread")
     thread.start()
+    if global_.traffic_light.connected:
+        poller = Thread(target=trafficLightPoller, daemon=True)
+        poller.start()
     app.bind("<Key>", lambda i: sw.keyboardPress(i))
     app.bind("<Escape>", lambda i: clearAndReturn())
     logging.info("Made it to app start")
