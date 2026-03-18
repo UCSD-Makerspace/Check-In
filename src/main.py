@@ -43,9 +43,8 @@ def myLoop(app, reader):
     last_time = 0
     scanner_error = False
     while True:
-        time.sleep(0.1)
-
         if scanner_error:
+            time.sleep(0.1)
             if reader.reconnect():
                 logging.info("Card reader reconnected")
                 scanner_error = False
@@ -53,9 +52,9 @@ def myLoop(app, reader):
 
         try:
             in_waiting = reader.getSerInWaiting()
-        except OSError:
+        except OSError as e:
             if not scanner_error:
-                logging.error("Card reader disconnected, disabling until reconnection")
+                logging.error("Card reader disconnected, disabling until reconnection: %s", e)
                 scanner_error = True
             continue
 

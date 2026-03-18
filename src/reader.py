@@ -26,8 +26,8 @@ class Reader(Thread):
         logging.info("Card reader init finished")
 
     def _init_pn532(self):
-        uart = serial.Serial(self._usb_id, baudrate=115200, timeout=1)
-        self._pn532 = PN532_UART(uart, debug=False)
+        uart = serial.Serial(self._usb_id, baudrate=115200, timeout=0.1)
+        self._pn532 = PN532_UART(uart, debug=True)
         self._pn532.SAM_configuration()
 
     def reconnect(self):
@@ -47,6 +47,8 @@ class Reader(Thread):
             raise OSError(f"PN532 error: {e}")
         if uid:
             self._pending_tag = "".join(f"{b:02X}" for b in uid)
+            time.sleep(0.01) # let any remaining in-flight bytes arrive
+            self._pn532._uart.reset_input_buffer() # and flush them
             return expected_characters
         self._pending_tag = None
         return 0
