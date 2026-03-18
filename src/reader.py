@@ -27,7 +27,7 @@ class Reader(Thread):
 
     def _init_pn532(self):
         uart = serial.Serial(self._usb_id, baudrate=115200, timeout=0.1)
-        self._pn532 = PN532_UART(uart, debug=True)
+        self._pn532 = PN532_UART(uart, debug=False)
         self._pn532.SAM_configuration()
 
     def reconnect(self):
