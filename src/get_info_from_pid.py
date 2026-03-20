@@ -1,124 +1,69 @@
-import requests
-from typing import Any
-import time
 import logging
-from authlib.integrations.requests_client import OAuth2Session
-import imp
-import obf as oAuth
+import time
 
-api_url = "https://api.ucsd.edu:8243/"
+import requests
 
-### Use a UCSD student or staff member ID# (a.k.a.) PID
-### To find the person's name and email from UCSD's central DB.
-### USAGE: create a contact_client object, then call either get_student_info or get_staff_info with pid as arguement
+from config import API_BASE_URL
 
-### intended return: list of [first name, last name, [list of emails on file]]. Students may have multiple, staff members only one. For consistency, emails will always be a list.
 
-### when things go wrong: if the server is unresponsive (likely due to bad internet connection), we are likely to raise a ConnectionError or Timeout exception.  If the network connection is good but the request fails (i.e. the PID is not correct, or authentication fails), then False is returned.
+def _req(method, url, **kwargs):
+    start = time.time()
+    resp = requests.request(method, url, **kwargs)
+    ms = (time.time() - start) * 1000
+    logging.info(f"[CLIENT] {method.upper()} {url} -> {resp.status_code} ({ms:.0f}ms)")
+    return resp
 
 
 class contact_client:
-    def __init__(self):
-        self.oauth2_client = OAuth2Session(
-            oAuth.client_id, oAuth.client_secret, token_url=api_url + "token"
-        )
-        self.token = self.oauth2_client.fetch_token(
-            api_url + "token", grant_type="client_credentials"
-        )
-    
+    def get_student_info(self, barcode):
+        try:
+            resp = _req("GET", f"{API_BASE_URL}/students/barcode/{barcode}", timeout=5)
+            if not resp.ok:
+                return False
+            d = resp.json()
+            return [d["first_name"], d["last_name"], d["emails"], d["pid"], d["first_enr_term"], d["last_enr_term"]]
+        except Exception as e:
+            logging.error(f"Error fetching student by barcode: {e}")
+            return False
+
     def get_student_info_pid(self, pid):
         try:
-            if self.token["expires_at"] < time.time() + 60:
-                self.token = self.oauth2_client.fetch_token(
-                    api_url + "token", grant_type="client_credentials"
-                )
-            token = self.token["access_token"]
-        except requests.exceptions.ConnectionError as e:
-            # If the connection fails, we return False
-            logging.error(f"Error fetching token: {e}")
-            return False
+            resp = _req("GET", f"{API_BASE_URL}/students/pid/{pid}", timeout=5)
+            if not resp.ok:
+                return False
+            d = resp.json()
+            return [d["first_name"], d["last_name"], d["emails"], d["pid"], d["first_enr_term"], d["last_enr_term"]]
         except Exception as e:
-            # Catch any other exceptions
-            logging.error(f"Unexpected error with get_student_info_pid: {e}")
+            logging.error(f"Error fetching student by pid: {e}")
             return False
 
-        url = (
-            api_url
-            + "student_contact_info/v1/students/contactinfo_by_pids?studentIds="
-            + str(pid)
-        )   
-        
-        response = self.safe_get(url, token)
-        if not response or not response.ok:
-            return False
-        fname = response.json()[0]["name"]["firstName"]
-        lname = response.json()[0]["name"]["lastName"]
-        firstEnrTrm = response.json()[0]["name"]["firstEnrTrm"]
-        lastEnrTrm = response.json()[0]["name"]["lastEnrTrm"]
-        emails = []
-        for entries in response.json()[0]["emailAddressList"]:
-            emails.append(entries["emailAddress"])
-        return [fname, lname, emails, pid, firstEnrTrm, lastEnrTrm]
-
-
-    def get_student_info(self, barcode):
-        if self.token["expires_at"] < time.time() + 60:
-            self.token = self.oauth2_client.fetch_token(
-                api_url + "token", grant_type="client_credentials"
-            )
-
-        token = self.token["access_token"]
-        barcode_url = f"{api_url}student_contact_info/v1/students/{barcode}/student_id"
-        barcode_response = self.safe_get(barcode_url, token)
-        if not barcode_response or not barcode_response.ok:
-            return False
-
-        pid = barcode_response.json()["studentId"]
-        url = (
-            api_url
-            + "student_contact_info/v1/students/contactinfo_by_pids?studentIds="
-            + str(pid)
-        )
-
-        response = self.safe_get(
-            url, token)
-        
-        if not response or not response.ok:
-            return False
-        fname = response.json()[0]["name"]["firstName"]
-        lname = response.json()[0]["name"]["lastName"]
-        firstEnrTrm = response.json()[0]["name"]["firstEnrTrm"]
-        lastEnrTrm = response.json()[0]["name"]["lastEnrTrm"]
-        emails = []
-        for entries in response.json()[0]["emailAddressList"]:
-            emails.append(entries["emailAddress"])
-        return [fname, lname, emails, pid, firstEnrTrm, lastEnrTrm]
-
-    # not yet tested, still need to be authorized access to employeeData API.
-    def get_staff_info(self, pid):
-        if self.token["expires_at"] < time.time() + 60:
-            self.token = self.oauth2_client.fetch_token(
-                api_url + "token", grant_type="client_credentials"
-            )
-        url = api_url + "employee_data/v1/employees/" + str(pid)
-        token = self.token["access_token"]
-        response = self.safe_get(url, token)
-        if not response.ok:
-            return False
-        email = response.json()["officialEmail"]
-        fname = response.json()["firstName"]
-        lname = response.json()["lastName"]
-        return [fname, lname, [email]]
-    
-    def safe_get(self, url, token, retries=2):
-        for _ in range(retries):
-            try:
-                response = requests.get(
-                    url, headers={"Authorization": f"Bearer {token}"}, timeout=4
-                )
-                if response.ok:
-                    return response
-            except (requests.exceptions.Timeout, requests.exceptions.ConnectionError):
-                pass
-            time.sleep(0.5)  # small pause before retry
-        return False
+    # TODO: I assume this was probably to add in support for employee checkin, when reimplemented
+    # TODO: it should be started with an implementation on the api side
+    # # not yet tested, still need to be authorized access to employeeData API.
+    # def get_staff_info(self, pid):
+    #     if self.token["expires_at"] < time.time() + 60:
+    #         self.token = self.oauth2_client.fetch_token(
+    #             api_url + "token", grant_type="client_credentials"
+    #         )
+    #     url = api_url + "employee_data/v1/employees/" + str(pid)
+    #     token = self.token["access_token"]
+    #     response = self.safe_get(url, token)
+    #     if not response.ok:
+    #         return False
+    #     email = response.json()["officialEmail"]
+    #     fname = response.json()["firstName"]
+    #     lname = response.json()["lastName"]
+    #     return [fname, lname, [email]]
+    #
+    # def safe_get(self, url, token, retries=2):
+    #     for _ in range(retries):
+    #         try:
+    #             response = requests.get(
+    #                 url, headers={"Authorization": f"Bearer {token}"}, timeout=4
+    #             )
+    #             if response.ok:
+    #                 return response
+    #         except (requests.exceptions.Timeout, requests.exceptions.ConnectionError):
+    #             pass
+    #         time.sleep(0.5)  # small pause before retry
+    #     return False

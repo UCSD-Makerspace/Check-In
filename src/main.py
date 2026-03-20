@@ -1,15 +1,13 @@
-from tkinter import *
-from gui import *
-from core.checkin_queue import CheckInLogger
+from tkinter import Label
+from gui import gui
 from reader import *
 from swipe import swipe
-from fabman import *
 from sheets import *
 from threading import Thread
-from UserWelcome import *
-from ManualFill import *
-from CheckInNoId import *
-from get_info_from_pid import contact_client
+from screens.MainPage import MainPage
+from screens.ManualFill import ManualFill
+from screens.CheckInNoId import CheckInNoId
+from utils import utils
 from core.handle_check_in import handle_check_in
 from core.render_ports import get_usb_ids
 import global_
@@ -17,6 +15,7 @@ import socket
 import logging
 import argparse
 from sys import stdout
+from sheets import check_api_health
 
 def is_connected(host="8.8.8.8", port=53, timeout=3):
     """
@@ -42,11 +41,22 @@ def myLoop(app, reader):
     logging.info("Now reading ID cards")
     last_tag = 0
     last_time = 0
-    contact = contact_client()
-
+    scanner_error = False
     while True:
-        time.sleep(0.1)
-        in_waiting = reader.getSerInWaiting()
+        if scanner_error:
+            time.sleep(0.1)
+            if reader.reconnect():
+                logging.info("Card reader reconnected")
+                scanner_error = False
+            continue
+
+        try:
+            in_waiting = reader.getSerInWaiting()
+        except OSError as e:
+            if not scanner_error:
+                logging.error("Card reader disconnected, disabling until reconnection: %s", e)
+                scanner_error = True
+            continue
 
         if in_waiting >= 14:
             if not is_connected():
@@ -54,11 +64,11 @@ def myLoop(app, reader):
                 if not no_wifi_shown:
                     no_wifi_shown = True
                     no_wifi = Label(
-                        app.get_frame(MainPage),
+                        app.canvas,
                         text="ERROR! Connection cannot be established, please let staff know.",
-                        font=("Arial", 25),
+                        bg="#153246", fg="white", font=("Arial", 25),
                     )
-                    no_wifi.pack(pady=40)
+                    no_wifi.place(relx=0.5, rely=0.1, anchor="center")
                     no_wifi.after(4000, lambda: destroyNoWifiError(no_wifi))
                 continue
 
@@ -81,10 +91,28 @@ def myLoop(app, reader):
                 logging.debug("RFID Check Succeeded")
 
             global_.setRFID(tag)
-            handle_check_in(tag, contact, util)
+            handle_check_in(tag)
 
             last_tag = tag
             last_time = time.time()
+
+def trafficLightPoller():
+    last_color = None
+    light = global_.traffic_light._light
+    while True:
+        time.sleep(0.1)
+        color = global_.sheets.get_traffic_light()
+        if color != last_color:
+            last_color = color
+            if color == "red":
+                light.set_red()
+            elif color == "green":
+                light.set_green()
+            elif color == "yellow":
+                light.set_yellow()
+            else:
+                light.set_off()
+
 
 def destroyNoWifiError(no_wifi):
     global no_wifi_shown
@@ -119,17 +147,21 @@ if __name__ == "__main__":
         logging.basicConfig(level=logging.INFO)
 
     reader_usb_id, traffic_usb_id = get_usb_ids()
-    global_.init(traffic_usb_id) 
+    check_api_health()
+    global_.init(traffic_usb_id)
     app = gui()
     global_.setApp(app)
     global_.traffic_light.set_off()   
-    global_.checkin_logger = CheckInLogger()
+
     sw = swipe()
     reader = Reader(reader_usb_id)
     util = utils()
     thread = Thread(target=myLoop, args=(app, reader))
     logging.info("Starting thread")
     thread.start()
+    if global_.traffic_light.connected:
+        poller = Thread(target=trafficLightPoller, daemon=True)
+        poller.start()
     app.bind("<Key>", lambda i: sw.keyboardPress(i))
     app.bind("<Escape>", lambda i: clearAndReturn())
     logging.info("Made it to app start")

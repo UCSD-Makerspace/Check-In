@@ -7,3 +7,5 @@ log*
 /src/assets/local_user_db.json
 .idea/
 ignore-*
+.env
+raw_*

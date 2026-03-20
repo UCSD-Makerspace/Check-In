@@ -1,53 +1,53 @@
 import global_
-import json
 import logging
-from datetime import datetime as dt
+from tkinter import Label
 from core.write_checkin import write_checkin
-from core.new_row_check_in import new_row_check_in
-from core.UserRecord import *
-from gui import *
-from reader import *
 
-LOCAL_DB_PATH = "assets/local_user_db.json"
 
-def handle_check_in(tag, contact, util):
-    """ Handles the check-in process for a user based on their tag.
-    It checks the local user database first, then the online database if not found locally.
-    Updates the local waiver status and enrolled terms as necessary. """
+def handle_check_in(tag):
+    result = global_.sheets.checkin_by_uuid(tag)
+    status = result.get("status")
 
-    with open(LOCAL_DB_PATH, "r", encoding="utf-8") as f:
-        user_data = json.load(f)
+    def update_ui():
+        from screens.MainPage import MainPage
+        from screens.NoAccNoWaiver import NoAccNoWaiver
+        from screens.NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
+        from screens.AccNoWaiver import AccNoWaiver
+        from screens.AccNoWaiverSwipe import AccNoWaiverSwipe
+        from screens.UserWelcome import UserWelcome
 
-    curr_user = UserRecord.load_from_local(tag, user_data)
-    waiver_status = "None"
-
-    if not curr_user:
-        logging.info(f"User with tag {tag} not found locally. Checking online...")
-        curr_user = UserRecord.load_from_online(tag, global_.sheets, util)
-        if curr_user:
-            waiver_status = "waiver_confirmed"
-            curr_user.save(user_data)
-            dump_json(user_data)
-            logging.info(f"User added from online to local database: {curr_user.data['Name']}")
-        if not curr_user:
-            logging.info(f"User {tag} not found locally or online.")
-            new_row_check_in(None, "None", tag, util, None, None)
+        if status == "api_error":
+            logging.error("API error during check-in")
+            global_.traffic_light.set_red()
+            error_label = Label(
+                global_.app.canvas,
+                text="System error, please let staff know.",
+                bg="#153246", fg="white", font=("Arial", 25),
+            )
+            error_label.place(relx=0.5, rely=0.1, anchor="center")
+            error_label.after(4000, error_label.destroy)
             return
 
-    if curr_user.has_waiver(util):
-        logging.info(f"User {curr_user.data['Name']} has a waiver.")
-        waiver_status = "waiver_confirmed"
+        if status == "no_account":
+            logging.info(f"User {tag} not found.")
+            global_.traffic_light.set_red()
+            global_.app.show_frame(NoAccNoWaiver)
+            global_.app.after(3000, lambda: global_.app.show_frame(NoAccNoWaiverSwipe))
+            return
 
-    if curr_user.needs_refresh():
-        logging.info(f"Refreshing terms and last check-in for user {curr_user.data['Name']}")
-        curr_user.update_terms(contact)
-        curr_user.save(user_data)
-        dump_json(user_data)
+        if status == "no_waiver":
+            logging.info(f"User {tag} does not have waiver.")
+            global_.traffic_light.set_yellow()
+            global_.app.show_frame(AccNoWaiver)
+            global_.app.after(3000, lambda: global_.app.show_frame(AccNoWaiverSwipe))
+            return
 
-    new_row_check_in(curr_user.data, waiver_status, tag, util, curr_user.data.get("firstEnrTrm"), curr_user.data.get("lastEnrTrm"))
-    write_checkin(curr_user.data, tag)
+        logging.info(f"User found: {result['name']}")
+        global_.traffic_light.set_green()
+        global_.app.get_frame(UserWelcome).displayName(result["name"])
+        write_checkin({
+            "Name": result["name"],
+            "Student ID": result["student_id"],
+        }, tag)
 
-# Helper function
-def dump_json(user_data):
-    with open(LOCAL_DB_PATH, "w", encoding="utf-8") as f:
-        json.dump(user_data, f, indent=2)
+    global_.app.after(0, update_ui)
