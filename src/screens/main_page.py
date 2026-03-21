@@ -1,8 +1,6 @@
 from pathlib import Path
 from tkinter import Button
 from .screen import Screen
-import global_
-
 ASSETS_PATH = Path(__file__).parent.parent / "assets" / "main_page_assets"
 
 
@@ -49,6 +47,6 @@ class MainPage(Screen):
 
     def _go_to_no_id(self, controller):
         from .check_in_no_id import CheckInNoId
-        no_id = global_.app.get_frame(CheckInNoId)
+        no_id = controller.get_frame(CheckInNoId)
         no_id.clearEntries()
         controller.show_frame(CheckInNoId)

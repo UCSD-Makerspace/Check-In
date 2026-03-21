@@ -1,7 +1,7 @@
 import uuid
 import tkinter as tk
 from pathlib import Path
-import global_
+from app_context import AppContext
 
 ASSETS_PATH = Path(__file__).parent / "assets" / "shared"
 
@@ -10,8 +10,9 @@ ASSETS_PATH = Path(__file__).parent / "assets" / "shared"
 # Acts as the controller and the user interface #
 #################################################
 class Gui(tk.Tk):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, ctx: AppContext, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
+        self.ctx = ctx
 
         self.title("Check-In")
         self.geometry("1280x720")
@@ -89,7 +90,7 @@ class Gui(tk.Tk):
         from screens.main_page import MainPage
         if curr_uuid == self.frame_uuid:
             self.show_frame(MainPage)
-            global_.traffic_light.set_off()
+            self.ctx.traffic_light.set_off()
 
     def show_frame(self, cont):
         if self.curr_frame is not None:

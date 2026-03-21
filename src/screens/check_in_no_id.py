@@ -1,7 +1,6 @@
 from pathlib import Path
 from tkinter import Button, Entry, StringVar, END
 from .screen import Screen
-import global_
 import logging
 
 ASSETS_PATH = Path(__file__).parent.parent / "assets" / "check_in_no_id_assets"
@@ -77,7 +76,7 @@ class CheckInNoId(Screen):
         self.canvas.update_idletasks()
         self.clearEntries()
 
-        result = global_.sheets.checkin_by_pid(pid)
+        result = self.controller.ctx.sheets.checkin_by_pid(pid)
         status = result.get("status")
 
         if self.loading_text_id is not None:
@@ -97,5 +96,5 @@ class CheckInNoId(Screen):
             return
 
         logging.info(f"Manual check-in for {result['name']}")
-        global_.traffic_light.set_green()
-        global_.app.get_frame(UserWelcome).displayName(result["name"])
+        self.controller.ctx.traffic_light.set_green()
+        self.controller.get_frame(UserWelcome).displayName(result["name"])

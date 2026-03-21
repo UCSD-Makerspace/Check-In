@@ -1,5 +1,4 @@
 from .screen import Screen
-import global_
 
 
 class UserThank(Screen):
@@ -21,12 +20,12 @@ class UserThank(Screen):
 
     def displayName(self, name, nextPage):
         from .main_page import MainPage
-        global_.app.show_frame(UserThank)
+        self.controller.show_frame(UserThank)
 
         if nextPage == MainPage:
-            global_.traffic_light.set_green()
+            self.controller.ctx.traffic_light.set_green()
         else:
-            global_.traffic_light.set_yellow()
+            self.controller.ctx.traffic_light.set_yellow()
 
         self.canvas.create_text(
             99.0, 323.0, anchor="nw",
@@ -37,10 +36,10 @@ class UserThank(Screen):
         )
 
         self.canvas.after(4500, lambda: self.canvas.delete("thank"))
-        global_.app.after(4000, lambda: self._go_to_next(nextPage))
+        self.controller.after(4000, lambda: self._go_to_next(nextPage))
 
     def _go_to_next(self, nextPage):
         from .main_page import MainPage
-        global_.app.show_frame(nextPage)
+        self.controller.show_frame(nextPage)
         if nextPage == MainPage:
-            global_.traffic_light.set_off()
+            self.controller.ctx.traffic_light.set_off()

@@ -1,5 +1,4 @@
 from .screen import Screen
-import global_
 
 
 class UserWelcome(Screen):
@@ -27,7 +26,7 @@ class UserWelcome(Screen):
         self.last_name = name
 
         from .main_page import MainPage
-        global_.app.show_frame(UserWelcome)
+        self.controller.show_frame(UserWelcome)
 
         text_id = self.canvas.create_text(
             99.0,
@@ -54,5 +53,5 @@ class UserWelcome(Screen):
 
         if not self.canvas.find_withtag("welcome"):
             self.last_name = None
-            global_.traffic_light.set_off()
-            global_.app.show_frame(MainPage)
+            self.controller.ctx.traffic_light.set_off()
+            self.controller.show_frame(MainPage)

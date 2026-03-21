@@ -114,7 +114,7 @@ class ManualFill(Screen):
         self.clearEntries()
         try:
             delay = timeit.timeit(
-                lambda: util.createAccount(data[0], data[1], data[2], data[3], ManualFill),
+                lambda: util.createAccount(self.controller.ctx, data[0], data[1], data[2], data[3], ManualFill),
                 number=1,
             )
             logging.debug(f"Time to create account: {delay}")

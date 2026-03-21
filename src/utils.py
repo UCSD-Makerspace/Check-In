@@ -1,6 +1,5 @@
 from datetime import datetime
 import time
-import global_
 import tkinter
 from screens.main_page import MainPage
 from screens.acc_no_waiver_swipe import AccNoWaiverSwipe
@@ -51,13 +50,13 @@ class Utils:
     def getDatetime(self):
         return datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
-    def createAccount(self, fname, lname, email, pid, ManualFill):
+    def createAccount(self, ctx, fname, lname, email, pid, ManualFill):
         start = time.perf_counter()
         idValid = self.IDCheck(pid)
         emailValid = self.emailCheck(email)
         nameValid = self.nameCheck(fname, lname)
 
-        canvas = global_.app.canvas
+        canvas = ctx.app.canvas
 
         for validation in (idValid, emailValid, nameValid):
             if validation != "good":
@@ -77,7 +76,7 @@ class Utils:
             bg="#153246", fg="white", font=("Arial", 25),
         )
         inProgress.place(relx=0.5, rely=0.87, anchor="center")
-        global_.app.update()
+        ctx.app.update()
 
         full_name = fname + " " + lname
         logging.info(f"Creating user account for {full_name}")
@@ -94,7 +93,7 @@ class Utils:
         retries = 1
         while retries < 6:
             try:
-                result = global_.sheets.create_account(fname, lname, email, pid, global_.rfid)
+                result = ctx.sheets.create_account(fname, lname, email, pid, ctx.rfid)
                 end3 = time.perf_counter()
                 logging.debug(f"Time to create account: {end3 - end2}")
 
@@ -106,25 +105,25 @@ class Utils:
                 logging.warning("Exception occurred while in account creation")
                 logging.exception("Exception occurred while in account creation")
                 no_wifi.place(relx=0.5, rely=0.91, anchor="center")
-                global_.app.update()
+                ctx.app.update()
                 time.sleep(retries)
                 retries += 1
 
         no_wifi.destroy()
 
         if retries == 6:
-            global_.app.show_frame(MainPage)
+            ctx.app.show_frame(MainPage)
             inProgress.destroy()
             return
 
         end4 = time.perf_counter()
         logging.debug(f"Total time to send data: {end4 - end2}")
 
-        checkin_result = global_.sheets.checkin_by_uuid(global_.rfid)
+        checkin_result = ctx.sheets.checkin_by_uuid(ctx.rfid)
         toGoTo = AccNoWaiverSwipe if checkin_result.get("status") == "no_waiver" else MainPage
 
         end5 = time.perf_counter()
         logging.debug(f"Time to check waiver via check-in: {end5 - end4}")
 
-        global_.app.get_frame(UserThank).displayName(full_name, toGoTo)
+        ctx.app.get_frame(UserThank).displayName(full_name, toGoTo)
         inProgress.destroy()

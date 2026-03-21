@@ -1,8 +1,6 @@
 from pathlib import Path
 from tkinter import Button
 from .screen import Screen
-import global_
-
 ASSETS_PATH = Path(__file__).parent.parent / "assets" / "no_acc_no_waiver_swipe_assets"
 
 
@@ -44,5 +42,5 @@ class NoAccNoWaiverSwipe(Screen):
 
     def _go_to_manual_fill(self, controller):
         from .manual_fill import ManualFill
-        global_.app.get_frame(ManualFill).clearEntries()
+        controller.get_frame(ManualFill).clearEntries()
         controller.show_frame(ManualFill)

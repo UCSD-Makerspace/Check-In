@@ -2,7 +2,6 @@ from tkinter import Label
 from gui import Gui
 from reader import *
 from swipe import Swipe
-from sheets import *
 from threading import Thread
 from screens.main_page import MainPage
 from screens.manual_fill import ManualFill
@@ -10,12 +9,12 @@ from screens.check_in_no_id import CheckInNoId
 from utils import Utils
 from core.handle_check_in import handle_check_in
 from core.render_ports import get_usb_ids
-import global_
+from app_context import AppContext
+from sheets import check_api_health
 import socket
 import logging
 import argparse
 from sys import stdout
-from sheets import check_api_health
 
 def is_connected(host="8.8.8.8", port=53, timeout=3):
     """
@@ -36,7 +35,7 @@ def is_connected(host="8.8.8.8", port=53, timeout=3):
 
 no_wifi_shown = False
 
-def myLoop(app, reader):
+def myLoop(ctx: AppContext, reader):
     global no_wifi_shown, no_wifi
     logging.info("Now reading ID cards")
     last_tag = 0
@@ -64,7 +63,7 @@ def myLoop(app, reader):
                 if not no_wifi_shown:
                     no_wifi_shown = True
                     no_wifi = Label(
-                        app.canvas,
+                        ctx.app.canvas,
                         text="ERROR! Connection cannot be established, please let staff know.",
                         bg="#153246", fg="white", font=("Arial", 25),
                     )
@@ -72,7 +71,7 @@ def myLoop(app, reader):
                     no_wifi.after(4000, lambda: destroyNoWifiError(no_wifi))
                 continue
 
-            app.get_frame(ManualFill).clearEntries()
+            ctx.app.get_frame(ManualFill).clearEntries()
             tag = reader.grabRFID()
 
             if " " in tag:
@@ -90,18 +89,18 @@ def myLoop(app, reader):
             else:
                 logging.debug("RFID Check Succeeded")
 
-            global_.rfid = tag
-            handle_check_in(tag)
+            ctx.rfid = tag
+            handle_check_in(ctx, tag)
 
             last_tag = tag
             last_time = time.time()
 
-def trafficLightPoller():
+def trafficLightPoller(ctx: AppContext):
     last_color = None
-    light = global_.traffic_light._light
+    light = ctx.traffic_light._light
     while True:
         time.sleep(0.1)
-        color = global_.sheets.get_traffic_light()
+        color = ctx.sheets.get_traffic_light()
         if color != last_color:
             last_color = color
             if color == "red":
@@ -119,11 +118,11 @@ def destroyNoWifiError(no_wifi):
     no_wifi.destroy()
     no_wifi_shown = False
 
-def clearAndReturn():
-    global_.traffic_light.set_off()
-    global_.app.show_frame(MainPage)
-    global_.app.get_frame(ManualFill).clearEntries()
-    global_.app.get_frame(CheckInNoId).clearEntries()
+def clearAndReturn(ctx: AppContext):
+    ctx.traffic_light.set_off()
+    ctx.app.show_frame(MainPage)
+    ctx.app.get_frame(ManualFill).clearEntries()
+    ctx.app.get_frame(CheckInNoId).clearEntries()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -148,21 +147,21 @@ if __name__ == "__main__":
 
     reader_usb_id, traffic_usb_id = get_usb_ids()
     check_api_health()
-    global_.init(traffic_usb_id)
-    app = Gui()
-    global_.app = app
-    global_.traffic_light.set_off()   
+    ctx = AppContext.create(traffic_usb_id)
+    app = Gui(ctx)
+    ctx.app = app
+    ctx.traffic_light.set_off()
 
-    sw = Swipe()
+    sw = Swipe(ctx)
     reader = Reader(reader_usb_id)
     util = Utils()
-    thread = Thread(target=myLoop, args=(app, reader))
+    thread = Thread(target=myLoop, args=(ctx, reader))
     logging.info("Starting thread")
     thread.start()
-    if global_.traffic_light.connected:
-        poller = Thread(target=trafficLightPoller, daemon=True)
+    if ctx.traffic_light.connected:
+        poller = Thread(target=trafficLightPoller, args=(ctx,), daemon=True)
         poller.start()
     app.bind("<Key>", lambda i: sw.keyboardPress(i))
-    app.bind("<Escape>", lambda i: clearAndReturn())
+    app.bind("<Escape>", lambda i: clearAndReturn(ctx))
     logging.info("Made it to app start")
     app.start()

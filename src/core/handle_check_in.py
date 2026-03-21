@@ -1,11 +1,10 @@
-import global_
 import logging
 from tkinter import Label
 from core.write_checkin import write_checkin
 
 
-def handle_check_in(tag):
-    result = global_.sheets.checkin_by_uuid(tag)
+def handle_check_in(ctx, tag):
+    result = ctx.sheets.checkin_by_uuid(tag)
     status = result.get("status")
 
     def update_ui():
@@ -18,9 +17,9 @@ def handle_check_in(tag):
 
         if status == "api_error":
             logging.error("API error during check-in")
-            global_.traffic_light.set_red()
+            ctx.traffic_light.set_red()
             error_label = Label(
-                global_.app.canvas,
+                ctx.app.canvas,
                 text="System error, please let staff know.",
                 bg="#153246", fg="white", font=("Arial", 25),
             )
@@ -30,24 +29,24 @@ def handle_check_in(tag):
 
         if status == "no_account":
             logging.info(f"User {tag} not found.")
-            global_.traffic_light.set_red()
-            global_.app.show_frame(NoAccNoWaiver)
-            global_.app.after(3000, lambda: global_.app.show_frame(NoAccNoWaiverSwipe))
+            ctx.traffic_light.set_red()
+            ctx.app.show_frame(NoAccNoWaiver)
+            ctx.app.after(3000, lambda: ctx.app.show_frame(NoAccNoWaiverSwipe))
             return
 
         if status == "no_waiver":
             logging.info(f"User {tag} does not have waiver.")
-            global_.traffic_light.set_yellow()
-            global_.app.show_frame(AccNoWaiver)
-            global_.app.after(3000, lambda: global_.app.show_frame(AccNoWaiverSwipe))
+            ctx.traffic_light.set_yellow()
+            ctx.app.show_frame(AccNoWaiver)
+            ctx.app.after(3000, lambda: ctx.app.show_frame(AccNoWaiverSwipe))
             return
 
         logging.info(f"User found: {result['name']}")
-        global_.traffic_light.set_green()
-        global_.app.get_frame(UserWelcome).displayName(result["name"])
+        ctx.traffic_light.set_green()
+        ctx.app.get_frame(UserWelcome).displayName(result["name"])
         write_checkin({
             "Name": result["name"],
             "Student ID": result["student_id"],
         }, tag)
 
-    global_.app.after(0, update_ui)
+    ctx.app.after(0, update_ui)
