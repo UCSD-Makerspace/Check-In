@@ -56,7 +56,7 @@ class Utils:
         emailValid = self.emailCheck(email)
         nameValid = self.nameCheck(fname, lname)
 
-        canvas = ctx.app.canvas
+        canvas = ctx.window.canvas
 
         for validation in (idValid, emailValid, nameValid):
             if validation != "good":
@@ -76,7 +76,7 @@ class Utils:
             bg="#153246", fg="white", font=("Arial", 25),
         )
         inProgress.place(relx=0.5, rely=0.87, anchor="center")
-        ctx.app.update()
+        ctx.window.update()
 
         full_name = fname + " " + lname
         logging.info(f"Creating user account for {full_name}")
@@ -105,14 +105,14 @@ class Utils:
                 logging.warning("Exception occurred while in account creation")
                 logging.exception("Exception occurred while in account creation")
                 no_wifi.place(relx=0.5, rely=0.91, anchor="center")
-                ctx.app.update()
+                ctx.window.update()
                 time.sleep(retries)
                 retries += 1
 
         no_wifi.destroy()
 
         if retries == 6:
-            ctx.app.show_frame(MainPage)
+            ctx.nav.show_frame(MainPage)
             inProgress.destroy()
             return
 
@@ -125,5 +125,5 @@ class Utils:
         end5 = time.perf_counter()
         logging.debug(f"Time to check waiver via check-in: {end5 - end4}")
 
-        ctx.app.get_frame(UserThank).displayName(full_name, toGoTo)
+        ctx.nav.get_frame(UserThank).displayName(full_name, toGoTo)
         inProgress.destroy()

@@ -37,7 +37,8 @@ class AppContext:
     def __init__(self, sheets: SheetManager, traffic_light: _TrafficProxy):
         self.sheets = sheets
         self.traffic_light = traffic_light
-        self.app = None  # set after Gui is created
+        self.window = None
+        self.nav = None
         self._rfid_lock = threading.Lock()
         self._rfid: str = ""
 

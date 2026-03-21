@@ -1,7 +1,8 @@
 from tkinter import Label
-from gui import Gui
+from window import CheckInWindow
+from controllers.navigation_controller import NavigationController
 from reader import *
-from swipe import Swipe
+from controllers.swipe_controller import SwipeController
 from threading import Thread
 from screens.main_page import MainPage
 from screens.manual_fill import ManualFill
@@ -16,24 +17,18 @@ import logging
 import argparse
 from sys import stdout
 
+
 def is_connected(host="8.8.8.8", port=53, timeout=3):
-    """
-    Host: 8.8.8.8 (google-public-dns-a.google.com)
-    OpenPort: 53/tcp
-    Service: domain (DNS/TCP)
-    """
     try:
         socket.setdefaulttimeout(timeout)
         socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
         return True
-    except socket.error as ex:
+    except socket.error:
         return False
 
-##############################################################
-# This acts as the main loop of the program, ran in a thread #
-##############################################################
 
 no_wifi_shown = False
+
 
 def myLoop(ctx: AppContext, reader):
     global no_wifi_shown, no_wifi
@@ -63,7 +58,7 @@ def myLoop(ctx: AppContext, reader):
                 if not no_wifi_shown:
                     no_wifi_shown = True
                     no_wifi = Label(
-                        ctx.app.canvas,
+                        ctx.window.canvas,
                         text="ERROR! Connection cannot be established, please let staff know.",
                         bg="#153246", fg="white", font=("Arial", 25),
                     )
@@ -71,7 +66,7 @@ def myLoop(ctx: AppContext, reader):
                     no_wifi.after(4000, lambda: destroyNoWifiError(no_wifi))
                 continue
 
-            ctx.app.get_frame(ManualFill).clearEntries()
+            ctx.nav.get_frame(ManualFill).clearEntries()
             tag = reader.grabRFID()
 
             if " " in tag:
@@ -94,6 +89,7 @@ def myLoop(ctx: AppContext, reader):
 
             last_tag = tag
             last_time = time.time()
+
 
 def trafficLightPoller(ctx: AppContext):
     last_color = None
@@ -118,29 +114,23 @@ def destroyNoWifiError(no_wifi):
     no_wifi.destroy()
     no_wifi_shown = False
 
+
 def clearAndReturn(ctx: AppContext):
     ctx.traffic_light.set_off()
-    ctx.app.show_frame(MainPage)
-    ctx.app.get_frame(ManualFill).clearEntries()
-    ctx.app.get_frame(CheckInNoId).clearEntries()
+    ctx.nav.show_frame(MainPage)
+    ctx.nav.get_frame(ManualFill).clearEntries()
+    ctx.nav.get_frame(CheckInNoId).clearEntries()
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Makerspace Check-in System",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-
-    parser.add_argument(
-        "-v",
-        "--verbose",
-        action="store_true",
-        help="Increase verbosity (print debug info)",
-    )
-
+    parser.add_argument("-v", "--verbose", action="store_true", help="Increase verbosity (print debug info)")
     args = parser.parse_args()
-    config = vars(args)
 
-    if config["verbose"]:
+    if args.verbose:
         logging.basicConfig(level=logging.DEBUG, stream=stdout)
     else:
         logging.basicConfig(level=logging.INFO)
@@ -148,20 +138,21 @@ if __name__ == "__main__":
     reader_usb_id, traffic_usb_id = get_usb_ids()
     check_api_health()
     ctx = AppContext.create(traffic_usb_id)
-    app = Gui(ctx)
-    ctx.app = app
+    window = CheckInWindow()
+    nav = NavigationController(window, ctx)
+    ctx.window = window
+    ctx.nav = nav
     ctx.traffic_light.set_off()
 
-    sw = Swipe(ctx)
+    sw = SwipeController(ctx)
     reader = Reader(reader_usb_id)
-    util = Utils()
     thread = Thread(target=myLoop, args=(ctx, reader))
     logging.info("Starting thread")
     thread.start()
     if ctx.traffic_light.connected:
         poller = Thread(target=trafficLightPoller, args=(ctx,), daemon=True)
         poller.start()
-    app.bind("<Key>", lambda i: sw.keyboardPress(i))
-    app.bind("<Escape>", lambda i: clearAndReturn(ctx))
+    window.bind("<Key>", lambda i: sw.keyboardPress(i))
+    window.bind("<Escape>", lambda i: clearAndReturn(ctx))
     logging.info("Made it to app start")
-    app.start()
+    window.start()

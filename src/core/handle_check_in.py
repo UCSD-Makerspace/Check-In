@@ -19,7 +19,7 @@ def handle_check_in(ctx, tag):
             logging.error("API error during check-in")
             ctx.traffic_light.set_red()
             error_label = Label(
-                ctx.app.canvas,
+                ctx.window.canvas,
                 text="System error, please let staff know.",
                 bg="#153246", fg="white", font=("Arial", 25),
             )
@@ -30,23 +30,23 @@ def handle_check_in(ctx, tag):
         if status == "no_account":
             logging.info(f"User {tag} not found.")
             ctx.traffic_light.set_red()
-            ctx.app.show_frame(NoAccNoWaiver)
-            ctx.app.after(3000, lambda: ctx.app.show_frame(NoAccNoWaiverSwipe))
+            ctx.nav.show_frame(NoAccNoWaiver)
+            ctx.window.after(3000, lambda: ctx.nav.show_frame(NoAccNoWaiverSwipe))
             return
 
         if status == "no_waiver":
             logging.info(f"User {tag} does not have waiver.")
             ctx.traffic_light.set_yellow()
-            ctx.app.show_frame(AccNoWaiver)
-            ctx.app.after(3000, lambda: ctx.app.show_frame(AccNoWaiverSwipe))
+            ctx.nav.show_frame(AccNoWaiver)
+            ctx.window.after(3000, lambda: ctx.nav.show_frame(AccNoWaiverSwipe))
             return
 
         logging.info(f"User found: {result['name']}")
         ctx.traffic_light.set_green()
-        ctx.app.get_frame(UserWelcome).displayName(result["name"])
+        ctx.nav.get_frame(UserWelcome).displayName(result["name"])
         write_checkin({
             "Name": result["name"],
             "Student ID": result["student_id"],
         }, tag)
 
-    ctx.app.after(0, update_ui)
+    ctx.window.after(0, update_ui)
