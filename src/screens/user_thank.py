@@ -19,13 +19,8 @@ class UserThank(Screen):
         self.canvas.delete("thank")
 
     def displayName(self, name, nextPage):
-        from .main_page import MainPage
         self.controller.show_frame(UserThank)
-
-        if nextPage == MainPage:
-            self.controller.ctx.traffic_light.set_green()
-        else:
-            self.controller.ctx.traffic_light.set_yellow()
+        self.controller.ctx.account.on_thank_start(nextPage)
 
         self.canvas.create_text(
             99.0, 323.0, anchor="nw",
@@ -39,7 +34,4 @@ class UserThank(Screen):
         self.controller.after(4000, lambda: self._go_to_next(nextPage))
 
     def _go_to_next(self, nextPage):
-        from .main_page import MainPage
-        self.controller.show_frame(nextPage)
-        if nextPage == MainPage:
-            self.controller.ctx.traffic_light.set_off()
+        self.controller.ctx.account.on_thank_done(nextPage)

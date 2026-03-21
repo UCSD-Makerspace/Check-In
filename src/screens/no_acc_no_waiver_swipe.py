@@ -41,6 +41,4 @@ class NoAccNoWaiverSwipe(Screen):
         self._window(465.0, 554.0, btn, width=349, height=71)
 
     def _go_to_manual_fill(self, controller):
-        from .manual_fill import ManualFill
-        controller.get_frame(ManualFill).clearEntries()
-        controller.show_frame(ManualFill)
+        controller.go_to_manual_fill()

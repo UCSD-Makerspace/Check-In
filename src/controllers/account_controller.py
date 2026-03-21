@@ -1,62 +1,37 @@
-from datetime import datetime
 import time
 import tkinter
+import logging
 from screens.main_page import MainPage
 from screens.acc_no_waiver_swipe import AccNoWaiverSwipe
 from screens.user_thank import UserThank
-import logging
-
-######################################################
-# Utilities that I couldn't get to fit anywhere else #
-######################################################
 
 
-class Utils:
-    def __init__(self) -> None:
-        pass
+class AccountController:
+    def __init__(self, ctx):
+        self.ctx = ctx
 
-    def emailCheck(self, email):
-        validations = (
-            (lambda s: "@" in s, "Email is invalid"),
-            (lambda s: "." in s, "Email is invalid"),
-        )
-
-        for valid, message in validations:
-            if not valid(email):
-                return message
-
+    def _email_check(self, email):
+        if "@" not in email or "." not in email:
+            return "Email is invalid"
         return "good"
 
-    def nameCheck(self, fname, lname):
+    def _name_check(self, fname, lname):
         if len(fname) == 0 or len(lname) == 0:
             return "Name was not entered"
-
         return "good"
 
-    def IDCheck(self, user_id):
+    def _id_check(self, user_id):
         if len(user_id) <= 2 or len(user_id) > 12:
             return "PID was not entered correctly"
         return "good"
 
-    def IDVet(self, id_check):
-        if any(i.isalpha() for i in id_check):
-            return "bad"
-
-        if len(id_check) >= 16:
-            return "bad"
-
-        return "good"
-
-    def getDatetime(self):
-        return datetime.now().strftime("%m/%d/%Y %H:%M:%S")
-
-    def createAccount(self, ctx, fname, lname, email, pid, ManualFill):
+    def create_account(self, fname, lname, email, pid):
         start = time.perf_counter()
-        idValid = self.IDCheck(pid)
-        emailValid = self.emailCheck(email)
-        nameValid = self.nameCheck(fname, lname)
+        idValid = self._id_check(pid)
+        emailValid = self._email_check(email)
+        nameValid = self._name_check(fname, lname)
 
-        canvas = ctx.window.canvas
+        canvas = self.ctx.window.canvas
 
         for validation in (idValid, emailValid, nameValid):
             if validation != "good":
@@ -76,7 +51,7 @@ class Utils:
             bg="#153246", fg="white", font=("Arial", 25),
         )
         inProgress.place(relx=0.5, rely=0.87, anchor="center")
-        ctx.window.update()
+        self.ctx.window.update()
 
         full_name = fname + " " + lname
         logging.info(f"Creating user account for {full_name}")
@@ -93,7 +68,7 @@ class Utils:
         retries = 1
         while retries < 6:
             try:
-                result = ctx.sheets.create_account(fname, lname, email, pid, ctx.rfid)
+                result = self.ctx.sheets.create_account(fname, lname, email, pid, self.ctx.rfid)
                 end3 = time.perf_counter()
                 logging.debug(f"Time to create account: {end3 - end2}")
 
@@ -105,25 +80,38 @@ class Utils:
                 logging.warning("Exception occurred while in account creation")
                 logging.exception("Exception occurred while in account creation")
                 no_wifi.place(relx=0.5, rely=0.91, anchor="center")
-                ctx.window.update()
+                self.ctx.window.update()
                 time.sleep(retries)
                 retries += 1
 
         no_wifi.destroy()
 
         if retries == 6:
-            ctx.nav.show_frame(MainPage)
+            self.ctx.nav.show_frame(MainPage)
             inProgress.destroy()
             return
 
         end4 = time.perf_counter()
         logging.debug(f"Total time to send data: {end4 - end2}")
 
-        checkin_result = ctx.sheets.checkin_by_uuid(ctx.rfid)
+        checkin_result = self.ctx.sheets.checkin_by_uuid(self.ctx.rfid)
         toGoTo = AccNoWaiverSwipe if checkin_result.get("status") == "no_waiver" else MainPage
 
         end5 = time.perf_counter()
         logging.debug(f"Time to check waiver via check-in: {end5 - end4}")
 
-        ctx.nav.get_frame(UserThank).displayName(full_name, toGoTo)
+        self.ctx.nav.get_frame(UserThank).displayName(full_name, toGoTo)
         inProgress.destroy()
+
+    def on_thank_start(self, next_page):
+        from screens.main_page import MainPage
+        if next_page == MainPage:
+            self.ctx.traffic_light.set_green()
+        else:
+            self.ctx.traffic_light.set_yellow()
+
+    def on_thank_done(self, next_page):
+        from screens.main_page import MainPage
+        self.ctx.nav.show_frame(next_page)
+        if next_page == MainPage:
+            self.ctx.traffic_light.set_off()

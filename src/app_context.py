@@ -1,7 +1,7 @@
 import threading
 
-from sheets import SheetManager
-from traffic import TrafficLight
+from api.sheets import SheetManager
+from hardware.traffic import TrafficLight
 
 
 class _TrafficProxy:
@@ -39,6 +39,8 @@ class AppContext:
         self.traffic_light = traffic_light
         self.window = None
         self.nav = None
+        self.check_in = None
+        self.account = None
         self._rfid_lock = threading.Lock()
         self._rfid: str = ""
 

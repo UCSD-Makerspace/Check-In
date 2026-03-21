@@ -71,8 +71,21 @@ class NavigationController:
     def after(self, ms, fn):
         self._window.after(ms, fn)
 
-    def _on_timeout(self, uid):
+    def back_to_main(self):
         from screens.main_page import MainPage
+        self.ctx.traffic_light.set_off()
+        self.show_frame(MainPage)
+
+    def go_to_no_id(self):
+        from screens.check_in_no_id import CheckInNoId
+        self.get_frame(CheckInNoId).clearEntries()
+        self.show_frame(CheckInNoId)
+
+    def go_to_manual_fill(self):
+        from screens.manual_fill import ManualFill
+        self.get_frame(ManualFill).clearEntries()
+        self.show_frame(ManualFill)
+
+    def _on_timeout(self, uid):
         if uid == self._frame_uuid:
-            self.show_frame(MainPage)
-            self.ctx.traffic_light.set_off()
+            self.back_to_main()

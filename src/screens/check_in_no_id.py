@@ -62,12 +62,6 @@ class CheckInNoId(Screen):
         self.pid_entry.insert(0, pid)
 
     def _call_check_in(self, controller):
-        from .no_acc_check_in_only import NoAccCheckInOnly
-        from .no_acc_no_waiver_swipe import NoAccNoWaiverSwipe
-        from .user_welcome import UserWelcome
-        from .acc_no_waiver import AccNoWaiver
-        from .main_page import MainPage
-
         pid = self.pid_entry.get()
         if not pid:
             return
@@ -76,25 +70,8 @@ class CheckInNoId(Screen):
         self.canvas.update_idletasks()
         self.clearEntries()
 
-        result = self.controller.ctx.sheets.checkin_by_pid(pid)
-        status = result.get("status")
+        self.controller.ctx.check_in.handle_by_pid(pid)
 
         if self.loading_text_id is not None:
             self.canvas.delete(self.loading_text_id)
             self.loading_text_id = None
-
-        if status == "no_account":
-            logging.info("Manual check-in: user account not found")
-            controller.show_frame(NoAccCheckInOnly)
-            controller.after(5000, lambda: controller.show_frame(MainPage))
-            return
-
-        if status == "no_waiver":
-            logging.info(f"Manual check-in: no waiver for {result.get('name', pid)}")
-            controller.show_frame(AccNoWaiver)
-            controller.after(3000, lambda: controller.show_frame(NoAccNoWaiverSwipe))
-            return
-
-        logging.info(f"Manual check-in for {result['name']}")
-        self.controller.ctx.traffic_light.set_green()
-        self.controller.get_frame(UserWelcome).displayName(result["name"])

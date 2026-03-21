@@ -25,7 +25,6 @@ class UserWelcome(Screen):
 
         self.last_name = name
 
-        from .main_page import MainPage
         self.controller.show_frame(UserWelcome)
 
         text_id = self.canvas.create_text(
@@ -42,7 +41,6 @@ class UserWelcome(Screen):
         self.canvas.after(3000, lambda: self._remove_name(text_id))
 
     def _remove_name(self, text_id):
-        from .main_page import MainPage
         self.canvas.delete(text_id)
         self.offset -= 73
 
@@ -53,5 +51,4 @@ class UserWelcome(Screen):
 
         if not self.canvas.find_withtag("welcome"):
             self.last_name = None
-            self.controller.ctx.traffic_light.set_off()
-            self.controller.show_frame(MainPage)
+            self.controller.back_to_main()

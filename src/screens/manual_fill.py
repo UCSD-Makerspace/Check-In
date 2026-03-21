@@ -1,7 +1,6 @@
 from pathlib import Path
 from tkinter import Button, Entry, StringVar, END
 from .screen import Screen
-from utils import Utils
 import logging
 import timeit
 
@@ -109,12 +108,11 @@ class ManualFill(Screen):
         self.pid_entry.insert(0, pid)
 
     def _call_account_creation(self):
-        util = Utils()
         data = self.getEntries()
         self.clearEntries()
         try:
             delay = timeit.timeit(
-                lambda: util.createAccount(self.controller.ctx, data[0], data[1], data[2], data[3], ManualFill),
+                lambda: self.controller.ctx.account.create_account(data[0], data[1], data[2], data[3]),
                 number=1,
             )
             logging.debug(f"Time to create account: {delay}")

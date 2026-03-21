@@ -47,6 +47,4 @@ class AccNoWaiverSwipe(Screen):
         self._window(875.0, 581.0, btn, width=344, height=71)
 
     def _back_to_main(self):
-        from .main_page import MainPage
-        self.controller.ctx.traffic_light.set_off()
-        self.controller.show_frame(MainPage)
+        self.controller.back_to_main()

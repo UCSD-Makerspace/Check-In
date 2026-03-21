@@ -46,7 +46,4 @@ class MainPage(Screen):
         self._window(1130.0, 40.0, btn2)
 
     def _go_to_no_id(self, controller):
-        from .check_in_no_id import CheckInNoId
-        no_id = controller.get_frame(CheckInNoId)
-        no_id.clearEntries()
-        controller.show_frame(CheckInNoId)
+        controller.go_to_no_id()

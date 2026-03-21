@@ -4,8 +4,7 @@ from screens.manual_fill import ManualFill
 from screens.no_acc_no_waiver_swipe import NoAccNoWaiverSwipe
 from screens.waiver_no_acc_swipe import WaiverNoAccSwipe
 from screens.check_in_no_id import CheckInNoId
-from get_info_from_pid import contact_client
-from utils import Utils
+from api.get_info_from_pid import contact_client
 
 
 class SwipeController:
@@ -14,8 +13,14 @@ class SwipeController:
         self._id_string = ""
         self._swipe_error_shown = False
 
+    def _id_vet(self, id_check):
+        if any(i.isalpha() for i in id_check):
+            return "bad"
+        if len(id_check) >= 16:
+            return "bad"
+        return "good"
+
     def keyboardPress(self, key):
-        util = Utils()
         curr_frame = self.ctx.nav.get_curr_frame()
 
         if curr_frame not in (NoAccNoWaiverSwipe, WaiverNoAccSwipe, CheckInNoId):
@@ -25,7 +30,7 @@ class SwipeController:
         logging.debug("The array is now: " + repr(str(self._id_string)))
 
         if self._id_string.endswith("\r"):
-            if util.IDVet(self._id_string) == "bad":
+            if self._id_vet(self._id_string) == "bad":
                 self._id_string = ""
                 if not self._swipe_error_shown:
                     self._swipe_error_shown = True
