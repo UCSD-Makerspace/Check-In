@@ -26,7 +26,7 @@ class UserWelcome(Screen):
 
         self.last_name = name
 
-        from .MainPage import MainPage
+        from .main_page import MainPage
         global_.app.show_frame(UserWelcome)
 
         text_id = self.canvas.create_text(
@@ -43,7 +43,7 @@ class UserWelcome(Screen):
         self.canvas.after(3000, lambda: self._remove_name(text_id))
 
     def _remove_name(self, text_id):
-        from .MainPage import MainPage
+        from .main_page import MainPage
         self.canvas.delete(text_id)
         self.offset -= 73
 

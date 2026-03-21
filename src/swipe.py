@@ -1,11 +1,11 @@
 import tkinter
-from screens.ManualFill import ManualFill
-from screens.NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
-from screens.WaiverNoAccSwipe import WaiverNoAccSwipe
-from screens.AccNoWaiverSwipe import AccNoWaiverSwipe
-from screens.CheckInNoId import CheckInNoId
+from screens.manual_fill import ManualFill
+from screens.no_acc_no_waiver_swipe import NoAccNoWaiverSwipe
+from screens.waiver_no_acc_swipe import WaiverNoAccSwipe
+from screens.acc_no_waiver_swipe import AccNoWaiverSwipe
+from screens.check_in_no_id import CheckInNoId
 from get_info_from_pid import contact_client
-from utils import utils
+from utils import Utils
 import global_
 import logging
 
@@ -16,13 +16,13 @@ import logging
 swipe_error_shown = False
 
 
-class swipe:
+class Swipe:
     def __init__(self):
         global id_string
         id_string = ""
 
     def keyboardPress(self, key):
-        util = utils()
+        util = Utils()
         global id_string, swipe_error_shown
         curr_frame = global_.app.get_curr_frame()
 

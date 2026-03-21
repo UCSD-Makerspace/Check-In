@@ -9,12 +9,12 @@ def handle_check_in(tag):
     status = result.get("status")
 
     def update_ui():
-        from screens.MainPage import MainPage
-        from screens.NoAccNoWaiver import NoAccNoWaiver
-        from screens.NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
-        from screens.AccNoWaiver import AccNoWaiver
-        from screens.AccNoWaiverSwipe import AccNoWaiverSwipe
-        from screens.UserWelcome import UserWelcome
+        from screens.main_page import MainPage
+        from screens.no_acc_no_waiver import NoAccNoWaiver
+        from screens.no_acc_no_waiver_swipe import NoAccNoWaiverSwipe
+        from screens.acc_no_waiver import AccNoWaiver
+        from screens.acc_no_waiver_swipe import AccNoWaiverSwipe
+        from screens.user_welcome import UserWelcome
 
         if status == "api_error":
             logging.error("API error during check-in")

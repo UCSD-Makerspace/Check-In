@@ -1,13 +1,13 @@
 from tkinter import Label
-from gui import gui
+from gui import Gui
 from reader import *
-from swipe import swipe
+from swipe import Swipe
 from sheets import *
 from threading import Thread
-from screens.MainPage import MainPage
-from screens.ManualFill import ManualFill
-from screens.CheckInNoId import CheckInNoId
-from utils import utils
+from screens.main_page import MainPage
+from screens.manual_fill import ManualFill
+from screens.check_in_no_id import CheckInNoId
+from utils import Utils
 from core.handle_check_in import handle_check_in
 from core.render_ports import get_usb_ids
 import global_
@@ -149,13 +149,13 @@ if __name__ == "__main__":
     reader_usb_id, traffic_usb_id = get_usb_ids()
     check_api_health()
     global_.init(traffic_usb_id)
-    app = gui()
+    app = Gui()
     global_.setApp(app)
     global_.traffic_light.set_off()   
 
-    sw = swipe()
+    sw = Swipe()
     reader = Reader(reader_usb_id)
-    util = utils()
+    util = Utils()
     thread = Thread(target=myLoop, args=(app, reader))
     logging.info("Starting thread")
     thread.start()

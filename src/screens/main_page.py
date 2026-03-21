@@ -8,8 +8,8 @@ ASSETS_PATH = Path(__file__).parent.parent / "assets" / "main_page_assets"
 
 class MainPage(Screen):
     def _build(self, controller):
-        from .QRCodes import QRCodes
-        from .CheckInNoId import CheckInNoId
+        from .qr_codes import QRCodes
+        from .check_in_no_id import CheckInNoId
 
         logo = self._photo(ASSETS_PATH / "image_3.png")
         self._image(88.0, 90.0, image=logo)
@@ -48,7 +48,7 @@ class MainPage(Screen):
         self._window(1130.0, 40.0, btn2)
 
     def _go_to_no_id(self, controller):
-        from .CheckInNoId import CheckInNoId
+        from .check_in_no_id import CheckInNoId
         no_id = global_.app.get_frame(CheckInNoId)
         no_id.clearEntries()
         controller.show_frame(CheckInNoId)

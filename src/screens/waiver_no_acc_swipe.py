@@ -43,6 +43,6 @@ class WaiverNoAccSwipe(Screen):
         self._window(465.0, 554.0, btn, width=349, height=71)
 
     def _go_to_manual_fill(self, controller):
-        from .ManualFill import ManualFill
+        from .manual_fill import ManualFill
         global_.app.get_frame(ManualFill).clearEntries()
         controller.show_frame(ManualFill)

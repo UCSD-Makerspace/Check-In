@@ -9,7 +9,7 @@ ASSETS_PATH = Path(__file__).parent / "assets" / "shared"
 #################################################
 # Acts as the controller and the user interface #
 #################################################
-class gui(tk.Tk):
+class Gui(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
 
@@ -42,19 +42,19 @@ class gui(tk.Tk):
         self.curr_frame = None
         self.frame_uuid = uuid.uuid4().hex
 
-        from screens.MainPage import MainPage
-        from screens.AccNoWaiver import AccNoWaiver
-        from screens.AccNoWaiverSwipe import AccNoWaiverSwipe
-        from screens.ManualFill import ManualFill
-        from screens.CheckInNoId import CheckInNoId
-        from screens.NoAccCheckInOnly import NoAccCheckInOnly
-        from screens.NoAccNoWaiver import NoAccNoWaiver
-        from screens.NoAccNoWaiverSwipe import NoAccNoWaiverSwipe
-        from screens.QRCodes import QRCodes
-        from screens.UserThank import UserThank
-        from screens.UserWelcome import UserWelcome
-        from screens.WaiverNoAcc import WaiverNoAcc
-        from screens.WaiverNoAccSwipe import WaiverNoAccSwipe
+        from screens.main_page import MainPage
+        from screens.acc_no_waiver import AccNoWaiver
+        from screens.acc_no_waiver_swipe import AccNoWaiverSwipe
+        from screens.manual_fill import ManualFill
+        from screens.check_in_no_id import CheckInNoId
+        from screens.no_acc_check_in_only import NoAccCheckInOnly
+        from screens.no_acc_no_waiver import NoAccNoWaiver
+        from screens.no_acc_no_waiver_swipe import NoAccNoWaiverSwipe
+        from screens.qr_codes import QRCodes
+        from screens.user_thank import UserThank
+        from screens.user_welcome import UserWelcome
+        from screens.waiver_no_acc import WaiverNoAcc
+        from screens.waiver_no_acc_swipe import WaiverNoAccSwipe
 
         self._timeouts = {
             AccNoWaiverSwipe: 30000,
@@ -86,7 +86,7 @@ class gui(tk.Tk):
         self.attributes("-fullscreen", True)
 
     def timeout_fn(self, curr_uuid):
-        from screens.MainPage import MainPage
+        from screens.main_page import MainPage
         if curr_uuid == self.frame_uuid:
             self.show_frame(MainPage)
             global_.traffic_light.set_off()

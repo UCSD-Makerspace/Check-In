@@ -1,7 +1,7 @@
 from pathlib import Path
 from tkinter import Button, Entry, StringVar, END
 from .screen import Screen
-from utils import utils
+from utils import Utils
 import logging
 import timeit
 
@@ -109,7 +109,7 @@ class ManualFill(Screen):
         self.pid_entry.insert(0, pid)
 
     def _call_account_creation(self):
-        util = utils()
+        util = Utils()
         data = self.getEntries()
         self.clearEntries()
         try:

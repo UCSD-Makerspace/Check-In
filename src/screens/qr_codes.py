@@ -7,7 +7,7 @@ ASSETS_PATH = Path(__file__).parent.parent / "assets" / "qr_codes_assets"
 
 class QRCodes(Screen):
     def _build(self, controller):
-        from .MainPage import MainPage
+        from .main_page import MainPage
 
         img3 = self._photo(ASSETS_PATH / "image_3.png")
         self._image(88.0, 90.0, image=img3)

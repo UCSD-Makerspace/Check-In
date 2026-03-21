@@ -2,9 +2,9 @@ from datetime import datetime
 import time
 import global_
 import tkinter
-from screens.MainPage import MainPage
-from screens.AccNoWaiverSwipe import AccNoWaiverSwipe
-from screens.UserThank import UserThank
+from screens.main_page import MainPage
+from screens.acc_no_waiver_swipe import AccNoWaiverSwipe
+from screens.user_thank import UserThank
 import logging
 
 ######################################################
@@ -12,7 +12,7 @@ import logging
 ######################################################
 
 
-class utils:
+class Utils:
     def __init__(self) -> None:
         pass
 
