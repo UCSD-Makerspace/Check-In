@@ -82,7 +82,7 @@ def myLoop(app, reader):
             else:
                 logging.debug("RFID Check Succeeded")
 
-            global_.setRFID(tag)
+            global_.rfid = tag
             handle_check_in(tag, contact, util)
 
             last_tag = tag
@@ -127,7 +127,7 @@ if __name__ == "__main__":
     check_api_health()
     global_.init(traffic_usb_id)
     app = gui()
-    global_.setApp(app)
+    global_.app = app
 
     reader = Reader()
     util = utils()

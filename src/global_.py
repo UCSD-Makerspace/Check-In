@@ -2,6 +2,11 @@ import threading
 from sheets import SheetManager
 from traffic import TrafficLight
 
+rfid = ""
+sheets = None
+app = None
+traffic_light = None
+
 
 class _TrafficProxy:
     def __init__(self, light, sheets_mgr):
@@ -33,16 +38,6 @@ class _TrafficProxy:
 
 
 def init(traffic_usb_id=None):
-    global rfid, sheets, app, traffic_light
+    global sheets, traffic_light
     sheets = SheetManager()
     traffic_light = _TrafficProxy(TrafficLight(traffic_usb_id), sheets)
-
-
-def setRFID(new_rfid):
-    global rfid
-    rfid = new_rfid
-
-
-def setApp(new_app):
-    global app
-    app = new_app
