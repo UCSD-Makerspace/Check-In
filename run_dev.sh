@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -a
-source "$(dirname "$0")/../.env"
+source "$(dirname "$0")/.env"
 set +a
 
 output_file="log.txt"
@@ -10,4 +10,4 @@ echo "" >> "$output_file"
 
 date "+%Y-%m-%d %H:%M:%S" >> "$output_file"
 
-python main.py 2>&1 | tee -a log.txt
+python src/main.py "$@" 2>&1 | tee -a log.txt
