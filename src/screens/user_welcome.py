@@ -1,4 +1,4 @@
-from .screen import Screen
+from .base import Screen
 
 
 class UserWelcome(Screen):
@@ -6,7 +6,7 @@ class UserWelcome(Screen):
         self.last_name = None
         self.offset = 0
 
-        self._text(
+        self._msg_item = self._text(
             99.33203125, 259.33203125, anchor="nw",
             text="Welcome back",
             fill="#F5F0E6", font=("Montserrat", 45 * -1),
@@ -14,17 +14,17 @@ class UserWelcome(Screen):
 
     def hide(self):
         super().hide()
-        # Clean up any dynamic name items when leaving this screen
         self.canvas.delete("welcome")
+        self.canvas.itemconfigure(self._msg_item, text="Welcome back")
         self.last_name = None
         self.offset = 0
 
-    def display_name(self, name):
+    def display_name(self, name, message="Welcome back"):
         if name == self.last_name:
             return
 
         self.last_name = name
-
+        self.canvas.itemconfigure(self._msg_item, text=message)
         self.controller.show_frame(UserWelcome)
 
         text_id = self.canvas.create_text(

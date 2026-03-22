@@ -1,9 +1,8 @@
 import tkinter
 import logging
-from screens.manual_fill import ManualFill
-from screens.no_acc_no_waiver_swipe import NoAccNoWaiverSwipe
-from screens.waiver_no_acc_swipe import WaiverNoAccSwipe
-from screens.check_in_no_id import CheckInNoId
+from screens.create_account_manual import CreateAccountManual
+from screens.create_account_barcode import CreateAccountBarcode
+from screens.check_in_manual import CheckInManual
 from api.get_info_from_pid import ContactClient
 
 
@@ -23,7 +22,7 @@ class SwipeController:
     def keyboard_press(self, key):
         curr_frame = self.ctx.nav.get_curr_frame()
 
-        if curr_frame not in (NoAccNoWaiverSwipe, WaiverNoAccSwipe, CheckInNoId):
+        if curr_frame not in (CreateAccountBarcode, CheckInManual):
             return
 
         self._id_string += key.char
@@ -71,9 +70,9 @@ class SwipeController:
             logging.info("Student search returned False, returning...")
             return
 
-        if self.ctx.nav.get_curr_frame() == CheckInNoId:
-            self.ctx.nav.get_frame(CheckInNoId).clear_entries()
-            self.ctx.nav.get_frame(CheckInNoId).update_entries(u_data.pid)
+        if self.ctx.nav.get_curr_frame() == CheckInManual:
+            self.ctx.nav.get_frame(CheckInManual).clear_entries()
+            self.ctx.nav.get_frame(CheckInManual).update_entries(u_data.pid)
             return
 
         email_to_use = "" if len(u_data.emails) == 0 else u_data.emails[0]
@@ -81,12 +80,12 @@ class SwipeController:
             if email.endswith("@ucsd.edu"):
                 email_to_use = email
 
-        manfill = self.ctx.nav.get_frame(ManualFill)
+        manfill = self.ctx.nav.get_frame(CreateAccountManual)
         manfill.clear_entries()
         logging.info(f"Filling data with {u_data.first_name} {u_data.last_name} {email_to_use} {u_data.pid}")
         manfill.update_entries(u_data.first_name, u_data.last_name, email_to_use, u_data.pid)
 
-        self.ctx.nav.show_frame(ManualFill)
+        self.ctx.nav.show_frame(CreateAccountManual)
 
     def _destroy_swipe_error(self, id_error):
         id_error.destroy()

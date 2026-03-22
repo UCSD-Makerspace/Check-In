@@ -22,11 +22,11 @@ class CheckInWindow(tk.Tk):
         self.canvas.pack(fill="both", expand=True)
 
         self._bg_photos = []
-        bg1 = tk.PhotoImage(file=str(ASSETS_PATH / "image_1.png"))
+        bg1 = tk.PhotoImage(file=str(ASSETS_PATH / "background_main.png"))
         self._bg_photos.append(bg1)
         self.canvas.create_image(640.0, 360.0, image=bg1)
 
-        bg2 = tk.PhotoImage(file=str(ASSETS_PATH / "image_2.png"))
+        bg2 = tk.PhotoImage(file=str(ASSETS_PATH / "outline_full.png"))
         self._bg_photos.append(bg2)
         self.canvas.create_image(639.333984375, 359.333984375, image=bg2)
 

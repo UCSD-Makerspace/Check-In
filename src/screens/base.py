@@ -11,10 +11,6 @@ class Screen:
         self._build(controller)
         self.hide()
 
-    # ------------------------------------------------------------------
-    # Helpers for subclasses
-    # ------------------------------------------------------------------
-
     def _photo(self, path):
         img = PhotoImage(file=str(path))
         self._photos.append(img)
@@ -30,8 +26,13 @@ class Screen:
         self._items.append(item)
         return item
 
+    def _canvas_entry(self, x, y, w, h, font, fg="#F5F0E6"):
+        from .components.canvas_entry import CanvasEntry
+        entry = CanvasEntry(self.canvas, x, y, w, h, font, fg)
+        self._items.extend(entry.item_ids)
+        return entry
+
     def _window(self, x, y, widget, width=None, height=None):
-        """Embed a tk widget into the canvas.  x, y = top-left corner."""
         kw = dict(anchor="nw", window=widget)
         if width is not None:
             kw["width"] = width
@@ -40,10 +41,6 @@ class Screen:
         item = self.canvas.create_window(x, y, **kw)
         self._windows.append(item)
         return item
-
-    # ------------------------------------------------------------------
-    # Visibility
-    # ------------------------------------------------------------------
 
     def show(self):
         for item in self._items:

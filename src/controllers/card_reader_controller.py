@@ -3,7 +3,7 @@ import socket
 import logging
 from tkinter import Label
 from threading import Thread
-from screens.manual_fill import ManualFill
+from screens.create_account_manual import CreateAccountManual
 
 
 class CardReaderController:
@@ -53,7 +53,7 @@ class CardReaderController:
                         no_wifi.after(4000, lambda: self._destroy_wifi_error(no_wifi))
                     continue
 
-                self.ctx.nav.get_frame(ManualFill).clear_entries()
+                self.ctx.nav.get_frame(CreateAccountManual).clear_entries()
                 tag = reader.grab_rfid()
 
                 if " " in tag:

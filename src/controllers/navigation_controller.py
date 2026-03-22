@@ -1,52 +1,51 @@
 import uuid
 
-from screens.main_page import MainPage
-from screens.acc_no_waiver import AccNoWaiver
-from screens.acc_no_waiver_swipe import AccNoWaiverSwipe
-from screens.manual_fill import ManualFill
-from screens.check_in_no_id import CheckInNoId
-from screens.no_acc_check_in_only import NoAccCheckInOnly
-from screens.no_acc_no_waiver import NoAccNoWaiver
-from screens.no_acc_no_waiver_swipe import NoAccNoWaiverSwipe
+from screens.check_in_rfid import CheckInRFID
+from screens.transition_screen import TransitionScreen
+from screens.create_account_barcode import CreateAccountBarcode
+from screens.create_account_manual import CreateAccountManual
+from screens.sign_waiver import SignWaiver
+from screens.check_in_manual import CheckInManual
 from screens.qr_codes import QRCodes
-from screens.user_thank import UserThank
 from screens.user_welcome import UserWelcome
-from screens.waiver_no_acc import WaiverNoAcc
-from screens.waiver_no_acc_swipe import WaiverNoAccSwipe
 
 
 class NavigationController:
-    def __init__(self, window, ctx):
+    def __init__(self, window, ctx, dev_mode=False):
         self.ctx = ctx
         self._window = window
         self._frames = {}
         self._curr = None
         self._frame_uuid = uuid.uuid4().hex
+        self._on_done_stack = []
+        self._dev_overlay = None
 
         self._timeouts = {
-            AccNoWaiverSwipe: 30000,
+            SignWaiver: 30000,
             QRCodes: 30000,
-            NoAccNoWaiverSwipe: 30000,
         }
 
         for F in (
-            MainPage,
-            AccNoWaiver,
-            AccNoWaiverSwipe,
-            ManualFill,
-            CheckInNoId,
-            NoAccCheckInOnly,
-            NoAccNoWaiver,
-            NoAccNoWaiverSwipe,
+            CheckInRFID,
+            TransitionScreen,
+            CreateAccountBarcode,
+            CreateAccountManual,
+            SignWaiver,
+            CheckInManual,
             QRCodes,
-            UserThank,
             UserWelcome,
-            WaiverNoAcc,
-            WaiverNoAccSwipe,
         ):
             self._frames[F] = F(window.canvas, self)
 
-        self.show_frame(MainPage)
+        if dev_mode:
+            from screens.dev_overlay import DevOverlay
+            self._dev_overlay = DevOverlay(window.canvas, self)
+
+        self.show_frame(CheckInRFID)
+
+    # ------------------------------------------------------------------
+    # Core frame switching
+    # ------------------------------------------------------------------
 
     def show_frame(self, screen_class):
         if self._curr is not None:
@@ -54,6 +53,9 @@ class NavigationController:
         self._curr = screen_class
         self._frame_uuid = uuid.uuid4().hex
         self._frames[screen_class].show()
+
+        if self._dev_overlay is not None:
+            self._dev_overlay.update(screen_class)
 
         if screen_class in self._timeouts:
             uid = self._frame_uuid
@@ -71,17 +73,55 @@ class NavigationController:
     def after(self, ms, fn):
         self._window.after(ms, fn)
 
+    # ------------------------------------------------------------------
+    # Stack-based flow
+    # ------------------------------------------------------------------
+
+    def push(self, screen_class, on_done=None):
+        """Show screen_class and register a continuation to run when pop() is called."""
+        self._on_done_stack.append(on_done)
+        self.show_frame(screen_class)
+
+    def pop(self):
+        """Signal that the current screen is done; run the stored continuation."""
+        cb = self._on_done_stack.pop() if self._on_done_stack else None
+        if cb:
+            cb()
+        else:
+            self.back_to_main()
+
+    # ------------------------------------------------------------------
+    # Named navigations
+    # ------------------------------------------------------------------
+
     def back_to_main(self):
+        self._on_done_stack.clear()
         self.ctx.traffic_light.request_off()
-        self.show_frame(MainPage)
+        self.show_frame(CheckInRFID)
 
     def go_to_no_id(self):
-        self.get_frame(CheckInNoId).clear_entries()
-        self.show_frame(CheckInNoId)
+        self.get_frame(CheckInManual).clear_entries()
+        self.show_frame(CheckInManual)
 
-    def go_to_manual_fill(self):
-        self.get_frame(ManualFill).clear_entries()
-        self.show_frame(ManualFill)
+    def go_to_create_account_manual(self):
+        self.get_frame(CreateAccountManual).clear_entries()
+        self.show_frame(CreateAccountManual)
+
+    def go_to_create_account(self, on_done):
+        self.get_frame(TransitionScreen).display(
+            "Looks like you don't have an account,\nlet's set one up!"
+        )
+        self._window.after(3000, lambda: self.push(CreateAccountBarcode, on_done=on_done))
+
+    def go_to_sign_waiver(self):
+        self.get_frame(TransitionScreen).display(
+            "Looks like you haven't signed\nthe waiver yet,\nlet's fix that!"
+        )
+        self._window.after(3000, lambda: self.show_frame(SignWaiver))
+
+    # ------------------------------------------------------------------
+    # Internal
+    # ------------------------------------------------------------------
 
     def _on_timeout(self, uid):
         if uid == self._frame_uuid:

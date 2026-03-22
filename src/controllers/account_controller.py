@@ -1,9 +1,6 @@
 import time
 import tkinter
 import logging
-from screens.main_page import MainPage
-from screens.acc_no_waiver_swipe import AccNoWaiverSwipe
-from screens.user_thank import UserThank
 
 
 class AccountController:
@@ -87,29 +84,14 @@ class AccountController:
         no_wifi.destroy()
 
         if retries == 6:
-            self.ctx.nav.show_frame(MainPage)
+            self.ctx.nav.back_to_main()
             inProgress.destroy()
             return
 
         end4 = time.perf_counter()
         logging.debug(f"Total time to send data: {end4 - end2}")
 
-        checkin_result = self.ctx.sheets.checkin_by_uuid(self.ctx.rfid)
-        toGoTo = AccNoWaiverSwipe if checkin_result.get("status") == "no_waiver" else MainPage
-
-        end5 = time.perf_counter()
-        logging.debug(f"Time to check waiver via check-in: {end5 - end4}")
-
-        self.ctx.nav.get_frame(UserThank).display_name(full_name, toGoTo)
         inProgress.destroy()
-
-    def on_thank_start(self, next_page):
-        if next_page == MainPage:
-            self.ctx.traffic_light.request_green()
-        else:
-            self.ctx.traffic_light.request_yellow()
-
-    def on_thank_done(self, next_page):
-        self.ctx.nav.show_frame(next_page)
-        if next_page == MainPage:
-            self.ctx.traffic_light.request_off()
+        # pop() runs the on_done continuation from the nav stack,
+        # which re-runs _run_check_in to handle waiver check and check-in.
+        self.ctx.nav.pop()

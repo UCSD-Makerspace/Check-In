@@ -5,8 +5,8 @@ from controllers.check_in_controller import CheckInController
 from controllers.account_controller import AccountController
 from controllers.card_reader_controller import CardReaderController
 from hardware.reader import Reader
-from screens.manual_fill import ManualFill
-from screens.check_in_no_id import CheckInNoId
+from screens.create_account_manual import CreateAccountManual
+from screens.check_in_manual import CheckInManual
 from hardware.render_ports import get_usb_ids
 from app_context import AppContext
 from api.sheets import check_api_health
@@ -17,8 +17,8 @@ from sys import stdout
 
 def clear_and_return(ctx: AppContext):
     ctx.nav.back_to_main()
-    ctx.nav.get_frame(ManualFill).clear_entries()
-    ctx.nav.get_frame(CheckInNoId).clear_entries()
+    ctx.nav.get_frame(CreateAccountManual).clear_entries()
+    ctx.nav.get_frame(CheckInManual).clear_entries()
 
 
 if __name__ == "__main__":
@@ -27,6 +27,7 @@ if __name__ == "__main__":
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Increase verbosity (print debug info)")
+    parser.add_argument("-d", "--dev", action="store_true", help="Enable dev mode with on-screen navigation overlay")
     args = parser.parse_args()
 
     if args.verbose:
@@ -34,11 +35,14 @@ if __name__ == "__main__":
     else:
         logging.basicConfig(level=logging.INFO)
 
+    import os
+    dev_mode = args.dev or os.environ.get("DEV_MODE") == "1"
+
     usb = get_usb_ids()
     check_api_health()
     ctx = AppContext.create(usb.traffic_light)
     window = CheckInWindow()
-    nav = NavigationController(window, ctx)
+    nav = NavigationController(window, ctx, dev_mode=dev_mode)
     ctx.window = window
     ctx.nav = nav
     ctx.check_in = CheckInController(ctx)

@@ -1,37 +1,41 @@
 from pathlib import Path
-from tkinter import Button, Entry, StringVar, END
-from .screen import Screen
-import logging
+from tkinter import Button, END
+from .base import Screen
+from .components.canvas_entry import CanvasEntry
 
-ASSETS_PATH = Path(__file__).parent.parent / "assets" / "check_in_no_id_assets"
+ASSETS_PATH = Path(__file__).parent.parent / "assets" / "check_in_manual"
+SHARED_PATH = Path(__file__).parent.parent / "assets" / "shared"
 
 
-########################################################
-# This is the frame where users will manually check in #
-########################################################
-
-class CheckInNoId(Screen):
+class CheckInManual(Screen):
     def _build(self, controller):
         self.loading_text_id = None
-        self.pid = StringVar()
 
-        img2 = self._photo(ASSETS_PATH / "image_2.png")
-        self._image(640.0, 360.0, image=img2)
+        logo = self._photo(SHARED_PATH / "button_generic.png")
+        self._image(88.0, 90.0, image=logo)
 
-        img3 = self._photo(ASSETS_PATH / "image_3.png")
-        self._image(640.0, 424.0, image=img3)
+        home_img = self._photo(SHARED_PATH / "icon_home.png")
+        home_btn = Button(
+            self.canvas, image=home_img, bg="#153246",
+            command=lambda: controller.back_to_main(),
+            relief="flat", highlightthickness=0, bd=0,
+        )
+        self._window(53.0, 55.0, home_btn)
+
+        field_img = self._photo(SHARED_PATH / "field.png")
+        self._image(640.0, 424.0, image=field_img)
 
         self._text(
-            212.0, 120.0, anchor="nw",
+            640.0, 206.0, anchor="center",
             text="If you have already made an\naccount, scan your UCSD barcode\nor enter your PID manually",
             fill="#F5F0E6", font=("Montserrat", 48 * -1), justify="center",
         )
         self._text(
-            605.0, 480.0, anchor="nw",
+            640.0, 492.0, anchor="center",
             text="PID", fill="#F5F0E6", font=("Montserrat", 24 * -1),
         )
 
-        btn_img = self._photo(ASSETS_PATH / "button_1.png")
+        btn_img = self._photo(ASSETS_PATH / "button_check_in.png")
         btn = Button(
             self.canvas, image=btn_img,
             borderwidth=0, highlightthickness=0,
@@ -39,8 +43,13 @@ class CheckInNoId(Screen):
         )
         self._window(465.0, 598.0, btn, width=349, height=71)
 
-        self.pid_entry = Entry(self.canvas, textvariable=self.pid, width=40, font=52)
-        self._window(420.0, 412.0, self.pid_entry)
+        self.pid_entry = self._canvas_entry(
+            640.0, 424.0, w=800, h=44, font=("Montserrat", 20),
+        )
+
+    def hide(self):
+        CanvasEntry.blur_all()
+        super().hide()
 
     def display_loading(self):
         if self.loading_text_id is None:

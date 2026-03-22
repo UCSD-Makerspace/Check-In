@@ -1,31 +1,32 @@
 from pathlib import Path
 from tkinter import Button
-from .screen import Screen
+from .base import Screen
 
-ASSETS_PATH = Path(__file__).parent.parent / "assets" / "qr_codes_assets"
+ASSETS_PATH = Path(__file__).parent.parent / "assets" / "qr_codes"
+SHARED_PATH = Path(__file__).parent.parent / "assets" / "shared"
 
 
 class QRCodes(Screen):
     def _build(self, controller):
-        img3 = self._photo(ASSETS_PATH / "image_3.png")
-        self._image(88.0, 90.0, image=img3)
+        logo = self._photo(SHARED_PATH / "button_generic.png")
+        self._image(88.0, 90.0, image=logo)
 
-        img4 = self._photo(ASSETS_PATH / "image_4.png")
-        self._image(421.0, 360.0, image=img4)
+        qr_website_img = self._photo(ASSETS_PATH / "qr_website.png")
+        self._image(421.0, 360.0, image=qr_website_img)
 
-        img5 = self._photo(ASSETS_PATH / "image_5.png")
-        self._image(859.0, 360.0, image=img5)
+        qr_waiver_img = self._photo(ASSETS_PATH / "qr_waiver.png")
+        self._image(859.0, 360.0, image=qr_waiver_img)
 
         self._text(
-            335.0, 551.0, anchor="nw",
+            421.0, 571.0, anchor="center",
             text="Website", fill="#F5F0E6", font=("Montserrat", 40 * -1),
         )
         self._text(
-            788.0, 557.0, anchor="nw",
+            859.0, 571.0, anchor="center",
             text="Waiver", fill="#F5F0E6", font=("Montserrat", 40 * -1),
         )
 
-        btn_img = self._photo(ASSETS_PATH / "image_6.png")
+        btn_img = self._photo(SHARED_PATH / "icon_home.png")
         btn = Button(
             self.canvas, image=btn_img, bg="#153246",
             command=lambda: controller.back_to_main(),
