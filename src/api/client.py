@@ -23,7 +23,7 @@ def check_api_health(retries=3, delay=3):
     sys.exit(1)
 
 
-class SheetManager:
+class ApiClient:
     def checkin_by_uuid(self, uuid):
         try:
             resp = _req("GET", f"{API_BASE_URL}/check-in/uuid/{uuid}", timeout=10)
@@ -56,20 +56,14 @@ class SheetManager:
             logging.error(f"Error getting traffic light: {e}")
             return "off"
 
-    def create_account(self, first_name, last_name, email, pid, rfid):
+    def create_account(self, rfid, *, barcode=None, pid=None):
         try:
-            resp = _req(
-                "POST",
-                f"{API_BASE_URL}/accounts",
-                json={
-                    "first_name": first_name,
-                    "last_name": last_name,
-                    "email": email,
-                    "pid": pid,
-                    "rfid": rfid,
-                },
-                timeout=30,
-            )
+            payload = {"rfid": rfid}
+            if barcode:
+                payload["barcode"] = barcode
+            if pid:
+                payload["pid"] = pid
+            resp = _req("POST", f"{API_BASE_URL}/accounts", json=payload, timeout=30)
             resp.raise_for_status()
             return resp.json()
         except Exception as e:

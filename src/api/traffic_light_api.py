@@ -1,11 +1,11 @@
 import threading
 
-from api.sheets import SheetManager
+from api.client import ApiClient
 from hardware.traffic_light import TrafficLight
 
 
 class TrafficLightApi:
-    def __init__(self, light: TrafficLight, sheets: SheetManager):
+    def __init__(self, light: TrafficLight, sheets: ApiClient):
         self._light = light
         self._sheets = sheets
 

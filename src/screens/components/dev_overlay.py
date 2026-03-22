@@ -11,10 +11,12 @@ from screens.user_welcome import UserWelcome
 _DEV_NAME  = "Dev User"
 _DEV_EMAIL = "devuser@ucsd.edu"
 _DEV_PID   = "A12345678"
+_DEV_RFID  = "1a2b3c4d5e6f7g"
 _THANK_MSG = "Thank you for registering"
 
 
 def _sim_no_account_success(nav):
+    nav.ctx.rfid = _DEV_RFID
     def on_done():
         nav.ctx.traffic_light.request_green()
         nav.get_frame(UserWelcome).display_name(_DEV_NAME, _THANK_MSG)
@@ -22,13 +24,14 @@ def _sim_no_account_success(nav):
 
 
 def _sim_no_account_needs_waiver(nav):
+    nav.ctx.rfid = _DEV_RFID
     nav.go_to_create_account(on_done=nav.go_to_sign_waiver)
 
 
 def _sim_fill_and_go(nav):
     frm = nav.get_frame(CreateAccountManual)
     frm.clear_entries()
-    frm.update_entries("Dev", "User", _DEV_EMAIL, _DEV_PID)
+    frm.pid_entry.insert(0, _DEV_PID)
     nav.go_to_create_account_manual()
 
 

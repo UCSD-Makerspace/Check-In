@@ -96,6 +96,7 @@ class NavigationController:
 
     def back_to_main(self):
         self._on_done_stack.clear()
+        self.ctx.rfid = ""
         self.ctx.traffic_light.request_off()
         self.show_frame(CheckInRFID)
 

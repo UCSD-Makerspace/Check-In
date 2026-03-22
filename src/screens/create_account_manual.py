@@ -32,10 +32,7 @@ class CreateAccountManual(Screen):
         self._image(1010.0, 77.0, image=icon_unchecked)
 
         field_img = self._photo(SHARED_PATH / "field.png")
-        self._image(640.0, 542.0, image=field_img)
-        self._image(640.0, 440.0, image=field_img)
-        self._image(640.0, 339.0, image=field_img)
-        self._image(640.0, 239.0, image=field_img)
+        self._image(640.0, 390.0, image=field_img)
 
         self._text(
             250.0, 45.0, anchor="nw",
@@ -46,19 +43,7 @@ class CreateAccountManual(Screen):
             text="Waiver Status:", fill="#F5F0E6", font=("Montserrat", 40 * -1),
         )
         self._text(
-            640.0, 189.0, anchor="center",
-            text="First Name", fill="#F5F0E6", font=("Montserrat", 24 * -1),
-        )
-        self._text(
-            640.0, 290.0, anchor="center",
-            text="Last Name", fill="#F5F0E6", font=("Montserrat", 24 * -1),
-        )
-        self._text(
-            640.0, 391.0, anchor="center",
-            text="Email", fill="#F5F0E6", font=("Montserrat", 24 * -1),
-        )
-        self._text(
-            640.0, 492.0, anchor="center",
+            640.0, 340.0, anchor="center",
             text="PID", fill="#F5F0E6", font=("Montserrat", 24 * -1),
         )
 
@@ -68,35 +53,21 @@ class CreateAccountManual(Screen):
             borderwidth=0, highlightthickness=0,
             command=self._call_account_creation, relief="flat",
         )
-        self._window(465.0, 598.0, btn, width=349, height=71)
+        self._window(465.0, 490.0, btn, width=349, height=71)
 
-        self.first_name_entry = self._canvas_entry(640.0, 239.0, w=800, h=44, font=("Montserrat", 20))
-        self.last_name_entry  = self._canvas_entry(640.0, 339.0, w=800, h=44, font=("Montserrat", 20))
-        self.email_entry      = self._canvas_entry(640.0, 440.0, w=800, h=44, font=("Montserrat", 20))
-        self.pid_entry        = self._canvas_entry(640.0, 542.0, w=800, h=44, font=("Montserrat", 20))
+        self.pid_entry = self._canvas_entry(640.0, 390.0, w=800, h=44, font=("Montserrat", 20))
 
     def hide(self):
         CanvasEntry.blur_all()
         super().hide()
 
     def clear_entries(self):
-        for entry in (self.first_name_entry, self.last_name_entry,
-                      self.email_entry, self.pid_entry):
-            entry.delete(0, END)
-
-    def update_entries(self, fname, lname, email, pid):
-        self.first_name_entry.insert(0, fname)
-        self.last_name_entry.insert(0, lname)
-        self.email_entry.insert(0, email)
-        self.pid_entry.insert(0, pid)
+        self.pid_entry.delete(0, END)
 
     def _call_account_creation(self):
-        first_name = self.first_name_entry.get()
-        last_name  = self.last_name_entry.get()
-        email      = self.email_entry.get()
-        pid        = self.pid_entry.get()
+        pid = self.pid_entry.get()
         self.clear_entries()
         try:
-            self.controller.ctx.account.create_account(first_name, last_name, email, pid)
+            self.controller.ctx.account.create_account_from_pid(pid)
         except Exception:
             logging.warning("Error occurred trying to create a user account", exc_info=True)

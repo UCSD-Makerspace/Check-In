@@ -1,12 +1,12 @@
 import threading
 
-from api.sheets import SheetManager
+from api.client import ApiClient
 from api.traffic_light_api import TrafficLightApi
 from hardware.traffic_light import TrafficLight
 
 
 class AppContext:
-    def __init__(self, sheets: SheetManager, traffic_light: TrafficLightApi):
+    def __init__(self, sheets: ApiClient, traffic_light: TrafficLightApi):
         self.sheets = sheets
         self.traffic_light = traffic_light
         self.window = None
@@ -28,7 +28,7 @@ class AppContext:
 
     @classmethod
     def create(cls, traffic_usb_id=None) -> "AppContext":
-        sheets = SheetManager()
+        sheets = ApiClient()
         light = TrafficLight(traffic_usb_id)
         traffic = TrafficLightApi(light, sheets)
         return cls(sheets, traffic)

@@ -9,7 +9,7 @@ from screens.create_account_manual import CreateAccountManual
 from screens.check_in_manual import CheckInManual
 from hardware.usb_ports import get_usb_ids
 from app_context import AppContext
-from api.sheets import check_api_health
+from api.client import check_api_health
 import logging
 import argparse
 from sys import stdout
