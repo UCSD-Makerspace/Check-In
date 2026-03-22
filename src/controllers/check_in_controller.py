@@ -1,6 +1,14 @@
 import logging
 from tkinter import Label
 
+from screens.main_page import MainPage
+from screens.no_acc_no_waiver import NoAccNoWaiver
+from screens.no_acc_no_waiver_swipe import NoAccNoWaiverSwipe
+from screens.no_acc_check_in_only import NoAccCheckInOnly
+from screens.acc_no_waiver import AccNoWaiver
+from screens.acc_no_waiver_swipe import AccNoWaiverSwipe
+from screens.user_welcome import UserWelcome
+
 
 class CheckInController:
     def __init__(self, ctx):
@@ -11,13 +19,6 @@ class CheckInController:
         status = result.get("status")
 
         def update_ui():
-            from screens.main_page import MainPage
-            from screens.no_acc_no_waiver import NoAccNoWaiver
-            from screens.no_acc_no_waiver_swipe import NoAccNoWaiverSwipe
-            from screens.acc_no_waiver import AccNoWaiver
-            from screens.acc_no_waiver_swipe import AccNoWaiverSwipe
-            from screens.user_welcome import UserWelcome
-
             if status == "api_error":
                 logging.error("API error during check-in")
                 self.ctx.traffic_light.set_red()
@@ -51,12 +52,6 @@ class CheckInController:
         self.ctx.window.after(0, update_ui)
 
     def handle_by_pid(self, pid):
-        from screens.no_acc_check_in_only import NoAccCheckInOnly
-        from screens.no_acc_no_waiver_swipe import NoAccNoWaiverSwipe
-        from screens.user_welcome import UserWelcome
-        from screens.acc_no_waiver import AccNoWaiver
-        from screens.main_page import MainPage
-
         result = self.ctx.sheets.checkin_by_pid(pid)
         status = result.get("status")
 

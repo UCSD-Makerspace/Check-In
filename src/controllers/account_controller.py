@@ -104,14 +104,12 @@ class AccountController:
         inProgress.destroy()
 
     def on_thank_start(self, next_page):
-        from screens.main_page import MainPage
         if next_page == MainPage:
             self.ctx.traffic_light.set_green()
         else:
             self.ctx.traffic_light.set_yellow()
 
     def on_thank_done(self, next_page):
-        from screens.main_page import MainPage
         self.ctx.nav.show_frame(next_page)
         if next_page == MainPage:
             self.ctx.traffic_light.set_off()

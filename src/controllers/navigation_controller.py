@@ -1,5 +1,19 @@
 import uuid
 
+from screens.main_page import MainPage
+from screens.acc_no_waiver import AccNoWaiver
+from screens.acc_no_waiver_swipe import AccNoWaiverSwipe
+from screens.manual_fill import ManualFill
+from screens.check_in_no_id import CheckInNoId
+from screens.no_acc_check_in_only import NoAccCheckInOnly
+from screens.no_acc_no_waiver import NoAccNoWaiver
+from screens.no_acc_no_waiver_swipe import NoAccNoWaiverSwipe
+from screens.qr_codes import QRCodes
+from screens.user_thank import UserThank
+from screens.user_welcome import UserWelcome
+from screens.waiver_no_acc import WaiverNoAcc
+from screens.waiver_no_acc_swipe import WaiverNoAccSwipe
+
 
 class NavigationController:
     def __init__(self, window, ctx):
@@ -8,20 +22,6 @@ class NavigationController:
         self._frames = {}
         self._curr = None
         self._frame_uuid = uuid.uuid4().hex
-
-        from screens.main_page import MainPage
-        from screens.acc_no_waiver import AccNoWaiver
-        from screens.acc_no_waiver_swipe import AccNoWaiverSwipe
-        from screens.manual_fill import ManualFill
-        from screens.check_in_no_id import CheckInNoId
-        from screens.no_acc_check_in_only import NoAccCheckInOnly
-        from screens.no_acc_no_waiver import NoAccNoWaiver
-        from screens.no_acc_no_waiver_swipe import NoAccNoWaiverSwipe
-        from screens.qr_codes import QRCodes
-        from screens.user_thank import UserThank
-        from screens.user_welcome import UserWelcome
-        from screens.waiver_no_acc import WaiverNoAcc
-        from screens.waiver_no_acc_swipe import WaiverNoAccSwipe
 
         self._timeouts = {
             AccNoWaiverSwipe: 30000,
@@ -72,17 +72,14 @@ class NavigationController:
         self._window.after(ms, fn)
 
     def back_to_main(self):
-        from screens.main_page import MainPage
         self.ctx.traffic_light.set_off()
         self.show_frame(MainPage)
 
     def go_to_no_id(self):
-        from screens.check_in_no_id import CheckInNoId
         self.get_frame(CheckInNoId).clearEntries()
         self.show_frame(CheckInNoId)
 
     def go_to_manual_fill(self):
-        from screens.manual_fill import ManualFill
         self.get_frame(ManualFill).clearEntries()
         self.show_frame(ManualFill)
 

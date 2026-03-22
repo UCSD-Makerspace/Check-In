@@ -7,8 +7,6 @@ ASSETS_PATH = Path(__file__).parent.parent / "assets" / "qr_codes_assets"
 
 class QRCodes(Screen):
     def _build(self, controller):
-        from .main_page import MainPage
-
         img3 = self._photo(ASSETS_PATH / "image_3.png")
         self._image(88.0, 90.0, image=img3)
 
@@ -30,7 +28,7 @@ class QRCodes(Screen):
         btn_img = self._photo(ASSETS_PATH / "image_6.png")
         btn = Button(
             self.canvas, image=btn_img, bg="#153246",
-            command=lambda: controller.show_frame(MainPage),
+            command=lambda: controller.back_to_main(),
             relief="flat",
         )
         self._window(53.0, 55.0, btn)

@@ -1,13 +1,13 @@
 from pathlib import Path
 from tkinter import Button
 from .screen import Screen
+from .qr_codes import QRCodes
+
 ASSETS_PATH = Path(__file__).parent.parent / "assets" / "main_page_assets"
 
 
 class MainPage(Screen):
     def _build(self, controller):
-        from .qr_codes import QRCodes
-        from .check_in_no_id import CheckInNoId
 
         logo = self._photo(ASSETS_PATH / "image_3.png")
         self._image(88.0, 90.0, image=logo)

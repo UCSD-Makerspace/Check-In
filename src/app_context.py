@@ -1,40 +1,12 @@
 import threading
 
 from api.sheets import SheetManager
+from api.traffic_light_api import TrafficLightApi
 from hardware.traffic import TrafficLight
 
 
-class _TrafficProxy:
-    def __init__(self, light: TrafficLight, sheets: SheetManager):
-        self._light = light
-        self._sheets = sheets
-
-    @property
-    def connected(self) -> bool:
-        return self._light.ser is not None
-
-    def _post(self, color: str) -> None:
-        threading.Thread(
-            target=self._sheets.set_traffic_light,
-            args=(color,),
-            daemon=True,
-        ).start()
-
-    def set_red(self) -> None:
-        self._post("red")
-
-    def set_green(self) -> None:
-        self._post("green")
-
-    def set_yellow(self) -> None:
-        self._post("yellow")
-
-    def set_off(self) -> None:
-        self._post("off")
-
-
 class AppContext:
-    def __init__(self, sheets: SheetManager, traffic_light: _TrafficProxy):
+    def __init__(self, sheets: SheetManager, traffic_light: TrafficLightApi):
         self.sheets = sheets
         self.traffic_light = traffic_light
         self.window = None
@@ -58,5 +30,5 @@ class AppContext:
     def create(cls, traffic_usb_id=None) -> "AppContext":
         sheets = SheetManager()
         light = TrafficLight(traffic_usb_id)
-        proxy = _TrafficProxy(light, sheets)
-        return cls(sheets, proxy)
+        traffic = TrafficLightApi(light, sheets)
+        return cls(sheets, traffic)

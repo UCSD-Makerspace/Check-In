@@ -12,11 +12,6 @@ ASSETS_PATH = Path(__file__).parent.parent / "assets" / "check_in_no_id_assets"
 
 class CheckInNoId(Screen):
     def _build(self, controller):
-        from .no_acc_check_in_only import NoAccCheckInOnly
-        from .no_acc_no_waiver_swipe import NoAccNoWaiverSwipe
-        from .user_welcome import UserWelcome
-        from .acc_no_waiver import AccNoWaiver
-
         self.loading_text_id = None
         self.pid = StringVar()
 
