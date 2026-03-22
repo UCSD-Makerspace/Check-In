@@ -6,7 +6,7 @@ from threading import Thread
 from screens.create_account_manual import CreateAccountManual
 
 
-class CardReaderController:
+class RfidReaderController:
     def __init__(self, ctx):
         self.ctx = ctx
         self._no_wifi_shown = False

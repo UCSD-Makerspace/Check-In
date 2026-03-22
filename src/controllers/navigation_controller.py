@@ -38,7 +38,7 @@ class NavigationController:
             self._frames[F] = F(window.canvas, self)
 
         if dev_mode:
-            from screens.dev_overlay import DevOverlay
+            from screens.components.dev_overlay import DevOverlay
             self._dev_overlay = DevOverlay(window.canvas, self)
 
         self.show_frame(CheckInRFID)

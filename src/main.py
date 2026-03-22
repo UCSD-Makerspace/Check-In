@@ -3,11 +3,11 @@ from controllers.navigation_controller import NavigationController
 from controllers.swipe_controller import SwipeController
 from controllers.check_in_controller import CheckInController
 from controllers.account_controller import AccountController
-from controllers.card_reader_controller import CardReaderController
-from hardware.reader import Reader
+from controllers.rfid_reader_controller import RfidReaderController
+from hardware.rfid_reader import Reader
 from screens.create_account_manual import CreateAccountManual
 from screens.check_in_manual import CheckInManual
-from hardware.render_ports import get_usb_ids
+from hardware.usb_ports import get_usb_ids
 from app_context import AppContext
 from api.sheets import check_api_health
 import logging
@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
     sw = SwipeController(ctx)
     reader = Reader(usb.reader)
-    card_reader = CardReaderController(ctx)
+    card_reader = RfidReaderController(ctx)
     card_reader.start(reader)
 
     window.bind("<Key>", lambda i: sw.keyboard_press(i))

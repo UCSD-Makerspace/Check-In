@@ -1,7 +1,7 @@
 import threading
 
 from api.sheets import SheetManager
-from hardware.traffic import TrafficLight
+from hardware.traffic_light import TrafficLight
 
 
 class TrafficLightApi:
