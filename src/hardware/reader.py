@@ -40,7 +40,7 @@ class Reader(Thread):
             self._pn532 = None
             return False
 
-    def getSerInWaiting(self):
+    def get_ser_in_waiting(self):
         try:
             uid = self._pn532.read_passive_target(timeout=0.1)
         except Exception as e:
@@ -53,16 +53,16 @@ class Reader(Thread):
         self._pending_tag = None
         return 0
 
-    def grabRFID(self):
+    def grab_rfid(self):
         tag = self._pending_tag
         self._pending_tag = None
         logging.info("Parsed tag: " + str(tag))
         return str(tag)
 
-    def checkRFID(self, tag):
+    def check_rfid(self, tag):
         if not tag or len(tag) != expected_characters:
             return "Tag was not the expected number of chars"
         return "good"
 
-    def canScanAgain(self, lastTime):
+    def can_scan_again(self, lastTime):
         return time.time() - lastTime > 3

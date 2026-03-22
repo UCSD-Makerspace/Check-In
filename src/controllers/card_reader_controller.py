@@ -32,7 +32,7 @@ class CardReaderController:
                 continue
 
             try:
-                in_waiting = reader.getSerInWaiting()
+                in_waiting = reader.get_ser_in_waiting()
             except OSError as e:
                 if not scanner_error:
                     logging.error("Card reader disconnected, disabling until reconnection: %s", e)
@@ -54,16 +54,16 @@ class CardReaderController:
                     continue
 
                 self.ctx.nav.get_frame(ManualFill).clearEntries()
-                tag = reader.grabRFID()
+                tag = reader.grab_rfid()
 
                 if " " in tag:
                     continue
 
-                if tag == last_tag and not reader.canScanAgain(last_time):
+                if tag == last_tag and not reader.can_scan_again(last_time):
                     logging.debug("Suppressing repeat scan")
                     continue
 
-                s_reason = reader.checkRFID(tag)
+                s_reason = reader.check_rfid(tag)
 
                 if s_reason != "good":
                     logging.debug(s_reason)
