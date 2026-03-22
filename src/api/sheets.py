@@ -2,17 +2,9 @@ import logging
 import sys
 import time
 
-import requests
-
 from config import API_BASE_URL
+from api._client import _req
 
-
-def _req(method, url, **kwargs):
-    start = time.time()
-    resp = requests.request(method, url, **kwargs)
-    ms = (time.time() - start) * 1000
-    logging.info(f"[CLIENT] {method.upper()} {url} -> {resp.status_code} ({ms:.0f}ms)")
-    return resp
 
 
 def check_api_health(retries=3, delay=3):
@@ -58,7 +50,7 @@ class SheetManager:
 
     def get_traffic_light(self):
         try:
-            resp = requests.get(f"{API_BASE_URL}/traffic-light", timeout=5)
+            resp = _req("GET", f"{API_BASE_URL}/traffic-light", timeout=5)
             return resp.json().get("color", "off")
         except Exception as e:
             logging.error(f"Error getting traffic light: {e}")

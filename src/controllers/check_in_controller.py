@@ -21,7 +21,7 @@ class CheckInController:
         def update_ui():
             if status == "api_error":
                 logging.error("API error during check-in")
-                self.ctx.traffic_light.set_red()
+                self.ctx.traffic_light.request_red()
                 error_label = Label(
                     self.ctx.window.canvas,
                     text="System error, please let staff know.",
@@ -33,21 +33,21 @@ class CheckInController:
 
             if status == "no_account":
                 logging.info(f"User {tag} not found.")
-                self.ctx.traffic_light.set_red()
+                self.ctx.traffic_light.request_red()
                 self.ctx.nav.show_frame(NoAccNoWaiver)
                 self.ctx.window.after(3000, lambda: self.ctx.nav.show_frame(NoAccNoWaiverSwipe))
                 return
 
             if status == "no_waiver":
                 logging.info(f"User {tag} does not have waiver.")
-                self.ctx.traffic_light.set_yellow()
+                self.ctx.traffic_light.request_yellow()
                 self.ctx.nav.show_frame(AccNoWaiver)
                 self.ctx.window.after(3000, lambda: self.ctx.nav.show_frame(AccNoWaiverSwipe))
                 return
 
             logging.info(f"User found: {result['name']}")
-            self.ctx.traffic_light.set_green()
-            self.ctx.nav.get_frame(UserWelcome).displayName(result["name"])
+            self.ctx.traffic_light.request_green()
+            self.ctx.nav.get_frame(UserWelcome).display_name(result["name"])
 
         self.ctx.window.after(0, update_ui)
 
@@ -68,5 +68,5 @@ class CheckInController:
             return
 
         logging.info(f"Manual check-in for {result['name']}")
-        self.ctx.traffic_light.set_green()
-        self.ctx.nav.get_frame(UserWelcome).displayName(result["name"])
+        self.ctx.traffic_light.request_green()
+        self.ctx.nav.get_frame(UserWelcome).display_name(result["name"])

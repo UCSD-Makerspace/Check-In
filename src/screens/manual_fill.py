@@ -2,7 +2,6 @@ from pathlib import Path
 from tkinter import Button, Entry, StringVar, END
 from .screen import Screen
 import logging
-import timeit
 
 ASSETS_PATH = Path(__file__).parent.parent / "assets" / "manual_fill_assets"
 
@@ -13,10 +12,10 @@ ASSETS_PATH = Path(__file__).parent.parent / "assets" / "manual_fill_assets"
 
 class ManualFill(Screen):
     def _build(self, controller):
-        self.first_name = StringVar()
-        self.last_name = StringVar()
-        self.email = StringVar()
-        self.pid = StringVar()
+        self.first_name_var = StringVar()
+        self.last_name_var = StringVar()
+        self.email_var = StringVar()
+        self.pid_var = StringVar()
 
         img2 = self._photo(ASSETS_PATH / "image_2.png")
         self._image(640.0, 76.0, image=img2)
@@ -75,46 +74,37 @@ class ManualFill(Screen):
         )
         self._window(465.0, 598.0, btn, width=349, height=71)
 
-        self.first_name_entry = Entry(self.canvas, textvariable=self.first_name, width=40, font=52)
+        self.first_name_entry = Entry(self.canvas, textvariable=self.first_name_var, width=40, font=52)
         self._window(420.0, 227.0, self.first_name_entry)
 
-        self.last_name_entry = Entry(self.canvas, textvariable=self.last_name, width=40, font=52)
+        self.last_name_entry = Entry(self.canvas, textvariable=self.last_name_var, width=40, font=52)
         self._window(420.0, 327.0, self.last_name_entry)
 
-        self.email_entry = Entry(self.canvas, textvariable=self.email, width=40, font=52)
+        self.email_entry = Entry(self.canvas, textvariable=self.email_var, width=40, font=52)
         self._window(420.0, 428.0, self.email_entry)
 
-        self.pid_entry = Entry(self.canvas, textvariable=self.pid, width=40, font=52)
+        self.pid_entry = Entry(self.canvas, textvariable=self.pid_var, width=40, font=52)
         self._window(420.0, 530.0, self.pid_entry)
 
-    def getEntries(self):
-        return [
-            self.first_name.get(),
-            self.last_name.get(),
-            self.email.get(),
-            self.pid.get(),
-        ]
-
-    def clearEntries(self):
+    def clear_entries(self):
         self.first_name_entry.delete(0, END)
         self.last_name_entry.delete(0, END)
         self.email_entry.delete(0, END)
         self.pid_entry.delete(0, END)
 
-    def updateEntries(self, fname, lname, email, pid):
+    def update_entries(self, fname, lname, email, pid):
         self.first_name_entry.insert(0, fname)
         self.last_name_entry.insert(0, lname)
         self.email_entry.insert(0, email)
         self.pid_entry.insert(0, pid)
 
     def _call_account_creation(self):
-        data = self.getEntries()
-        self.clearEntries()
+        first_name, last_name, email, pid = (
+            self.first_name_var.get(), self.last_name_var.get(),
+            self.email_var.get(), self.pid_var.get(),
+        )
+        self.clear_entries()
         try:
-            delay = timeit.timeit(
-                lambda: self.controller.ctx.account.create_account(data[0], data[1], data[2], data[3]),
-                number=1,
-            )
-            logging.debug(f"Time to create account: {delay}")
+            self.controller.ctx.account.create_account(first_name, last_name, email, pid)
         except Exception:
             logging.warning("Error occurred trying to create a user account", exc_info=True)

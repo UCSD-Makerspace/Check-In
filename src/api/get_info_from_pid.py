@@ -1,27 +1,28 @@
 import logging
-import time
-
-import requests
+from dataclasses import dataclass
 
 from config import API_BASE_URL
+from api._client import _req
 
 
-def _req(method, url, **kwargs):
-    start = time.time()
-    resp = requests.request(method, url, **kwargs)
-    ms = (time.time() - start) * 1000
-    logging.info(f"[CLIENT] {method.upper()} {url} -> {resp.status_code} ({ms:.0f}ms)")
-    return resp
+@dataclass
+class StudentInfo:
+    first_name: str
+    last_name: str
+    emails: list
+    pid: str
+    first_enr_term: str
+    last_enr_term: str
 
 
-class contact_client:
+class ContactClient:
     def get_student_info(self, barcode):
         try:
             resp = _req("GET", f"{API_BASE_URL}/students/barcode/{barcode}", timeout=5)
             if not resp.ok:
                 return False
             d = resp.json()
-            return [d["first_name"], d["last_name"], d["emails"], d["pid"], d["first_enr_term"], d["last_enr_term"]]
+            return StudentInfo(d["first_name"], d["last_name"], d["emails"], d["pid"], d["first_enr_term"], d["last_enr_term"])
         except Exception as e:
             logging.error(f"Error fetching student by barcode: {e}")
             return False
@@ -32,7 +33,7 @@ class contact_client:
             if not resp.ok:
                 return False
             d = resp.json()
-            return [d["first_name"], d["last_name"], d["emails"], d["pid"], d["first_enr_term"], d["last_enr_term"]]
+            return StudentInfo(d["first_name"], d["last_name"], d["emails"], d["pid"], d["first_enr_term"], d["last_enr_term"])
         except Exception as e:
             logging.error(f"Error fetching student by pid: {e}")
             return False

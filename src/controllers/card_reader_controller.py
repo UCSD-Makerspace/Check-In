@@ -53,7 +53,7 @@ class CardReaderController:
                         no_wifi.after(4000, lambda: self._destroy_wifi_error(no_wifi))
                     continue
 
-                self.ctx.nav.get_frame(ManualFill).clearEntries()
+                self.ctx.nav.get_frame(ManualFill).clear_entries()
                 tag = reader.grab_rfid()
 
                 if " " in tag:
@@ -79,20 +79,12 @@ class CardReaderController:
 
     def _poll_traffic_light(self):
         last_color = None
-        light = self.ctx.traffic_light._light
         while True:
             time.sleep(0.1)
             color = self.ctx.sheets.get_traffic_light()
             if color != last_color:
                 last_color = color
-                if color == "red":
-                    light.set_red()
-                elif color == "green":
-                    light.set_green()
-                elif color == "yellow":
-                    light.set_yellow()
-                else:
-                    light.set_off()
+                self.ctx.traffic_light.drive(color)
 
     def _is_connected(self, host="8.8.8.8", port=53, timeout=3):
         try:

@@ -15,10 +15,10 @@ import argparse
 from sys import stdout
 
 
-def clearAndReturn(ctx: AppContext):
+def clear_and_return(ctx: AppContext):
     ctx.nav.back_to_main()
-    ctx.nav.get_frame(ManualFill).clearEntries()
-    ctx.nav.get_frame(CheckInNoId).clearEntries()
+    ctx.nav.get_frame(ManualFill).clear_entries()
+    ctx.nav.get_frame(CheckInNoId).clear_entries()
 
 
 if __name__ == "__main__":
@@ -34,23 +34,23 @@ if __name__ == "__main__":
     else:
         logging.basicConfig(level=logging.INFO)
 
-    reader_usb_id, traffic_usb_id = get_usb_ids()
+    usb = get_usb_ids()
     check_api_health()
-    ctx = AppContext.create(traffic_usb_id)
+    ctx = AppContext.create(usb.traffic_light)
     window = CheckInWindow()
     nav = NavigationController(window, ctx)
     ctx.window = window
     ctx.nav = nav
     ctx.check_in = CheckInController(ctx)
     ctx.account = AccountController(ctx)
-    ctx.traffic_light.set_off()
+    ctx.traffic_light.request_off()
 
     sw = SwipeController(ctx)
-    reader = Reader(reader_usb_id)
+    reader = Reader(usb.reader)
     card_reader = CardReaderController(ctx)
     card_reader.start(reader)
 
-    window.bind("<Key>", lambda i: sw.keyboardPress(i))
-    window.bind("<Escape>", lambda i: clearAndReturn(ctx))
+    window.bind("<Key>", lambda i: sw.keyboard_press(i))
+    window.bind("<Escape>", lambda i: clear_and_return(ctx))
     logging.info("Made it to app start")
     window.start()

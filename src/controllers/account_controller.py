@@ -100,16 +100,16 @@ class AccountController:
         end5 = time.perf_counter()
         logging.debug(f"Time to check waiver via check-in: {end5 - end4}")
 
-        self.ctx.nav.get_frame(UserThank).displayName(full_name, toGoTo)
+        self.ctx.nav.get_frame(UserThank).display_name(full_name, toGoTo)
         inProgress.destroy()
 
     def on_thank_start(self, next_page):
         if next_page == MainPage:
-            self.ctx.traffic_light.set_green()
+            self.ctx.traffic_light.request_green()
         else:
-            self.ctx.traffic_light.set_yellow()
+            self.ctx.traffic_light.request_yellow()
 
     def on_thank_done(self, next_page):
         self.ctx.nav.show_frame(next_page)
         if next_page == MainPage:
-            self.ctx.traffic_light.set_off()
+            self.ctx.traffic_light.request_off()

@@ -19,7 +19,7 @@ class UserWelcome(Screen):
         self.last_name = None
         self.offset = 0
 
-    def displayName(self, name):
+    def display_name(self, name):
         if name == self.last_name:
             return
 

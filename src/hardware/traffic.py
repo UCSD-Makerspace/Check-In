@@ -11,6 +11,10 @@ class TrafficLight:
             self.ser = serial.Serial(addr, baud)
             self.ser.reset_input_buffer()
 
+    @property
+    def connected(self) -> bool:
+        return self.ser is not None
+
     def set_off(self):
         if self.ser:
             self.ser.write(b"off\n")

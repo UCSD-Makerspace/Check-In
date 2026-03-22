@@ -11,7 +11,18 @@ class TrafficLightApi:
 
     @property
     def connected(self) -> bool:
-        return self._light.ser is not None
+        return self._light.connected
+
+    def drive(self, color: str) -> None:
+        """Directly set the physical traffic light without posting to the API."""
+        if color == "red":
+            self._light.set_red()
+        elif color == "green":
+            self._light.set_green()
+        elif color == "yellow":
+            self._light.set_yellow()
+        else:
+            self._light.set_off()
 
     def _post(self, color: str) -> None:
         threading.Thread(
@@ -20,14 +31,14 @@ class TrafficLightApi:
             daemon=True,
         ).start()
 
-    def set_red(self) -> None:
+    def request_red(self) -> None:
         self._post("red")
 
-    def set_green(self) -> None:
+    def request_green(self) -> None:
         self._post("green")
 
-    def set_yellow(self) -> None:
+    def request_yellow(self) -> None:
         self._post("yellow")
 
-    def set_off(self) -> None:
+    def request_off(self) -> None:
         self._post("off")

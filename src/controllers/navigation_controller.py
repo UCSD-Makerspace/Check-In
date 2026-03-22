@@ -72,15 +72,15 @@ class NavigationController:
         self._window.after(ms, fn)
 
     def back_to_main(self):
-        self.ctx.traffic_light.set_off()
+        self.ctx.traffic_light.request_off()
         self.show_frame(MainPage)
 
     def go_to_no_id(self):
-        self.get_frame(CheckInNoId).clearEntries()
+        self.get_frame(CheckInNoId).clear_entries()
         self.show_frame(CheckInNoId)
 
     def go_to_manual_fill(self):
-        self.get_frame(ManualFill).clearEntries()
+        self.get_frame(ManualFill).clear_entries()
         self.show_frame(ManualFill)
 
     def _on_timeout(self, uid):

@@ -42,7 +42,7 @@ class CheckInNoId(Screen):
         self.pid_entry = Entry(self.canvas, textvariable=self.pid, width=40, font=52)
         self._window(420.0, 412.0, self.pid_entry)
 
-    def displayLoading(self):
+    def display_loading(self):
         if self.loading_text_id is None:
             self.loading_text_id = self.canvas.create_text(
                 420.0, 545.0, anchor="nw",
@@ -50,10 +50,10 @@ class CheckInNoId(Screen):
                 fill="#FF0000", font=("Montserrat", 36 * -1, "bold"), justify="center",
             )
 
-    def clearEntries(self):
+    def clear_entries(self):
         self.pid_entry.delete(0, END)
 
-    def updateEntries(self, pid):
+    def update_entries(self, pid):
         self.pid_entry.insert(0, pid)
 
     def _call_check_in(self, controller):
@@ -61,9 +61,9 @@ class CheckInNoId(Screen):
         if not pid:
             return
 
-        self.displayLoading()
+        self.display_loading()
         self.canvas.update_idletasks()
-        self.clearEntries()
+        self.clear_entries()
 
         self.controller.ctx.check_in.handle_by_pid(pid)
 

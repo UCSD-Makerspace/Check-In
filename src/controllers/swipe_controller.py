@@ -4,7 +4,7 @@ from screens.manual_fill import ManualFill
 from screens.no_acc_no_waiver_swipe import NoAccNoWaiverSwipe
 from screens.waiver_no_acc_swipe import WaiverNoAccSwipe
 from screens.check_in_no_id import CheckInNoId
-from api.get_info_from_pid import contact_client
+from api.get_info_from_pid import ContactClient
 
 
 class SwipeController:
@@ -20,7 +20,7 @@ class SwipeController:
             return "bad"
         return "good"
 
-    def keyboardPress(self, key):
+    def keyboard_press(self, key):
         curr_frame = self.ctx.nav.get_curr_frame()
 
         if curr_frame not in (NoAccNoWaiverSwipe, WaiverNoAccSwipe, CheckInNoId):
@@ -39,16 +39,16 @@ class SwipeController:
                         bg="#153246", fg="white", font=("Arial", 20),
                     )
                     id_error.place(relx=0.5, rely=0.85, anchor="center")
-                    id_error.after(1500, lambda: self._destroySwipeError(id_error))
+                    id_error.after(1500, lambda: self._destroy_swipe_error(id_error))
                 return
 
-            self._swipeCard(self._id_string)
+            self._swipe_card(self._id_string)
             self._id_string = ""
 
-    def _pullUser(self, barcode, u_type):
+    def _pull_user(self, barcode, u_type):
         logging.info(f"Card barcode read is: {barcode}. Trying to pull user...")
 
-        contact = contact_client()
+        contact = ContactClient()
         try:
             if u_type == "Staff":
                 u_info = contact.get_staff_info(barcode)
@@ -62,32 +62,32 @@ class SwipeController:
             logging.info("Student search returned False, returning...")
             return None
 
-        logging.info(f"Info pull succeeded:\n {u_info[0]}, {u_info[1]}, {u_info[3]}")
+        logging.info(f"Info pull succeeded:\n {u_info.first_name}, {u_info.last_name}, {u_info.pid}")
         return u_info
 
-    def _swipeCard(self, id_string):
-        u_data = self._pullUser(id_string.strip(), "Student")
+    def _swipe_card(self, id_string):
+        u_data = self._pull_user(id_string.strip(), "Student")
         if not u_data:
             logging.info("Student search returned False, returning...")
             return
 
         if self.ctx.nav.get_curr_frame() == CheckInNoId:
-            self.ctx.nav.get_frame(CheckInNoId).clearEntries()
-            self.ctx.nav.get_frame(CheckInNoId).updateEntries(u_data[3])
+            self.ctx.nav.get_frame(CheckInNoId).clear_entries()
+            self.ctx.nav.get_frame(CheckInNoId).update_entries(u_data.pid)
             return
 
-        email_to_use = "" if len(u_data[2]) == 0 else u_data[2][0]
-        for email in u_data[2]:
+        email_to_use = "" if len(u_data.emails) == 0 else u_data.emails[0]
+        for email in u_data.emails:
             if email.endswith("@ucsd.edu"):
                 email_to_use = email
 
         manfill = self.ctx.nav.get_frame(ManualFill)
-        manfill.clearEntries()
-        logging.info(f"Filling data with {u_data[0]} {u_data[1]} {email_to_use} {u_data[3]}")
-        manfill.updateEntries(u_data[0], u_data[1], email_to_use, u_data[3])
+        manfill.clear_entries()
+        logging.info(f"Filling data with {u_data.first_name} {u_data.last_name} {email_to_use} {u_data.pid}")
+        manfill.update_entries(u_data.first_name, u_data.last_name, email_to_use, u_data.pid)
 
         self.ctx.nav.show_frame(ManualFill)
 
-    def _destroySwipeError(self, id_error):
+    def _destroy_swipe_error(self, id_error):
         id_error.destroy()
         self._swipe_error_shown = False

@@ -18,7 +18,7 @@ class UserThank(Screen):
         super().hide()
         self.canvas.delete("thank")
 
-    def displayName(self, name, nextPage):
+    def display_name(self, name, nextPage):
         self.controller.show_frame(UserThank)
         self.controller.ctx.account.on_thank_start(nextPage)
 
