@@ -29,7 +29,7 @@ jobs:
         run: |
           if [ "${{ github.ref_name }}" = "dev" ]; then
             echo "name=check-in-dev" >> $GITHUB_OUTPUT
-            echo "extra_tag=ghcr.io/${{ steps.lowercase.outputs.owner }}/check-in-dev:dev" >> $GITHUB_OUTPUT
+            echo "extra_tag=ghcr.io/${{ steps.lowercase.outputs.owner }}/check-in-dev:latest" >> $GITHUB_OUTPUT
           else
             echo "name=check-in" >> $GITHUB_OUTPUT
             echo "extra_tag=ghcr.io/${{ steps.lowercase.outputs.owner }}/check-in:latest" >> $GITHUB_OUTPUT
