@@ -25,7 +25,7 @@ class UserWelcome(Screen):
 
         self._msg_label = QLabel("Welcome back")
         self._msg_label.setStyleSheet(
-            "color: #F5F0E6; font: 42pt Montserrat;"
+            "color: #F5F0E6; font: 38pt Montserrat;"
             "background: transparent; border: none;"
         )
         self._msg_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
@@ -59,7 +59,7 @@ class UserWelcome(Screen):
 
         label = QLabel(name)
         label.setStyleSheet(
-            "color: #F5F0E6; font: bold 88pt Montserrat;"
+            "color: #F5F0E6; font: bold 70pt Montserrat;"
             "background: transparent; border: none;"
         )
         label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
