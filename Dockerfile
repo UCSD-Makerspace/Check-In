@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y \
     libxkbcommon0 \
     libgl1 \
     libdbus-1-3 \
+    libxcb-cursor0 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
