@@ -3,6 +3,7 @@ FROM python:3.13
 RUN apt-get update && apt-get install -y \
     libegl1 \
     libxkbcommon0 \
+    libgl1 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
