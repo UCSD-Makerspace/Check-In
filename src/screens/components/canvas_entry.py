@@ -28,6 +28,8 @@ class CanvasEntry:
         return [self._hit_id, self._text_id]
 
     def _on_click(self, event=None):
+        if getattr(self, '_readonly', False):
+            return
         global _focused
         if _focused and _focused is not self:
             _focused._blur()
@@ -61,6 +63,11 @@ class CanvasEntry:
 
     def insert(self, index, text):
         self.canvas.insert(self._text_id, index, text)
+
+    def set_readonly(self, readonly: bool):
+        self._readonly = readonly
+        color = "#C8C0B0" if readonly else "#F5F0E6"
+        self.canvas.itemconfigure(self._text_id, fill=color)
 
 
 def _dispatch_key(event):

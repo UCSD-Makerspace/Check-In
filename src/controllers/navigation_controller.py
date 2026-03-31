@@ -4,6 +4,8 @@ from screens.check_in_rfid import CheckInRFID
 from screens.transition_screen import TransitionScreen
 from screens.create_account_barcode import CreateAccountBarcode
 from screens.create_account_manual import CreateAccountManual
+from screens.create_account_no_pid import CreateAccountNoPid
+from screens.create_account_review import CreateAccountReview
 from screens.sign_waiver import SignWaiver
 from screens.check_in_manual import CheckInManual
 from screens.qr_codes import QRCodes
@@ -30,6 +32,8 @@ class NavigationController:
             TransitionScreen,
             CreateAccountBarcode,
             CreateAccountManual,
+            CreateAccountNoPid,
+            CreateAccountReview,
             SignWaiver,
             CheckInManual,
             QRCodes,
@@ -107,6 +111,21 @@ class NavigationController:
     def go_to_create_account_manual(self):
         self.get_frame(CreateAccountManual).clear_entries()
         self.show_frame(CreateAccountManual)
+
+    def go_to_create_account_no_pid(self):
+        self.get_frame(CreateAccountNoPid).clear_entries()
+        self.show_frame(CreateAccountNoPid)
+
+    def go_to_create_account_review(self, pid="", first_name="", last_name="", email=""):
+        pid_locked = bool(pid)
+        self.get_frame(CreateAccountReview).setup(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            pid=pid,
+            pid_locked=pid_locked,
+        )
+        self.show_frame(CreateAccountReview)
 
     def go_to_create_account(self, on_done):
         self.get_frame(TransitionScreen).display(

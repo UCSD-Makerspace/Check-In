@@ -4,10 +4,11 @@ on:
   push:
     branches:
       - main
+      - dev
   workflow_dispatch:
 
 concurrency:
-  group: production_environment
+  group: ${{ github.ref_name }}_environment
   cancel-in-progress: true
 
 jobs:
@@ -22,6 +23,17 @@ jobs:
       - name: Set lowercase repository owner
         id: lowercase
         run: echo "owner=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+
+      - name: Set image name
+        id: image
+        run: |
+          if [ "${{ github.ref_name }}" = "dev" ]; then
+            echo "name=check-in-dev" >> $GITHUB_OUTPUT
+            echo "extra_tag=ghcr.io/${{ steps.lowercase.outputs.owner }}/check-in-dev:dev" >> $GITHUB_OUTPUT
+          else
+            echo "name=check-in" >> $GITHUB_OUTPUT
+            echo "extra_tag=ghcr.io/${{ steps.lowercase.outputs.owner }}/check-in:latest" >> $GITHUB_OUTPUT
+          fi
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -39,5 +51,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ steps.lowercase.outputs.owner }}/check-in:${{ github.sha }}
-            ghcr.io/${{ steps.lowercase.outputs.owner }}/check-in:latest
+            ghcr.io/${{ steps.lowercase.outputs.owner }}/${{ steps.image.outputs.name }}:${{ github.sha }}
+            ${{ steps.image.outputs.extra_tag }}

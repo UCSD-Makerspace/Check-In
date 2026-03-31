@@ -1,11 +1,14 @@
 from window import CheckInWindow
 from controllers.navigation_controller import NavigationController
-from controllers.swipe_controller import SwipeController
+from controllers.barcode_scanner_controller import BarcodeScannerController
+from hardware.barcode_scanner import BarcodeScanner
 from controllers.check_in_controller import CheckInController
 from controllers.account_controller import AccountController
 from controllers.rfid_reader_controller import RfidReaderController
 from hardware.rfid_reader import Reader
 from screens.create_account_manual import CreateAccountManual
+from screens.create_account_no_pid import CreateAccountNoPid
+from screens.create_account_review import CreateAccountReview
 from screens.check_in_manual import CheckInManual
 from hardware.usb_ports import get_usb_ids
 from app_context import AppContext
@@ -18,6 +21,8 @@ from sys import stdout
 def clear_and_return(ctx: AppContext):
     ctx.nav.back_to_main()
     ctx.nav.get_frame(CreateAccountManual).clear_entries()
+    ctx.nav.get_frame(CreateAccountNoPid).clear_entries()
+    ctx.nav.get_frame(CreateAccountReview).clear_entries()
     ctx.nav.get_frame(CheckInManual).clear_entries()
 
 
@@ -49,12 +54,17 @@ if __name__ == "__main__":
     ctx.account = AccountController(ctx)
     ctx.traffic_light.request_off()
 
-    sw = SwipeController(ctx)
     reader = Reader(usb.reader)
     card_reader = RfidReaderController(ctx)
     card_reader.start(reader)
 
-    window.bind("<Key>", lambda i: sw.keyboard_press(i))
+    if usb.barcode:
+        barcode_scanner = BarcodeScanner(usb.barcode)
+        barcode_controller = BarcodeScannerController(ctx)
+        barcode_controller.start(barcode_scanner)
+    else:
+        logging.warning("No barcode scanner found, barcode scanning disabled")
+
     window.bind("<Escape>", lambda i: clear_and_return(ctx))
     logging.info("Made it to app start")
     window.start()

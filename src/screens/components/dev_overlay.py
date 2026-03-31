@@ -3,6 +3,8 @@ import tkinter as tk
 from screens.check_in_rfid import CheckInRFID
 from screens.create_account_barcode import CreateAccountBarcode
 from screens.create_account_manual import CreateAccountManual
+from screens.create_account_no_pid import CreateAccountNoPid
+from screens.create_account_review import CreateAccountReview
 from screens.sign_waiver import SignWaiver
 from screens.check_in_manual import CheckInManual
 from screens.qr_codes import QRCodes
@@ -60,6 +62,15 @@ TRANSITIONS = {
         ("← Main",                            lambda nav: nav.back_to_main()),
     ],
     CreateAccountManual: [
+        ("→ review (pid lookup)",             lambda nav: nav.ctx.account.go_to_review_from_pid(_DEV_PID)),
+        ("→ no-pid screen",                   lambda nav: nav.go_to_create_account_no_pid()),
+        ("← Main",                            lambda nav: nav.back_to_main()),
+    ],
+    CreateAccountNoPid: [
+        ("submit",                            lambda nav: nav.pop()),
+        ("← Main",                            lambda nav: nav.back_to_main()),
+    ],
+    CreateAccountReview: [
         ("submit",                            lambda nav: nav.pop()),
         ("← Main",                            lambda nav: nav.back_to_main()),
     ],

@@ -56,13 +56,43 @@ class ApiClient:
             logging.error(f"Error getting traffic light: {e}")
             return "off"
 
-    def create_account(self, rfid, *, barcode=None, pid=None):
+    def lookup_by_pid(self, pid):
+        """Returns dict with first_name/last_name/email/pid, or None if not found."""
+        try:
+            resp = _req("GET", f"{API_BASE_URL}/accounts/lookup/pid/{pid}", timeout=10)
+            if resp.status_code == 404:
+                return None
+            resp.raise_for_status()
+            return resp.json()
+        except Exception as e:
+            logging.error(f"Error looking up student by pid {pid}: {e}")
+            return None
+
+    def lookup_by_barcode(self, barcode):
+        """Returns dict with first_name/last_name/email/pid, or None if not found."""
+        try:
+            resp = _req("GET", f"{API_BASE_URL}/accounts/lookup/barcode/{barcode}", timeout=10)
+            if resp.status_code == 404:
+                return None
+            resp.raise_for_status()
+            return resp.json()
+        except Exception as e:
+            logging.error(f"Error looking up student by barcode: {e}")
+            return None
+
+    def create_account(self, rfid, *, barcode=None, pid=None, first_name=None, last_name=None, email=None):
         try:
             payload = {"rfid": rfid}
             if barcode:
                 payload["barcode"] = barcode
             if pid:
                 payload["pid"] = pid
+            if first_name:
+                payload["first_name"] = first_name
+            if last_name:
+                payload["last_name"] = last_name
+            if email:
+                payload["email"] = email
             resp = _req("POST", f"{API_BASE_URL}/accounts", json=payload, timeout=30)
             resp.raise_for_status()
             return resp.json()

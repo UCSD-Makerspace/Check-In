@@ -1,5 +1,5 @@
 from pathlib import Path
-from tkinter import Button, Canvas, END
+from tkinter import Button, END
 from .base import Screen
 from .components.canvas_entry import CanvasEntry
 import logging
@@ -8,7 +8,7 @@ ASSETS_PATH = Path(__file__).parent.parent / "assets" / "create_account_manual"
 SHARED_PATH = Path(__file__).parent.parent / "assets" / "shared"
 
 
-class CreateAccountManual(Screen):
+class CreateAccountNoPid(Screen):
     def _build(self, controller):
         logo = self._photo(SHARED_PATH / "button_generic.png")
         self._image(88.0, 90.0, image=logo)
@@ -32,7 +32,9 @@ class CreateAccountManual(Screen):
         self._image(1010.0, 77.0, image=icon_unchecked)
 
         field_img = self._photo(SHARED_PATH / "field.png")
+        self._image(640.0, 289.0, image=field_img)
         self._image(640.0, 390.0, image=field_img)
+        self._image(640.0, 490.0, image=field_img)
 
         self._text(
             250.0, 45.0, anchor="nw",
@@ -43,37 +45,46 @@ class CreateAccountManual(Screen):
             text="Waiver Status:", fill="#F5F0E6", font=("Montserrat", 40 * -1),
         )
         self._text(
-            640.0, 340.0, anchor="center",
-            text="PID", fill="#F5F0E6", font=("Montserrat", 24 * -1),
+            640.0, 240.0, anchor="center",
+            text="First Name", fill="#F5F0E6", font=("Montserrat", 24 * -1),
+        )
+        self._text(
+            640.0, 341.0, anchor="center",
+            text="Last Name", fill="#F5F0E6", font=("Montserrat", 24 * -1),
+        )
+        self._text(
+            640.0, 441.0, anchor="center",
+            text="Email", fill="#F5F0E6", font=("Montserrat", 24 * -1),
         )
 
         btn_img = self._photo(ASSETS_PATH / "register.png")
         btn = Button(
             self.canvas, image=btn_img,
             borderwidth=0, highlightthickness=0,
-            command=self._go_to_review, relief="flat",
+            command=self._submit, relief="flat",
         )
-        self._window(465.0, 460.0, btn, width=349, height=71)
+        self._window(465.0, 545.0, btn, width=349, height=71)
 
-        no_pid_btn = self._rounded_button(
-            text="I don't have a PID →",
-            w=349, h=80, r=20,
-            bg="#F5F0E6", fg="#4EBEEE",
-            font=("Montserrat", 20),
-            command=lambda: controller.go_to_create_account_no_pid(),
-        )
-        self._window(465.0, 545.0, no_pid_btn, width=349, height=80)
-
-        self.pid_entry = self._canvas_entry(640.0, 390.0, w=800, h=44, font=("Montserrat", 20))
+        self.first_name_entry = self._canvas_entry(640.0, 289.0, w=800, h=44, font=("Montserrat", 20))
+        self.last_name_entry  = self._canvas_entry(640.0, 390.0, w=800, h=44, font=("Montserrat", 20))
+        self.email_entry      = self._canvas_entry(640.0, 490.0, w=800, h=44, font=("Montserrat", 20))
 
     def hide(self):
         CanvasEntry.blur_all()
         super().hide()
 
     def clear_entries(self):
-        self.pid_entry.delete(0, END)
+        for entry in (self.first_name_entry, self.last_name_entry, self.email_entry):
+            entry.delete(0, END)
 
-    def _go_to_review(self):
-        pid = self.pid_entry.get().strip()
+    def _submit(self):
+        first = self.first_name_entry.get().strip()
+        last  = self.last_name_entry.get().strip()
+        email = self.email_entry.get().strip()
         self.clear_entries()
-        self.controller.ctx.account.go_to_review_from_pid(pid)
+        try:
+            self.controller.ctx.account.create_account_from_review(
+                first_name=first, last_name=last, email=email, pid=""
+            )
+        except Exception:
+            logging.warning("Error occurred trying to create a user account", exc_info=True)
