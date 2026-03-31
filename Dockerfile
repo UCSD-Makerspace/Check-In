@@ -4,6 +4,7 @@ RUN apt-get update && apt-get install -y \
     libegl1 \
     libxkbcommon0 \
     libgl1 \
+    libdbus-1-3 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
