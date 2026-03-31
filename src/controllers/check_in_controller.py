@@ -1,5 +1,6 @@
 import logging
-from tkinter import Label
+
+from PyQt6.QtCore import QTimer
 
 from screens.user_welcome import UserWelcome
 
@@ -9,12 +10,13 @@ class CheckInController:
         self.ctx = ctx
 
     def handle_by_uuid(self, tag):
-        # Called from background thread — defer to main thread.
-        self.ctx.window.after(
-            0, lambda: self._run_check_in(tag, self.ctx.sheets.checkin_by_uuid)
+        # Called from background thread — dispatch to main thread via signal.
+        self.ctx.dispatcher.call.emit(
+            lambda: self._run_check_in(tag, self.ctx.sheets.checkin_by_uuid)
         )
 
     def handle_by_pid(self, pid):
+        # Called on main thread (button click or barcode dispatcher).
         self._run_check_in(pid, self.ctx.sheets.checkin_by_pid)
 
     def _run_check_in(self, identifier, check_fn, welcome_message="Welcome back"):
@@ -24,13 +26,8 @@ class CheckInController:
         if status == "api_error":
             logging.error("API error during check-in")
             self.ctx.traffic_light.request_red()
-            error_label = Label(
-                self.ctx.window.canvas,
-                text="System error, please let staff know.",
-                bg="#153246", fg="white", font=("Arial", 25),
-            )
-            error_label.place(relx=0.5, rely=0.1, anchor="center")
-            error_label.after(4000, error_label.destroy)
+            self.ctx.nav.show_status("System error, please let staff know.")
+            QTimer.singleShot(4000, self.ctx.nav.hide_status)
             return
 
         if status == "no_account":

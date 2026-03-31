@@ -1,5 +1,8 @@
 import uuid
 
+from PyQt6.QtCore import QTimer, Qt
+from PyQt6.QtWidgets import QLabel
+
 from screens.check_in_rfid import CheckInRFID
 from screens.transition_screen import TransitionScreen
 from screens.create_account_barcode import CreateAccountBarcode
@@ -16,6 +19,7 @@ class NavigationController:
     def __init__(self, window, ctx, dev_mode=False):
         self.ctx = ctx
         self._window = window
+        self._stacked = window.stacked
         self._frames = {}
         self._curr = None
         self._frame_uuid = uuid.uuid4().hex
@@ -39,11 +43,27 @@ class NavigationController:
             QRCodes,
             UserWelcome,
         ):
-            self._frames[F] = F(window.canvas, self)
+            frame = F(self)
+            self._frames[F] = frame
+            self._stacked.addWidget(frame)
+
+        # Status overlay — floats over the stacked widget at the bottom
+        self._status_label = QLabel("", window.central)
+        self._status_label.setGeometry(40, 628, 1200, 56)
+        self._status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self._status_label.setStyleSheet(
+            "color: #F5F0E6;"
+            "font: bold 18pt Montserrat;"
+            "background-color: rgba(0, 0, 0, 170);"
+            "border-radius: 10px;"
+            "border: none;"
+        )
+        self._status_label.hide()
+        self._status_label.raise_()
 
         if dev_mode:
             from screens.components.dev_overlay import DevOverlay
-            self._dev_overlay = DevOverlay(window.canvas, self)
+            self._dev_overlay = DevOverlay(window, self)
 
         self.show_frame(CheckInRFID)
 
@@ -53,17 +73,18 @@ class NavigationController:
 
     def show_frame(self, screen_class):
         if self._curr is not None:
-            self._frames[self._curr].hide()
+            self._frames[self._curr].on_hide()
         self._curr = screen_class
         self._frame_uuid = uuid.uuid4().hex
-        self._frames[screen_class].show()
+        self._stacked.setCurrentWidget(self._frames[screen_class])
+        self._frames[screen_class].on_show()
 
         if self._dev_overlay is not None:
             self._dev_overlay.update(screen_class)
 
         if screen_class in self._timeouts:
             uid = self._frame_uuid
-            self._window.after(
+            QTimer.singleShot(
                 self._timeouts[screen_class],
                 lambda: self._on_timeout(uid),
             )
@@ -75,19 +96,29 @@ class NavigationController:
         return self._curr
 
     def after(self, ms, fn):
-        self._window.after(ms, fn)
+        QTimer.singleShot(ms, fn)
+
+    # ------------------------------------------------------------------
+    # Status overlay
+    # ------------------------------------------------------------------
+
+    def show_status(self, text):
+        self._status_label.setText(text)
+        self._status_label.show()
+        self._status_label.raise_()
+
+    def hide_status(self):
+        self._status_label.hide()
 
     # ------------------------------------------------------------------
     # Stack-based flow
     # ------------------------------------------------------------------
 
     def push(self, screen_class, on_done=None):
-        """Show screen_class and register a continuation to run when pop() is called."""
         self._on_done_stack.append(on_done)
         self.show_frame(screen_class)
 
     def pop(self):
-        """Signal that the current screen is done; run the stored continuation."""
         cb = self._on_done_stack.pop() if self._on_done_stack else None
         if cb:
             cb()
@@ -131,13 +162,13 @@ class NavigationController:
         self.get_frame(TransitionScreen).display(
             "Looks like you don't have an account,\nlet's set one up!"
         )
-        self._window.after(3000, lambda: self.push(CreateAccountBarcode, on_done=on_done))
+        QTimer.singleShot(3000, lambda: self.push(CreateAccountBarcode, on_done=on_done))
 
     def go_to_sign_waiver(self):
         self.get_frame(TransitionScreen).display(
             "Looks like you haven't signed\nthe waiver yet,\nlet's fix that!"
         )
-        self._window.after(3000, lambda: self.show_frame(SignWaiver))
+        QTimer.singleShot(3000, lambda: self.show_frame(SignWaiver))
 
     # ------------------------------------------------------------------
     # Internal

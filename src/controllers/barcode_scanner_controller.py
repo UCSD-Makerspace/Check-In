@@ -47,9 +47,13 @@ class BarcodeScannerController:
                 curr_frame = self.ctx.nav.get_curr_frame()
 
                 if curr_frame == CheckInManual:
-                    self.ctx.window.after(0, lambda b=barcode: self.ctx.check_in.handle_by_pid(b))
+                    self.ctx.dispatcher.call.emit(
+                        lambda b=barcode: self.ctx.check_in.handle_by_pid(b)
+                    )
                 elif curr_frame in (CreateAccountBarcode, CreateAccountManual):
-                    self.ctx.window.after(0, lambda b=barcode: self.ctx.account.go_to_review_from_barcode(b))
+                    self.ctx.dispatcher.call.emit(
+                        lambda b=barcode: self.ctx.account.go_to_review_from_barcode(b)
+                    )
                 else:
                     logging.debug("Barcode scanned on unhandled screen: %s", curr_frame)
         except Exception as e:

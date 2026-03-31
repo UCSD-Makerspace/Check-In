@@ -1,38 +1,67 @@
-import tkinter as tk
 from pathlib import Path
+from PyQt6.QtWidgets import QMainWindow, QWidget, QStackedWidget
+from PyQt6.QtGui import QFontDatabase, QPainter, QPixmap, QColor
+from PyQt6.QtCore import QTimer, Qt
 
 ASSETS_PATH = Path(__file__).parent / "assets" / "shared"
 
 
-class CheckInWindow(tk.Tk):
+class _RootWidget(QWidget):
+    """Central widget that paints background_main.png centered on the dark base color."""
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        bg_path = ASSETS_PATH / "background_main.png"
+        self._bg = QPixmap(str(bg_path)) if bg_path.exists() else QPixmap()
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        # Dark base fill
+        painter.fillRect(self.rect(), QColor("#153246"))
+        # Background image centered
+        if not self._bg.isNull():
+            x = (self.width() - self._bg.width()) // 2
+            y = (self.height() - self._bg.height()) // 2
+            painter.drawPixmap(x, y, self._bg)
+
+
+class CheckInWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.title("Check-In")
-        self.geometry("1280x720")
-        self.bind("<Map>", self._on_map)
+        self.setWindowTitle("Check-In")
+        self.setFixedSize(1280, 720)
 
-        self.canvas = tk.Canvas(
-            self,
-            bg="#153246",
-            height=720,
-            width=1280,
-            bd=0,
-            highlightthickness=0,
-        )
-        self.canvas.pack(fill="both", expand=True)
+        # Load Montserrat if bundled; falls back to system font
+        fonts_dir = Path(__file__).parent.parent / "fonts"
+        if fonts_dir.exists():
+            for font_file in fonts_dir.glob("*.ttf"):
+                QFontDatabase.addApplicationFont(str(font_file))
 
-        self._bg_photos = []
-        bg1 = tk.PhotoImage(file=str(ASSETS_PATH / "background_main.png"))
-        self._bg_photos.append(bg1)
-        self.canvas.create_image(640.0, 360.0, image=bg1)
+        self.central = _RootWidget()
+        self.setCentralWidget(self.central)
 
-        bg2 = tk.PhotoImage(file=str(ASSETS_PATH / "outline_full.png"))
-        self._bg_photos.append(bg2)
-        self.canvas.create_image(639.333984375, 359.333984375, image=bg2)
+        # Stacked widget fills the central widget; transparent so bg shows through
+        self.stacked = QStackedWidget(self.central)
+        self.stacked.setGeometry(0, 0, 1280, 720)
+        self.stacked.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.stacked.setStyleSheet("background: transparent;")
 
-    def _on_map(self, event):
-        self.unbind("<Map>")
-        self.attributes("-fullscreen", True)
+        self._escape_handler = None
+
+    def set_escape_handler(self, fn):
+        self._escape_handler = fn
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key.Key_Escape and self._escape_handler:
+            self._escape_handler()
+        else:
+            super().keyPressEvent(event)
+
+    def after(self, ms, fn):
+        """Drop-in replacement for tkinter's window.after()."""
+        QTimer.singleShot(ms, fn)
 
     def start(self):
-        self.mainloop()
+        from PyQt6.QtWidgets import QApplication
+        self.showFullScreen()
+        QApplication.instance().exec()

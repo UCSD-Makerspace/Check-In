@@ -1,54 +1,45 @@
-from pathlib import Path
-from tkinter import Button
+from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel
+from PyQt6.QtCore import Qt
 from .base import Screen
-
-ASSETS_PATH = Path(__file__).parent.parent / "assets" / "create_account_barcode"
-SHARED_PATH = Path(__file__).parent.parent / "assets" / "shared"
+from .components.outline_frame import OutlineFrame
+from .components.styled_button import StyledButton, home_button, INNER_MARGIN, OUTER_MARGIN
 
 
 class CreateAccountBarcode(Screen):
     def _build(self, controller):
-        logo = self._photo(SHARED_PATH / "button_generic.png")
-        self._image(88.0, 90.0, image=logo)
+        outer = QVBoxLayout(self)
+        outer.setContentsMargins(OUTER_MARGIN, OUTER_MARGIN, OUTER_MARGIN, OUTER_MARGIN)
+        outer.setSpacing(0)
 
-        home_img = self._photo(SHARED_PATH / "icon_home.png")
-        home_btn = Button(
-            self.canvas, image=home_img, bg="#153246",
-            command=lambda: controller.back_to_main(),
-            relief="flat", highlightthickness=0, bd=0,
+        outline = OutlineFrame()
+        outer.addWidget(outline)
+
+        inner = QVBoxLayout(outline)
+        inner.setContentsMargins(INNER_MARGIN, INNER_MARGIN, INNER_MARGIN, INNER_MARGIN)
+        inner.setSpacing(0)
+
+        top_row = QHBoxLayout()
+        top_row.addWidget(home_button(lambda: controller.back_to_main()))
+        top_row.addStretch()
+        inner.addLayout(top_row)
+
+        inner.addStretch(3)
+
+        instruction = QLabel("Please scan your ID barcode")
+        instruction.setStyleSheet(
+            "color: #F5F0E6; font: 36pt Montserrat;"
+            "background: transparent; border: none;"
         )
-        self._window(53.0, 55.0, home_btn)
+        instruction.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        inner.addWidget(instruction)
 
-        outline1_img = self._photo(ASSETS_PATH / "outline_1.png")
-        self._image(640.0, 76.0, image=outline1_img)
+        inner.addStretch(3)
 
-        outline2_img = self._photo(ASSETS_PATH / "outline_2.png")
-        self._image(640.0, 430.0, image=outline2_img)
-
-        icon_unchecked = self._photo(SHARED_PATH / "icon_unchecked_box.png")
-        self._image(576.0, 65.0, image=icon_unchecked)
-
-        icon_checked = self._photo(SHARED_PATH / "icon_checked_box.png")
-        self._image(1030.0, 65.0, image=icon_checked)
-
-        self._text(
-            640.0, 374.0, anchor="center",
-            text="Please scan your ID barcode",
-            fill="#F5F0E6", font=("Montserrat", 48 * -1),
-        )
-        self._text(
-            215.0, 45.0, anchor="nw",
-            text="Account Status:", fill="#F5F0E6", font=("Montserrat", 40 * -1),
-        )
-        self._text(
-            690.0, 45.0, anchor="nw",
-            text="Waiver Status:", fill="#F5F0E6", font=("Montserrat", 40 * -1),
-        )
-
-        btn_img = self._photo(ASSETS_PATH / "button_fill_manually.png")
-        btn = Button(
-            self.canvas, image=btn_img,
-            borderwidth=0, highlightthickness=0,
-            command=lambda: controller.go_to_create_account_manual(), relief="flat",
-        )
-        self._window(465.0, 554.0, btn, width=349, height=71)
+        btn_row = QHBoxLayout()
+        fill_btn = StyledButton("Fill Manually")
+        fill_btn.setFixedWidth(349)
+        fill_btn.clicked.connect(lambda: controller.go_to_create_account_manual())
+        btn_row.addStretch()
+        btn_row.addWidget(fill_btn)
+        btn_row.addStretch()
+        inner.addLayout(btn_row)

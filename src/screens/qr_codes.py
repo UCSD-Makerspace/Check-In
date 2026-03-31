@@ -1,35 +1,59 @@
 from pathlib import Path
-from tkinter import Button
+from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtCore import Qt
 from .base import Screen
+from .components.outline_frame import OutlineFrame
+from .components.styled_button import home_button, INNER_MARGIN, OUTER_MARGIN
 
 ASSETS_PATH = Path(__file__).parent.parent / "assets" / "qr_codes"
-SHARED_PATH = Path(__file__).parent.parent / "assets" / "shared"
 
 
 class QRCodes(Screen):
     def _build(self, controller):
-        logo = self._photo(SHARED_PATH / "button_generic.png")
-        self._image(88.0, 90.0, image=logo)
+        outer = QVBoxLayout(self)
+        outer.setContentsMargins(OUTER_MARGIN, OUTER_MARGIN, OUTER_MARGIN, OUTER_MARGIN)
+        outer.setSpacing(0)
 
-        qr_website_img = self._photo(ASSETS_PATH / "qr_website.png")
-        self._image(421.0, 360.0, image=qr_website_img)
+        outline = OutlineFrame()
+        outer.addWidget(outline)
 
-        qr_waiver_img = self._photo(ASSETS_PATH / "qr_waiver.png")
-        self._image(859.0, 360.0, image=qr_waiver_img)
+        inner = QVBoxLayout(outline)
+        inner.setContentsMargins(INNER_MARGIN, INNER_MARGIN, INNER_MARGIN, INNER_MARGIN)
+        inner.setSpacing(0)
 
-        self._text(
-            421.0, 571.0, anchor="center",
-            text="Website", fill="#F5F0E6", font=("Montserrat", 40 * -1),
-        )
-        self._text(
-            859.0, 571.0, anchor="center",
-            text="Waiver", fill="#F5F0E6", font=("Montserrat", 40 * -1),
-        )
+        top_row = QHBoxLayout()
+        top_row.addWidget(home_button(lambda: controller.back_to_main()))
+        top_row.addStretch()
+        inner.addLayout(top_row)
 
-        btn_img = self._photo(SHARED_PATH / "icon_home.png")
-        btn = Button(
-            self.canvas, image=btn_img, bg="#153246",
-            command=lambda: controller.back_to_main(),
-            relief="flat",
-        )
-        self._window(53.0, 55.0, btn)
+        inner.addStretch(1)
+
+        qr_row = QHBoxLayout()
+        qr_row.setSpacing(80)
+
+        def _qr_col(image_path, caption):
+            col = QVBoxLayout()
+            col.setSpacing(12)
+            img = QLabel()
+            px = QPixmap(str(image_path))
+            img.setPixmap(px)
+            img.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+            img.setStyleSheet("background: transparent; border: none;")
+            lbl = QLabel(caption)
+            lbl.setStyleSheet(
+                "color: #F5F0E6; font: 30pt Montserrat;"
+                "background: transparent; border: none;"
+            )
+            lbl.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+            col.addWidget(img)
+            col.addWidget(lbl)
+            return col
+
+        qr_row.addStretch()
+        qr_row.addLayout(_qr_col(ASSETS_PATH / "qr_website.png", "Website"))
+        qr_row.addLayout(_qr_col(ASSETS_PATH / "qr_waiver.png", "Waiver"))
+        qr_row.addStretch()
+        inner.addLayout(qr_row)
+
+        inner.addStretch(1)

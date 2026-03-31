@@ -1,79 +1,77 @@
-from pathlib import Path
-from tkinter import Button, Canvas, END
+from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel
+from PyQt6.QtCore import Qt
 from .base import Screen
-from .components.canvas_entry import CanvasEntry
-import logging
-
-ASSETS_PATH = Path(__file__).parent.parent / "assets" / "create_account_manual"
-SHARED_PATH = Path(__file__).parent.parent / "assets" / "shared"
+from .components.outline_frame import OutlineFrame
+from .components.styled_button import StyledButton, home_button, INNER_MARGIN, OUTER_MARGIN
+from .components.styled_entry import StyledEntry
 
 
 class CreateAccountManual(Screen):
     def _build(self, controller):
-        logo = self._photo(SHARED_PATH / "button_generic.png")
-        self._image(88.0, 90.0, image=logo)
+        outer = QVBoxLayout(self)
+        outer.setContentsMargins(OUTER_MARGIN, OUTER_MARGIN, OUTER_MARGIN, OUTER_MARGIN)
+        outer.setSpacing(0)
 
-        home_img = self._photo(SHARED_PATH / "icon_home.png")
-        home_btn = Button(
-            self.canvas, image=home_img, bg="#153246",
-            command=lambda: controller.back_to_main(),
-            relief="flat", highlightthickness=0, bd=0,
+        outline = OutlineFrame()
+        outer.addWidget(outline)
+
+        inner = QVBoxLayout(outline)
+        inner.setContentsMargins(INNER_MARGIN, INNER_MARGIN, INNER_MARGIN, INNER_MARGIN)
+        inner.setSpacing(0)
+
+        top_row = QHBoxLayout()
+        top_row.addWidget(home_button(lambda: controller.back_to_main()))
+        top_row.addStretch()
+        inner.addLayout(top_row)
+
+        inner.addStretch(3)
+
+        pid_label = QLabel("PID")
+        pid_label.setStyleSheet(
+            "color: #F5F0E6; font: 18pt Montserrat;"
+            "background: transparent; border: none;"
         )
-        self._window(53.0, 55.0, home_btn)
+        pid_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        inner.addWidget(pid_label)
 
-        outline1_img = self._photo(ASSETS_PATH / "outline_1.png")
-        self._image(640.0, 76.0, image=outline1_img)
+        entry_row = QHBoxLayout()
+        self.pid_entry = StyledEntry()
+        self.pid_entry.setMaximumWidth(800)
+        entry_row.addStretch()
+        entry_row.addWidget(self.pid_entry)
+        entry_row.addStretch()
+        inner.addLayout(entry_row)
 
-        outline2_img = self._photo(ASSETS_PATH / "outline_2.png")
-        self._image(640.0, 430.0, image=outline2_img)
+        inner.addStretch(2)
 
-        icon_unchecked = self._photo(SHARED_PATH / "icon_unchecked_box.png")
-        self._image(605.0, 77.0, image=icon_unchecked)
-        self._image(1010.0, 77.0, image=icon_unchecked)
+        btn_row = QHBoxLayout()
+        register_btn = StyledButton("Register")
+        register_btn.setFixedWidth(349)
+        register_btn.clicked.connect(self._go_to_review)
+        btn_row.addStretch()
+        btn_row.addWidget(register_btn)
+        btn_row.addStretch()
+        inner.addLayout(btn_row)
 
-        field_img = self._photo(SHARED_PATH / "field.png")
-        self._image(640.0, 390.0, image=field_img)
+        inner.addSpacing(12)
 
-        self._text(
-            250.0, 45.0, anchor="nw",
-            text="Account Status:", fill="#F5F0E6", font=("Montserrat", 40 * -1),
-        )
-        self._text(
-            670.0, 45.0, anchor="nw",
-            text="Waiver Status:", fill="#F5F0E6", font=("Montserrat", 40 * -1),
-        )
-        self._text(
-            640.0, 340.0, anchor="center",
-            text="PID", fill="#F5F0E6", font=("Montserrat", 24 * -1),
-        )
+        no_pid_row = QHBoxLayout()
+        no_pid_btn = StyledButton("I don't have a PID →")
+        no_pid_btn.setFixedWidth(349)
+        no_pid_btn.setMinimumHeight(80)
+        no_pid_btn.clicked.connect(lambda: controller.go_to_create_account_no_pid())
+        no_pid_row.addStretch()
+        no_pid_row.addWidget(no_pid_btn)
+        no_pid_row.addStretch()
+        inner.addLayout(no_pid_row)
 
-        btn_img = self._photo(ASSETS_PATH / "register.png")
-        btn = Button(
-            self.canvas, image=btn_img,
-            borderwidth=0, highlightthickness=0,
-            command=self._go_to_review, relief="flat",
-        )
-        self._window(465.0, 460.0, btn, width=349, height=71)
-
-        no_pid_btn = self._rounded_button(
-            text="I don't have a PID →",
-            w=349, h=80, r=20,
-            bg="#F5F0E6", fg="#4EBEEE",
-            font=("Montserrat", 20),
-            command=lambda: controller.go_to_create_account_no_pid(),
-        )
-        self._window(465.0, 545.0, no_pid_btn, width=349, height=80)
-
-        self.pid_entry = self._canvas_entry(640.0, 390.0, w=800, h=44, font=("Montserrat", 20))
-
-    def hide(self):
-        CanvasEntry.blur_all()
-        super().hide()
+    def on_hide(self):
+        self.pid_entry.clearFocus()
 
     def clear_entries(self):
-        self.pid_entry.delete(0, END)
+        self.pid_entry.clear()
 
     def _go_to_review(self):
-        pid = self.pid_entry.get().strip()
+        pid = self.pid_entry.text().strip()
         self.clear_entries()
         self.controller.ctx.account.go_to_review_from_pid(pid)

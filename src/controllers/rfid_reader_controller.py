@@ -1,8 +1,10 @@
 import time
 import socket
 import logging
-from tkinter import Label
 from threading import Thread
+
+from PyQt6.QtCore import QTimer
+
 from screens.create_account_manual import CreateAccountManual
 
 
@@ -44,16 +46,12 @@ class RfidReaderController:
                     logging.info("ERROR wifi is not connected")
                     if not self._no_wifi_shown:
                         self._no_wifi_shown = True
-                        no_wifi = Label(
-                            self.ctx.window.canvas,
-                            text="ERROR! Connection cannot be established, please let staff know.",
-                            bg="#153246", fg="white", font=("Arial", 25),
-                        )
-                        no_wifi.place(relx=0.5, rely=0.1, anchor="center")
-                        no_wifi.after(4000, lambda: self._destroy_wifi_error(no_wifi))
+                        self.ctx.dispatcher.call.emit(self._show_wifi_error)
                     continue
 
-                self.ctx.nav.get_frame(CreateAccountManual).clear_entries()
+                self.ctx.dispatcher.call.emit(
+                    lambda: self.ctx.nav.get_frame(CreateAccountManual).clear_entries()
+                )
                 tag = reader.grab_rfid()
 
                 if " " in tag:
@@ -86,6 +84,16 @@ class RfidReaderController:
                 last_color = color
                 self.ctx.traffic_light.drive(color)
 
+    def _show_wifi_error(self):
+        self.ctx.nav.show_status(
+            "ERROR! Connection cannot be established, please let staff know."
+        )
+        QTimer.singleShot(4000, self._clear_wifi_error)
+
+    def _clear_wifi_error(self):
+        self.ctx.nav.hide_status()
+        self._no_wifi_shown = False
+
     def _is_connected(self, host="8.8.8.8", port=53, timeout=3):
         try:
             socket.setdefaulttimeout(timeout)
@@ -93,7 +101,3 @@ class RfidReaderController:
             return True
         except socket.error:
             return False
-
-    def _destroy_wifi_error(self, label):
-        label.destroy()
-        self._no_wifi_shown = False

@@ -1,49 +1,72 @@
 from pathlib import Path
-from tkinter import Button
+from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout, QLabel
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtCore import Qt
 from .base import Screen
+from .components.outline_frame import OutlineFrame
+from .components.styled_button import StyledButton, OUTER_MARGIN, INNER_MARGIN
 
 ASSETS_PATH = Path(__file__).parent.parent / "assets" / "sign_waiver"
-SHARED_PATH = Path(__file__).parent.parent / "assets" / "shared"
 
 
 class SignWaiver(Screen):
     def _build(self, controller):
-        outline1_img = self._photo(ASSETS_PATH / "outline_1.png")
-        self._image(1042.0, 359.0, image=outline1_img)
+        outer = QVBoxLayout(self)
+        outer.setContentsMargins(OUTER_MARGIN, OUTER_MARGIN, OUTER_MARGIN, OUTER_MARGIN)
+        outer.setSpacing(0)
 
-        outline2_img = self._photo(ASSETS_PATH / "outline_2.png")
-        self._image(408.0, 76.0, image=outline2_img)
+        outline = OutlineFrame()
+        outer.addWidget(outline)
 
-        outline3_img = self._photo(ASSETS_PATH / "outline_3.png")
-        self._image(408.0, 429.0, image=outline3_img)
+        root = QVBoxLayout(outline)
+        root.setContentsMargins(INNER_MARGIN, INNER_MARGIN, INNER_MARGIN, INNER_MARGIN)
+        root.setSpacing(0)
 
-        icon_checked = self._photo(SHARED_PATH / "icon_checked_box.png")
-        self._image(395.0, 70.0, image=icon_checked)
+        content = QHBoxLayout()
+        content.setContentsMargins(50, 0, 50, 0)
+        content.setSpacing(20)
 
-        icon_unchecked = self._photo(SHARED_PATH / "icon_unchecked_box.png")
-        self._image(750.0, 70.0, image=icon_unchecked)
+        left = QVBoxLayout()
+        left.setSpacing(0)
 
-        qr_waiver_img = self._photo(ASSETS_PATH / "qr_waiver.png")
-        self._image(1042.0, 328.0, image=qr_waiver_img)
+        left.addStretch(1)
 
-        self._text(
-            37.0, 45.0, anchor="nw",
-            text="Account Status:", fill="#F5F0E6", font=("Montserrat", 40 * -1),
+        instruction = QLabel(
+            "Please scan the QR code\non the right and sign the waiver"
         )
-        self._text(
-            430.0, 45.0, anchor="nw",
-            text="Waiver Status:", fill="#F5F0E6", font=("Montserrat", 40 * -1),
+        instruction.setStyleSheet(
+            "color: #F5F0E6; font: 36pt Montserrat;"
+            "background: transparent; border: none;"
         )
-        self._text(
-            45.0, 270.0, anchor="nw",
-            text="Please scan the QR code\non the right and sign our \n     waiver",
-            fill="#F5F0E6", font=("Montserrat", 48 * -1),
-        )
+        instruction.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        instruction.setWordWrap(True)
+        left.addWidget(instruction)
 
-        btn_img = self._photo(ASSETS_PATH / "button_done_scanning.png")
-        btn = Button(
-            self.canvas, image=btn_img,
-            borderwidth=0, highlightthickness=0,
-            command=lambda: controller.back_to_main(), relief="flat",
-        )
-        self._window(875.0, 581.0, btn, width=344, height=71)
+        left.addStretch(2)
+
+        content.addLayout(left, stretch=1)
+
+        right = QVBoxLayout()
+        right.setSpacing(0)
+        right.addStretch()
+
+        qr_px = QPixmap(str(ASSETS_PATH / "qr_waiver.png"))
+        qr_px = qr_px.scaled(320, 320, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+        qr_label = QLabel()
+        qr_label.setPixmap(qr_px)
+        qr_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        qr_label.setStyleSheet("background: transparent; border: none;")
+        right.addWidget(qr_label)
+
+        right.addSpacing(24)
+
+        done_btn = StyledButton("Done Scanning")
+        done_btn.setFixedWidth(280)
+        done_btn.clicked.connect(lambda: controller.back_to_main())
+        right.addWidget(done_btn, alignment=Qt.AlignmentFlag.AlignHCenter)
+
+        right.addStretch()
+
+        content.addLayout(right, stretch=1)
+
+        root.addLayout(content)

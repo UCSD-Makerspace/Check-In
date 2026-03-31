@@ -1,4 +1,5 @@
-import tkinter as tk
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton
+from PyQt6.QtCore import Qt, QTimer
 
 from screens.check_in_rfid import CheckInRFID
 from screens.create_account_barcode import CreateAccountBarcode
@@ -30,11 +31,13 @@ def _sim_no_account_needs_waiver(nav):
     nav.go_to_create_account(on_done=nav.go_to_sign_waiver)
 
 
-def _sim_fill_and_go(nav):
-    frm = nav.get_frame(CreateAccountManual)
-    frm.clear_entries()
-    frm.pid_entry.insert(0, _DEV_PID)
-    nav.go_to_create_account_manual()
+def _sim_barcode_swipe(nav):
+    nav.go_to_create_account_review(
+        pid=_DEV_PID,
+        first_name=_DEV_NAME.split()[0],
+        last_name=_DEV_NAME.split()[1],
+        email=_DEV_EMAIL,
+    )
 
 
 TRANSITIONS = {
@@ -57,7 +60,7 @@ TRANSITIONS = {
         ("PID: no waiver",                    lambda nav: nav.go_to_sign_waiver()),
     ],
     CreateAccountBarcode: [
-        ("sim barcode swipe",                 _sim_fill_and_go),
+        ("sim barcode swipe",                 _sim_barcode_swipe),
         ("manual fill",                       lambda nav: nav.go_to_create_account_manual()),
         ("← Main",                            lambda nav: nav.back_to_main()),
     ],
@@ -80,42 +83,67 @@ TRANSITIONS = {
 }
 
 
-class DevOverlay:
-    def __init__(self, canvas, nav):
-        self._canvas = canvas
+class DevOverlay(QWidget):
+
+    def __init__(self, window, nav):
+        super().__init__(window.central)
         self._nav = nav
-        self._buttons = []
+        self._stacked = window.stacked
+        self._buttons: list[QPushButton] = []
 
-        self._frame = tk.Frame(canvas, bg="#1a1a2e", relief="solid", bd=1)
-        tk.Label(
-            self._frame,
-            text="DEV NAV",
-            bg="#1a1a2e", fg="#aaaaaa",
-            font=("Courier", 9, "bold"),
-        ).pack(pady=(4, 2), padx=6)
+        self.setStyleSheet("QWidget { background-color: #1a1a2e; }")
 
-        self._canvas_window = canvas.create_window(
-            1270, 715, anchor="se", window=self._frame,
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(6, 6, 6, 6)
+        layout.setSpacing(2)
+
+        header = QLabel("DEV NAV")
+        header.setStyleSheet(
+            "color: #aaaaaa; font: bold 9pt Courier;"
+            "background: transparent; border: none;"
         )
+        header.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        layout.addWidget(header)
+
+        self._layout = layout
 
     def update(self, screen_class):
-        for btn in self._buttons:
-            btn.destroy()
+        while self._layout.count() > 1:
+            item = self._layout.takeAt(1)
+            w = item.widget()
+            if w:
+                w.setParent(None)
         self._buttons.clear()
 
         for label, action in TRANSITIONS.get(screen_class, []):
-            btn = tk.Label(
-                self._frame,
-                text=label,
-                bg="#2a2a4e", fg="white",
-                font=("Courier", 9),
-                padx=6, pady=3,
-                cursor="hand2",
-            )
-            btn.pack(fill="x", padx=4, pady=1)
-            btn.bind("<Button-1>", lambda e, a=action: a(self._nav))
-            btn.bind("<Enter>", lambda e, w=btn: w.configure(bg="#4a4a8e"))
-            btn.bind("<Leave>", lambda e, w=btn: w.configure(bg="#2a2a4e"))
+            btn = QPushButton(label)
+            btn.setStyleSheet("""
+                QPushButton {
+                    background-color: #2a2a4e;
+                    color: white;
+                    font: 9pt Courier;
+                    padding: 3px 6px;
+                    border: none;
+                    text-align: left;
+                }
+                QPushButton:hover { background-color: #4a4a8e; }
+            """)
+            btn.setCursor(Qt.CursorShape.PointingHandCursor)
+            btn.clicked.connect(lambda checked, a=action: a(self._nav))
+            self._layout.addWidget(btn)
             self._buttons.append(btn)
 
-        self._canvas.tag_raise(self._canvas_window)
+        QTimer.singleShot(0, self._refresh)
+
+    def _refresh(self):
+        self.adjustSize()
+        self._reposition()
+        self.raise_()
+        self.show()
+
+    def _reposition(self):
+        s = self._stacked
+        self.move(
+            s.x() + s.width()  - self.width()  - 10,
+            s.y() + s.height() - self.height() - 10,
+        )
