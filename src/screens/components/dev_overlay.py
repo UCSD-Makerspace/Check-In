@@ -10,6 +10,7 @@ from screens.sign_waiver import SignWaiver
 from screens.check_in_manual import CheckInManual
 from screens.qr_codes import QRCodes
 from screens.user_welcome import UserWelcome
+from screens.transition_screen import TransitionScreen
 
 _DEV_NAME  = "Dev User"
 _DEV_EMAIL = "devuser@ucsd.edu"
@@ -20,6 +21,12 @@ _THANK_MSG = "Thank you for registering"
 
 def _sim_no_account_success(nav):
     nav.ctx.rfid = _DEV_RFID
+    if not nav.ctx.has_barcode_scanner:
+        nav.get_frame(TransitionScreen).display(
+            "Looks like you don't have an account.\nUse the other kiosk to set one up!"
+        )
+        QTimer.singleShot(6000, nav.back_to_main)
+        return
     def on_done():
         nav.ctx.traffic_light.request_green()
         nav.get_frame(UserWelcome).display_name(_DEV_NAME, _THANK_MSG)
@@ -28,6 +35,12 @@ def _sim_no_account_success(nav):
 
 def _sim_no_account_needs_waiver(nav):
     nav.ctx.rfid = _DEV_RFID
+    if not nav.ctx.has_barcode_scanner:
+        nav.get_frame(TransitionScreen).display(
+            "Looks like you don't have an account.\nUse the other kiosk to set one up!"
+        )
+        QTimer.singleShot(6000, nav.back_to_main)
+        return
     nav.go_to_create_account(on_done=nav.go_to_sign_waiver)
 
 

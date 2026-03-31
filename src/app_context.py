@@ -13,7 +13,8 @@ class AppContext:
         self.nav = None
         self.check_in = None
         self.account = None
-        self.dispatcher = None  # set by main.py after QApplication is created
+        self.dispatcher = None
+        self.has_barcode_scanner = False
         self._rfid_lock = threading.Lock()
         self._rfid: str = ""
 

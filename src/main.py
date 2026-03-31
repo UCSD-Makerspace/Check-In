@@ -75,6 +75,7 @@ if __name__ == "__main__":
     card_reader.start(reader)
 
     if usb.barcode:
+        ctx.has_barcode_scanner = True
         barcode_scanner = BarcodeScanner(usb.barcode)
         barcode_controller = BarcodeScannerController(ctx)
         barcode_controller.start(barcode_scanner)

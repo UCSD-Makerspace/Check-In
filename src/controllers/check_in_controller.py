@@ -3,6 +3,7 @@ import logging
 from PyQt6.QtCore import QTimer
 
 from screens.user_welcome import UserWelcome
+from screens.transition_screen import TransitionScreen
 
 
 class CheckInController:
@@ -33,6 +34,12 @@ class CheckInController:
         if status == "no_account":
             logging.info(f"No account found for {identifier}")
             self.ctx.traffic_light.request_red()
+            if not self.ctx.has_barcode_scanner:
+                self.ctx.nav.get_frame(TransitionScreen).display(
+                    "Looks like you don't have an account.\nUse the other kiosk to set one up!"
+                )
+                QTimer.singleShot(6000, self.ctx.nav.back_to_main)
+                return
             self.ctx.nav.go_to_create_account(
                 on_done=lambda: self._run_check_in(
                     identifier, check_fn, welcome_message="Thank you for registering"
