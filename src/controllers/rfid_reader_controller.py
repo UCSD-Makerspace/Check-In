@@ -1,6 +1,7 @@
 import time
 import socket
 import logging
+from os.path import exists
 from threading import Thread
 
 from PyQt6.QtCore import QTimer
@@ -37,9 +38,12 @@ class RfidReaderController:
             try:
                 in_waiting = reader.get_ser_in_waiting()
             except OSError as e:
-                if not scanner_error:
+                if not exists(reader._usb_id):
                     logging.error("Card reader disconnected, disabling until reconnection: %s", e)
                     scanner_error = True
+                else:
+                    logging.debug("Card reader transient error, retrying: %s", e)
+                    time.sleep(0.2)
                 continue
 
             if in_waiting >= 14:
