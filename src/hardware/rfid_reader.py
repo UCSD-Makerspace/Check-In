@@ -16,7 +16,7 @@ class Reader(Thread):
         self._usb_id = usb_id
         self._pn532 = None
         self._pending_tag = None
-        if not exists(usb_id):
+        if not usb_id or not exists(usb_id):
             logging.error("Card reader not found at %s, exiting", usb_id)
             sys.exit(1)
         for attempt in range(1, 6):
