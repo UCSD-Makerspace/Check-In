@@ -1,6 +1,7 @@
 services:
   check-in:
     image: ghcr.io/ucsd-makerspace/check-in:latest
+    pull_policy: always
     privileged: true
     network_mode: host
     environment:

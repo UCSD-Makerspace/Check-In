@@ -1,168 +1,87 @@
-from tkinter import Label
-from gui import gui
-from reader import *
-from swipe import swipe
-from sheets import *
-from threading import Thread
-from screens.MainPage import MainPage
-from screens.ManualFill import ManualFill
-from screens.CheckInNoId import CheckInNoId
-from utils import utils
-from core.handle_check_in import handle_check_in
-from core.render_ports import get_usb_ids
-import global_
-import socket
+import sys
 import logging
 import argparse
+import os
 from sys import stdout
-from sheets import check_api_health
 
-def is_connected(host="8.8.8.8", port=53, timeout=3):
-    """
-    Host: 8.8.8.8 (google-public-dns-a.google.com)
-    OpenPort: 53/tcp
-    Service: domain (DNS/TCP)
-    """
-    try:
-        socket.setdefaulttimeout(timeout)
-        socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
-        return True
-    except socket.error as ex:
-        return False
+from PyQt6.QtWidgets import QApplication
 
-##############################################################
-# This acts as the main loop of the program, ran in a thread #
-##############################################################
-
-no_wifi_shown = False
-
-def myLoop(app, reader):
-    global no_wifi_shown, no_wifi
-    logging.info("Now reading ID cards")
-    last_tag = 0
-    last_time = 0
-    scanner_error = False
-    while True:
-        if scanner_error:
-            time.sleep(0.1)
-            if reader.reconnect():
-                logging.info("Card reader reconnected")
-                scanner_error = False
-            continue
-
-        try:
-            in_waiting = reader.getSerInWaiting()
-        except OSError as e:
-            if not scanner_error:
-                logging.error("Card reader disconnected, disabling until reconnection: %s", e)
-                scanner_error = True
-            continue
-
-        if in_waiting >= 14:
-            if not is_connected():
-                logging.info("ERROR wifi is not connected")
-                if not no_wifi_shown:
-                    no_wifi_shown = True
-                    no_wifi = Label(
-                        app.canvas,
-                        text="ERROR! Connection cannot be established, please let staff know.",
-                        bg="#153246", fg="white", font=("Arial", 25),
-                    )
-                    no_wifi.place(relx=0.5, rely=0.1, anchor="center")
-                    no_wifi.after(4000, lambda: destroyNoWifiError(no_wifi))
-                continue
-
-            app.get_frame(ManualFill).clearEntries()
-            tag = reader.grabRFID()
-
-            if " " in tag:
-                continue
-
-            if tag == last_tag and not reader.canScanAgain(last_time):
-                logging.debug("Suppressing repeat scan")
-                continue
-
-            s_reason = reader.checkRFID(tag)
-
-            if s_reason != "good":
-                logging.debug(s_reason)
-                continue
-            else:
-                logging.debug("RFID Check Succeeded")
-
-            global_.setRFID(tag)
-            handle_check_in(tag)
-
-            last_tag = tag
-            last_time = time.time()
-
-def trafficLightPoller():
-    last_color = None
-    light = global_.traffic_light._light
-    while True:
-        time.sleep(0.1)
-        color = global_.sheets.get_traffic_light()
-        if color != last_color:
-            last_color = color
-            if color == "red":
-                light.set_red()
-            elif color == "green":
-                light.set_green()
-            elif color == "yellow":
-                light.set_yellow()
-            else:
-                light.set_off()
+from window import CheckInWindow
+from dispatcher import MainThreadDispatcher
+from controllers.navigation_controller import NavigationController
+from controllers.barcode_scanner_controller import BarcodeScannerController
+from hardware.barcode_scanner import BarcodeScanner
+from controllers.check_in_controller import CheckInController
+from controllers.account_controller import AccountController
+from controllers.rfid_reader_controller import RfidReaderController
+from hardware.rfid_reader import Reader
+from screens.create_account_manual import CreateAccountManual
+from screens.create_account_no_pid import CreateAccountNoPid
+from screens.create_account_review import CreateAccountReview
+from screens.check_in_manual import CheckInManual
+from hardware.usb_ports import get_usb_ids
+from app_context import AppContext
+from api.client import check_api_health
 
 
-def destroyNoWifiError(no_wifi):
-    global no_wifi_shown
-    no_wifi.destroy()
-    no_wifi_shown = False
+def clear_and_return(ctx: AppContext):
+    ctx.nav.back_to_main()
+    ctx.nav.get_frame(CreateAccountManual).clear_entries()
+    ctx.nav.get_frame(CreateAccountNoPid).clear_entries()
+    ctx.nav.get_frame(CreateAccountReview).clear_entries()
+    ctx.nav.get_frame(CheckInManual).clear_entries()
 
-def clearAndReturn():
-    global_.traffic_light.set_off()
-    global_.app.show_frame(MainPage)
-    global_.app.get_frame(ManualFill).clearEntries()
-    global_.app.get_frame(CheckInNoId).clearEntries()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Makerspace Check-in System",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-
-    parser.add_argument(
-        "-v",
-        "--verbose",
-        action="store_true",
-        help="Increase verbosity (print debug info)",
-    )
-
+    parser.add_argument("-v", "--verbose", action="store_true", help="Increase verbosity (print debug info)")
+    parser.add_argument("-d", "--dev", action="store_true", help="Enable dev mode with on-screen navigation overlay")
     args = parser.parse_args()
-    config = vars(args)
 
-    if config["verbose"]:
+    if args.verbose:
         logging.basicConfig(level=logging.DEBUG, stream=stdout)
     else:
         logging.basicConfig(level=logging.INFO)
 
-    reader_usb_id, traffic_usb_id = get_usb_ids()
-    check_api_health()
-    global_.init(traffic_usb_id)
-    app = gui()
-    global_.setApp(app)
-    global_.traffic_light.set_off()   
+    dev_mode = args.dev or os.environ.get("DEV_MODE") == "1"
 
-    sw = swipe()
-    reader = Reader(reader_usb_id)
-    util = utils()
-    thread = Thread(target=myLoop, args=(app, reader))
-    logging.info("Starting thread")
-    thread.start()
-    if global_.traffic_light.connected:
-        poller = Thread(target=trafficLightPoller, daemon=True)
-        poller.start()
-    app.bind("<Key>", lambda i: sw.keyboardPress(i))
-    app.bind("<Escape>", lambda i: clearAndReturn())
+    # QApplication must be created before any QWidget or QObject subclass
+    app = QApplication(sys.argv)
+
+    # Restore default SIGINT so Ctrl+C terminates the process
+    import signal
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+    usb = get_usb_ids()
+    check_api_health()
+    ctx = AppContext.create(usb.traffic_light)
+    ctx.dispatcher = MainThreadDispatcher()
+
+    window = CheckInWindow()
+    nav = NavigationController(window, ctx, dev_mode=dev_mode)
+    ctx.window = window
+    ctx.nav = nav
+    ctx.check_in = CheckInController(ctx)
+    ctx.account = AccountController(ctx)
+    ctx.traffic_light.request_off()
+
+    window.set_escape_handler(lambda: clear_and_return(ctx))
+
+    reader = Reader(usb.reader)
+    card_reader = RfidReaderController(ctx)
+    card_reader.start(reader)
+
+    if usb.barcode:
+        ctx.has_barcode_scanner = True
+        barcode_scanner = BarcodeScanner(usb.barcode)
+        barcode_controller = BarcodeScannerController(ctx)
+        barcode_controller.start(barcode_scanner)
+    else:
+        logging.warning("No barcode scanner found, barcode scanning disabled")
+
     logging.info("Made it to app start")
-    app.start()
+    window.start()
+    sys.exit(0)

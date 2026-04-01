@@ -1,0 +1,77 @@
+from PyQt6.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel
+from PyQt6.QtCore import Qt
+from .base import Screen
+from .components.outline_frame import OutlineFrame
+from .components.styled_button import StyledButton, home_button, INNER_MARGIN, OUTER_MARGIN
+from .components.styled_entry import StyledEntry
+
+
+class CreateAccountManual(Screen):
+    def _build(self, controller):
+        outer = QVBoxLayout(self)
+        outer.setContentsMargins(OUTER_MARGIN, OUTER_MARGIN, OUTER_MARGIN, OUTER_MARGIN)
+        outer.setSpacing(0)
+
+        outline = OutlineFrame()
+        outer.addWidget(outline)
+
+        inner = QVBoxLayout(outline)
+        inner.setContentsMargins(INNER_MARGIN, INNER_MARGIN, INNER_MARGIN, INNER_MARGIN)
+        inner.setSpacing(0)
+
+        top_row = QHBoxLayout()
+        top_row.addWidget(home_button(lambda: controller.back_to_main()))
+        top_row.addStretch()
+        inner.addLayout(top_row)
+
+        inner.addStretch(3)
+
+        pid_label = QLabel("PID")
+        pid_label.setStyleSheet(
+            "color: #F5F0E6; font: 18pt Montserrat;"
+            "background: transparent; border: none;"
+        )
+        pid_label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        inner.addWidget(pid_label)
+
+        entry_row = QHBoxLayout()
+        self.pid_entry = StyledEntry()
+        self.pid_entry.setMaximumWidth(800)
+        entry_row.addStretch()
+        entry_row.addWidget(self.pid_entry)
+        entry_row.addStretch()
+        inner.addLayout(entry_row)
+
+        inner.addStretch(2)
+
+        btn_row = QHBoxLayout()
+        register_btn = StyledButton("Register")
+        register_btn.setFixedWidth(349)
+        register_btn.clicked.connect(self._go_to_review)
+        btn_row.addStretch()
+        btn_row.addWidget(register_btn)
+        btn_row.addStretch()
+        inner.addLayout(btn_row)
+
+        inner.addSpacing(12)
+
+        no_pid_row = QHBoxLayout()
+        no_pid_btn = StyledButton("I don't have a PID →")
+        no_pid_btn.setFixedWidth(349)
+        no_pid_btn.setMinimumHeight(80)
+        no_pid_btn.clicked.connect(lambda: controller.go_to_create_account_no_pid())
+        no_pid_row.addStretch()
+        no_pid_row.addWidget(no_pid_btn)
+        no_pid_row.addStretch()
+        inner.addLayout(no_pid_row)
+
+    def on_hide(self):
+        self.pid_entry.clearFocus()
+
+    def clear_entries(self):
+        self.pid_entry.clear()
+
+    def _go_to_review(self):
+        pid = self.pid_entry.text().strip()
+        self.clear_entries()
+        self.controller.ctx.account.go_to_review_from_pid(pid)
