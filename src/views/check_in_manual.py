@@ -51,6 +51,7 @@ class CheckInManual(Screen):
         entry_row = QHBoxLayout()
         self.pid_entry = StyledEntry()
         self.pid_entry.setMaximumWidth(800)
+        self.pid_entry.returnPressed.connect(lambda: self._call_check_in(controller))
         entry_row.addStretch()
         entry_row.addWidget(self.pid_entry)
         entry_row.addStretch()
@@ -59,13 +60,18 @@ class CheckInManual(Screen):
         inner.addStretch(2)
 
         btn_row = QHBoxLayout()
-        check_in_btn = StyledButton("Check In")
-        check_in_btn.setFixedWidth(349)
-        check_in_btn.clicked.connect(lambda: self._call_check_in(controller))
+        self.check_in_btn = StyledButton("Check In")
+        self.check_in_btn.setFixedWidth(349)
+        self.check_in_btn.setEnabled(False)
+        self.check_in_btn.clicked.connect(lambda: self._call_check_in(controller))
+        self.pid_entry.textChanged.connect(self._update_btn_state)
         btn_row.addStretch()
-        btn_row.addWidget(check_in_btn)
+        btn_row.addWidget(self.check_in_btn)
         btn_row.addStretch()
         inner.addLayout(btn_row)
+
+    def _update_btn_state(self):
+        self.check_in_btn.setEnabled(bool(self.pid_entry.text().strip()))
 
     def on_show(self):
         self.pid_entry.setFocus()

@@ -63,10 +63,12 @@ class StyledButton(QPushButton):
                 painter.setPen(QColor("#F5F0E6"))
                 painter.drawText(self.rect(), Qt.AlignmentFlag.AlignCenter, self.text())
         else:
+            if not self.isEnabled():
+                painter.setOpacity(0.75)
             rect = QRectF(self.rect()).adjusted(1, 1, -1, -1)
             path = QPainterPath()
             path.addRoundedRect(rect, self._radius, self._radius)
-            painter.fillPath(path, QColor("#E8E4DA") if self._hovered else QColor("#F5F0E6"))
+            painter.fillPath(path, QColor("#E8E4DA") if self._hovered and self.isEnabled() else QColor("#F5F0E6"))
 
             painter.setFont(QFont("Montserrat", self._font_size))
             painter.setPen(QColor("#4EBEEE"))

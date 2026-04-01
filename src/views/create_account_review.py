@@ -51,14 +51,20 @@ class CreateAccountReview(Screen):
         self.email_entry      = _field_row("Email")
         self.pid_entry        = _field_row("PID")
 
+        for entry in (self.first_name_entry, self.last_name_entry,
+                      self.email_entry, self.pid_entry):
+            entry.returnPressed.connect(self._submit)
+            entry.textChanged.connect(self._update_btn_state)
+
         inner.addStretch(1)
 
         btn_row = QHBoxLayout()
-        register_btn = StyledButton("Register")
-        register_btn.setFixedWidth(349)
-        register_btn.clicked.connect(self._submit)
+        self.register_btn = StyledButton("Register")
+        self.register_btn.setFixedWidth(349)
+        self.register_btn.setEnabled(False)
+        self.register_btn.clicked.connect(self._submit)
         btn_row.addStretch()
-        btn_row.addWidget(register_btn)
+        btn_row.addWidget(self.register_btn)
         btn_row.addStretch()
         inner.addLayout(btn_row)
 
@@ -73,6 +79,13 @@ class CreateAccountReview(Screen):
         if pid:
             self.pid_entry.setText(pid.upper())
         self.pid_entry.set_readonly(pid_locked)
+        self._update_btn_state()
+
+    def _update_btn_state(self):
+        self.register_btn.setEnabled(all(
+            e.text().strip() for e in (self.first_name_entry, self.last_name_entry,
+                                       self.email_entry, self.pid_entry)
+        ))
 
     def on_show(self):
         self.first_name_entry.setFocus()
@@ -93,6 +106,8 @@ class CreateAccountReview(Screen):
         last  = self.last_name_entry.text().strip()
         email = self.email_entry.text().strip()
         pid   = self.pid_entry.text().strip().upper()
+        if not all([first, last, email, pid]):
+            return
         self.clear_entries()
         try:
             self.controller.ctx.account.create_account_from_review(

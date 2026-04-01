@@ -50,16 +50,26 @@ class CreateAccountNoPid(Screen):
         self.last_name_entry  = _field_row("Last Name")
         self.email_entry      = _field_row("Email")
 
+        for entry in (self.first_name_entry, self.last_name_entry, self.email_entry):
+            entry.returnPressed.connect(self._submit)
+            entry.textChanged.connect(self._update_btn_state)
+
         inner.addStretch(1)
 
         btn_row = QHBoxLayout()
-        register_btn = StyledButton("Register")
-        register_btn.setFixedWidth(349)
-        register_btn.clicked.connect(self._submit)
+        self.register_btn = StyledButton("Register")
+        self.register_btn.setFixedWidth(349)
+        self.register_btn.setEnabled(False)
+        self.register_btn.clicked.connect(self._submit)
         btn_row.addStretch()
-        btn_row.addWidget(register_btn)
+        btn_row.addWidget(self.register_btn)
         btn_row.addStretch()
         inner.addLayout(btn_row)
+
+    def _update_btn_state(self):
+        self.register_btn.setEnabled(all(
+            e.text().strip() for e in (self.first_name_entry, self.last_name_entry, self.email_entry)
+        ))
 
     def on_show(self):
         self.first_name_entry.setFocus()
@@ -76,6 +86,8 @@ class CreateAccountNoPid(Screen):
         first = self.first_name_entry.text().strip()
         last  = self.last_name_entry.text().strip()
         email = self.email_entry.text().strip()
+        if not all([first, last, email]):
+            return
         self.clear_entries()
         try:
             self.controller.ctx.account.create_account_from_review(
