@@ -39,10 +39,14 @@ class Reader(Thread):
                 logging.warning("Failed to close card reader serial port: %s", e)
             self._pn532 = None
         uart = serial.Serial(self._usb_id, baudrate=115200, timeout=0.1)
-        uart.reset_input_buffer()
-        uart.reset_output_buffer()
-        time.sleep(0.1)
-        self._pn532 = PN532_UART(uart, debug=False)
+        try:
+            uart.reset_input_buffer()
+            uart.reset_output_buffer()
+            time.sleep(0.1)
+            self._pn532 = PN532_UART(uart, debug=False)
+        except Exception:
+            uart.close()
+            raise
 
     def reconnect(self):
         if not exists(self._usb_id):
