@@ -71,7 +71,7 @@ class CreateAccountReview(Screen):
         if email:
             self.email_entry.setText(email)
         if pid:
-            self.pid_entry.setText(pid)
+            self.pid_entry.setText(pid.upper())
         self.pid_entry.set_readonly(pid_locked)
 
     def on_show(self):
@@ -92,7 +92,7 @@ class CreateAccountReview(Screen):
         first = self.first_name_entry.text().strip()
         last  = self.last_name_entry.text().strip()
         email = self.email_entry.text().strip()
-        pid   = self.pid_entry.text().strip()
+        pid   = self.pid_entry.text().strip().upper()
         self.clear_entries()
         try:
             self.controller.ctx.account.create_account_from_review(
