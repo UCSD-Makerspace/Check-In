@@ -7,7 +7,6 @@ ASSETS_PATH = Path(__file__).parent / "assets" / "shared"
 
 
 class _RootWidget(QWidget):
-    """Central widget that paints background_main.png centered on the dark base color."""
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -16,9 +15,7 @@ class _RootWidget(QWidget):
 
     def paintEvent(self, event):
         painter = QPainter(self)
-        # Dark base fill
         painter.fillRect(self.rect(), QColor("#153246"))
-        # Background image centered
         if not self._bg.isNull():
             x = (self.width() - self._bg.width()) // 2
             y = (self.height() - self._bg.height()) // 2
@@ -31,7 +28,6 @@ class CheckInWindow(QMainWindow):
         self.setWindowTitle("Check-In")
         self.setFixedSize(1280, 720)
 
-        # Load Montserrat if bundled; falls back to system font
         fonts_dir = Path(__file__).parent.parent / "fonts"
         if fonts_dir.exists():
             for font_file in fonts_dir.glob("*.ttf"):
@@ -40,7 +36,6 @@ class CheckInWindow(QMainWindow):
         self.central = _RootWidget()
         self.setCentralWidget(self.central)
 
-        # Stacked widget fills the central widget; transparent so bg shows through
         self.stacked = QStackedWidget(self.central)
         self.stacked.setGeometry(0, 0, 1280, 720)
         self.stacked.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
@@ -56,10 +51,6 @@ class CheckInWindow(QMainWindow):
             self._escape_handler()
         else:
             super().keyPressEvent(event)
-
-    def after(self, ms, fn):
-        """Drop-in replacement for tkinter's window.after()."""
-        QTimer.singleShot(ms, fn)
 
     def start(self):
         from PyQt6.QtWidgets import QApplication

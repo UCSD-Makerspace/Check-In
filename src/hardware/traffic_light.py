@@ -30,23 +30,3 @@ class TrafficLight:
     def set_green(self):
         if self.ser:
             self.ser.write(b"green\n")
-
-
-if __name__ == "__main__":
-    ports = list(serial.tools.list_ports.comports())
-    traffic_light_vid = 6790
-
-    for p in ports:
-        if p.vid == traffic_light_vid:
-            break
-
-    light = TrafficLight(p.device)
-    while True:
-        light.set_off()
-        time.sleep(1)
-        light.set_red()
-        time.sleep(1)
-        light.set_green()
-        time.sleep(1)
-        light.set_yellow()
-        time.sleep(1)

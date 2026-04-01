@@ -3,6 +3,8 @@ import logging
 from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QApplication
 
+from controllers.api_controller import ApiController
+
 
 class AccountController:
     def __init__(self, ctx):
@@ -12,7 +14,7 @@ class AccountController:
         self.ctx.nav.show_status("Looking up student...")
         QApplication.processEvents()
 
-        student = self.ctx.sheets.lookup_by_barcode(barcode)
+        student = ApiController.lookup_by_barcode(barcode)
         self.ctx.nav.hide_status()
 
         if student is None:
@@ -31,7 +33,7 @@ class AccountController:
         self.ctx.nav.show_status("Looking up student...")
         QApplication.processEvents()
 
-        student = self.ctx.sheets.lookup_by_pid(pid)
+        student = ApiController.lookup_by_pid(pid)
         self.ctx.nav.hide_status()
 
         if student is None:
@@ -56,7 +58,7 @@ class AccountController:
         self.ctx.nav.show_status("Account creation in progress!")
         QApplication.processEvents()
 
-        result = self.ctx.sheets.create_account(
+        result = ApiController.create_account(
             self.ctx.rfid,
             barcode=barcode,
             pid=pid,

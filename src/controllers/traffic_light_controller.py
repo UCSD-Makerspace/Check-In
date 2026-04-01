@@ -1,20 +1,18 @@
 import threading
 
-from api.client import ApiClient
+from controllers.api_controller import ApiController
 from hardware.traffic_light import TrafficLight
 
 
-class TrafficLightApi:
-    def __init__(self, light: TrafficLight, sheets: ApiClient):
+class TrafficLightController:
+    def __init__(self, light: TrafficLight):
         self._light = light
-        self._sheets = sheets
 
     @property
     def connected(self) -> bool:
         return self._light.connected
 
     def drive(self, color: str) -> None:
-        """Directly set the physical traffic light without posting to the API."""
         if color == "red":
             self._light.set_red()
         elif color == "green":
@@ -26,7 +24,7 @@ class TrafficLightApi:
 
     def _post(self, color: str) -> None:
         threading.Thread(
-            target=self._sheets.set_traffic_light,
+            target=ApiController.set_traffic_light,
             args=(color,),
             daemon=True,
         ).start()

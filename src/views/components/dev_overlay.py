@@ -1,16 +1,16 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton
 from PyQt6.QtCore import Qt, QTimer
 
-from screens.check_in_rfid import CheckInRFID
-from screens.create_account_barcode import CreateAccountBarcode
-from screens.create_account_manual import CreateAccountManual
-from screens.create_account_no_pid import CreateAccountNoPid
-from screens.create_account_review import CreateAccountReview
-from screens.sign_waiver import SignWaiver
-from screens.check_in_manual import CheckInManual
-from screens.qr_codes import QRCodes
-from screens.user_welcome import UserWelcome
-from screens.transition_screen import TransitionScreen
+from views.check_in_rfid import CheckInRFID
+from views.create_account_barcode import CreateAccountBarcode
+from views.create_account_manual import CreateAccountManual
+from views.create_account_no_pid import CreateAccountNoPid
+from views.create_account_review import CreateAccountReview
+from views.sign_waiver import SignWaiver
+from views.check_in_manual import CheckInManual
+from views.qr_codes import QRCodes
+from views.user_welcome import UserWelcome
+from views.transition_screen import TransitionScreen
 
 _DEV_NAME  = "Dev User"
 _DEV_EMAIL = "devuser@ucsd.edu"

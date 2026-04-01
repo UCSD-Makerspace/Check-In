@@ -3,16 +3,16 @@ import uuid
 from PyQt6.QtCore import QTimer, Qt
 from PyQt6.QtWidgets import QLabel
 
-from screens.check_in_rfid import CheckInRFID
-from screens.transition_screen import TransitionScreen
-from screens.create_account_barcode import CreateAccountBarcode
-from screens.create_account_manual import CreateAccountManual
-from screens.create_account_no_pid import CreateAccountNoPid
-from screens.create_account_review import CreateAccountReview
-from screens.sign_waiver import SignWaiver
-from screens.check_in_manual import CheckInManual
-from screens.qr_codes import QRCodes
-from screens.user_welcome import UserWelcome
+from views.check_in_rfid import CheckInRFID
+from views.transition_screen import TransitionScreen
+from views.create_account_barcode import CreateAccountBarcode
+from views.create_account_manual import CreateAccountManual
+from views.create_account_no_pid import CreateAccountNoPid
+from views.create_account_review import CreateAccountReview
+from views.sign_waiver import SignWaiver
+from views.check_in_manual import CheckInManual
+from views.qr_codes import QRCodes
+from views.user_welcome import UserWelcome
 
 
 class NavigationController:
@@ -62,7 +62,7 @@ class NavigationController:
         self._status_label.raise_()
 
         if dev_mode:
-            from screens.components.dev_overlay import DevOverlay
+            from views.components.dev_overlay import DevOverlay
             self._dev_overlay = DevOverlay(window, self)
 
         self.show_frame(CheckInRFID)
@@ -94,9 +94,6 @@ class NavigationController:
 
     def get_curr_frame(self):
         return self._curr
-
-    def after(self, ms, fn):
-        QTimer.singleShot(ms, fn)
 
     # ------------------------------------------------------------------
     # Status overlay

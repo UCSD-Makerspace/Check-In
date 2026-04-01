@@ -2,8 +2,9 @@ import logging
 
 from PyQt6.QtCore import QTimer
 
-from screens.user_welcome import UserWelcome
-from screens.transition_screen import TransitionScreen
+from controllers.api_controller import ApiController
+from views.user_welcome import UserWelcome
+from views.transition_screen import TransitionScreen
 
 
 class CheckInController:
@@ -13,12 +14,12 @@ class CheckInController:
     def handle_by_uuid(self, tag):
         # Called from background thread — dispatch to main thread via signal.
         self.ctx.dispatcher.call.emit(
-            lambda: self._run_check_in(tag, self.ctx.sheets.checkin_by_uuid)
+            lambda: self._run_check_in(tag, ApiController.checkin_by_uuid)
         )
 
     def handle_by_pid(self, pid):
         # Called on main thread (button click or barcode dispatcher).
-        self._run_check_in(pid, self.ctx.sheets.checkin_by_pid)
+        self._run_check_in(pid, ApiController.checkin_by_pid)
 
     def _run_check_in(self, identifier, check_fn, welcome_message="Welcome back"):
         result = check_fn(identifier)

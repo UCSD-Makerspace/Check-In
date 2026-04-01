@@ -2,9 +2,9 @@ import logging
 import time
 from threading import Thread
 
-from screens.check_in_manual import CheckInManual
-from screens.create_account_barcode import CreateAccountBarcode
-from screens.create_account_manual import CreateAccountManual
+from views.check_in_manual import CheckInManual
+from views.create_account_barcode import CreateAccountBarcode
+from views.create_account_manual import CreateAccountManual
 
 
 class BarcodeScannerController:

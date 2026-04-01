@@ -73,5 +73,5 @@ class Reader(Thread):
             return "Tag was not the expected number of chars"
         return "good"
 
-    def can_scan_again(self, lastTime):
-        return time.time() - lastTime > 3
+    def can_scan_again(self, last_time):
+        return time.time() - last_time > 3

@@ -25,14 +25,11 @@ class BarcodeScanner:
             return False
 
     def read_barcode(self):
-        """Read one barcode from the scanner. Returns stripped string or None."""
-        # Use read_until(\r) to handle scanners that terminate with CR only
         line = self._ser.read_until(b"\r")
         if not line:
             return None
         barcode = line.decode("ascii", errors="ignore").strip()
-        # Strip Codabar start/stop characters (A, B, C, D) from both ends
-        barcode = barcode.strip("ABCDabcd")
+        barcode = barcode.strip("ABCDabcd") # TODO: not sure if there is a better way to handle this
         return barcode if barcode else None
 
     def is_valid(self, barcode):

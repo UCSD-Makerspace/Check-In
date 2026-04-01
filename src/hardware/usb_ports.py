@@ -3,8 +3,8 @@ from dataclasses import dataclass
 
 import serial.tools.list_ports
 
-SHARED_VID = 0x1A86
-TRAFFIC_LOCATION = "1-1.1.2"
+READER_AND_TRAFFIC_LIGHT_VID = 0x1A86
+TRAFFIC_LIGHT_LOCATION = "1-1.1.2"
 BARCODE_VID = 0x9901
 
 
@@ -21,8 +21,8 @@ def get_usb_ids() -> UsbIds:
     barcode = None
     for p in serial.tools.list_ports.comports():
         logging.debug("USB port: %s vid=%s desc=%s", p.device, hex(p.vid) if p.vid else None, p.description)
-        if p.vid == SHARED_VID:
-            if p.location == TRAFFIC_LOCATION:
+        if p.vid == READER_AND_TRAFFIC_LIGHT_VID:
+            if p.location == TRAFFIC_LIGHT_LOCATION:
                 traffic_light = p.device
             else:
                 reader = p.device

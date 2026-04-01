@@ -5,7 +5,8 @@ from threading import Thread
 
 from PyQt6.QtCore import QTimer
 
-from screens.create_account_manual import CreateAccountManual
+from controllers.api_controller import ApiController
+from views.create_account_manual import CreateAccountManual
 
 
 class RfidReaderController:
@@ -79,7 +80,7 @@ class RfidReaderController:
         last_color = None
         while True:
             time.sleep(0.1)
-            color = self.ctx.sheets.get_traffic_light()
+            color = ApiController.get_traffic_light()
             if color != last_color:
                 last_color = color
                 self.ctx.traffic_light.drive(color)

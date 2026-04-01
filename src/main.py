@@ -15,13 +15,13 @@ from controllers.check_in_controller import CheckInController
 from controllers.account_controller import AccountController
 from controllers.rfid_reader_controller import RfidReaderController
 from hardware.rfid_reader import Reader
-from screens.create_account_manual import CreateAccountManual
-from screens.create_account_no_pid import CreateAccountNoPid
-from screens.create_account_review import CreateAccountReview
-from screens.check_in_manual import CheckInManual
+from views.create_account_manual import CreateAccountManual
+from views.create_account_no_pid import CreateAccountNoPid
+from views.create_account_review import CreateAccountReview
+from views.check_in_manual import CheckInManual
 from hardware.usb_ports import get_usb_ids
 from app_context import AppContext
-from api.client import check_api_health
+from controllers.api_controller import ApiController
 
 
 def clear_and_return(ctx: AppContext):
@@ -56,7 +56,7 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     usb = get_usb_ids()
-    check_api_health()
+    ApiController.check_api_health()
     ctx = AppContext.create(usb.traffic_light)
     ctx.dispatcher = MainThreadDispatcher()
 
