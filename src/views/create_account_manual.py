@@ -56,7 +56,7 @@ class CreateAccountManual(Screen):
         inner.addSpacing(12)
 
         no_pid_row = QHBoxLayout()
-        no_pid_btn = StyledButton("I don't have a PID →")
+        no_pid_btn = StyledButton("No PID →")
         no_pid_btn.setFixedWidth(349)
         no_pid_btn.setMinimumHeight(80)
         no_pid_btn.clicked.connect(lambda: controller.go_to_create_account_no_pid())
