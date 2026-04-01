@@ -27,7 +27,7 @@ class RfidReaderController:
         scanner_error = False
         while True:
             if scanner_error:
-                time.sleep(0.1)
+                time.sleep(1.0)
                 if reader.reconnect():
                     logging.info("Card reader reconnected")
                     scanner_error = False

@@ -11,24 +11,32 @@ expected_characters = 14
 
 
 class Reader(Thread):
-    def __init__(self, usb_id="/dev/ttyUSB0"):
+    def __init__(self, usb_id):
         super().__init__()
         self._usb_id = usb_id
         self._pn532 = None
         self._pending_tag = None
-        if usb_id is None:
-            logging.error("No card reader USB ID configured, exiting")
-            sys.exit(1)
         if not exists(usb_id):
             logging.error("Card reader not found at %s, exiting", usb_id)
             sys.exit(1)
-        self._init_pn532()
-        logging.info("Card reader init finished")
+        for attempt in range(1, 6):
+            try:
+                self._init_pn532()
+                logging.info("Card reader init finished")
+                break
+            except Exception as e:
+                logging.warning("Card reader init attempt %d/5 failed: %s", attempt, e)
+                if attempt == 5:
+                    logging.error("Card reader failed to initialize after 5 attempts, exiting")
+                    sys.exit(1)
+                time.sleep(attempt * 0.5)
 
     def _init_pn532(self):
         uart = serial.Serial(self._usb_id, baudrate=115200, timeout=0.1)
+        uart.reset_input_buffer()
+        uart.reset_output_buffer()
+        time.sleep(0.1)
         self._pn532 = PN532_UART(uart, debug=False)
-        self._pn532.SAM_configuration()
 
     def reconnect(self):
         if not exists(self._usb_id):
@@ -36,7 +44,8 @@ class Reader(Thread):
         try:
             self._init_pn532()
             return True
-        except Exception:
+        except Exception as e:
+            logging.warning("Card reader reconnect attempt failed: %s", e)
             self._pn532 = None
             return False
 
@@ -47,8 +56,8 @@ class Reader(Thread):
             raise OSError(f"PN532 error: {e}")
         if uid:
             self._pending_tag = "".join(f"{b:02X}" for b in uid)
-            time.sleep(0.01) # let any remaining in-flight bytes arrive
-            self._pn532._uart.reset_input_buffer() # and flush them
+            time.sleep(0.01)
+            self._pn532._uart.reset_input_buffer()
             return expected_characters
         self._pending_tag = None
         return 0
