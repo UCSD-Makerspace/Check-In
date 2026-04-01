@@ -61,6 +61,9 @@ class CreateAccountNoPid(Screen):
         btn_row.addStretch()
         inner.addLayout(btn_row)
 
+    def on_show(self):
+        self.first_name_entry.setFocus()
+
     def on_hide(self):
         for entry in (self.first_name_entry, self.last_name_entry, self.email_entry):
             entry.clearFocus()

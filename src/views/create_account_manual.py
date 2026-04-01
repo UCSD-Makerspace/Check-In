@@ -65,6 +65,9 @@ class CreateAccountManual(Screen):
         no_pid_row.addStretch()
         inner.addLayout(no_pid_row)
 
+    def on_show(self):
+        self.pid_entry.setFocus()
+
     def on_hide(self):
         self.pid_entry.clearFocus()
 

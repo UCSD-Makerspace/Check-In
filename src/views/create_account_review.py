@@ -74,6 +74,9 @@ class CreateAccountReview(Screen):
             self.pid_entry.setText(pid)
         self.pid_entry.set_readonly(pid_locked)
 
+    def on_show(self):
+        self.first_name_entry.setFocus()
+
     def on_hide(self):
         for entry in (self.first_name_entry, self.last_name_entry,
                       self.email_entry, self.pid_entry):

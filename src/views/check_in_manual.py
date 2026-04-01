@@ -67,6 +67,9 @@ class CheckInManual(Screen):
         btn_row.addStretch()
         inner.addLayout(btn_row)
 
+    def on_show(self):
+        self.pid_entry.setFocus()
+
     def on_hide(self):
         self.pid_entry.clearFocus()
 
