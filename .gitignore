@@ -4,3 +4,6 @@ fabtoken.txt
 creds.json
 log*
 .venv/
+
+src/token.json
+src/upcoming_events.json
