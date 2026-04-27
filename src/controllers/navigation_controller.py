@@ -32,16 +32,16 @@ class NavigationController:
         }
 
         for F in (
-            CheckInRFID,
-            TransitionScreen,
-            CreateAccountBarcode,
-            CreateAccountManual,
-            CreateAccountNoPid,
-            CreateAccountReview,
-            SignWaiver,
-            CheckInManual,
-            QRCodes,
-            UserWelcome,
+                CheckInRFID,
+                TransitionScreen,
+                CreateAccountBarcode,
+                CreateAccountManual,
+                CreateAccountNoPid,
+                CreateAccountReview,
+                SignWaiver,
+                CheckInManual,
+                QRCodes,
+                UserWelcome,
         ):
             frame = F(self)
             self._frames[F] = frame

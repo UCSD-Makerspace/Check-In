@@ -53,6 +53,7 @@ if __name__ == "__main__":
 
     # Restore default SIGINT so Ctrl+C terminates the process
     import signal
+
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     usb = get_usb_ids()

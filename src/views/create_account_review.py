@@ -47,9 +47,9 @@ class CreateAccountReview(Screen):
             return entry
 
         self.first_name_entry = _field_row("First Name")
-        self.last_name_entry  = _field_row("Last Name")
-        self.email_entry      = _field_row("Email")
-        self.pid_entry        = _field_row("PID")
+        self.last_name_entry = _field_row("Last Name")
+        self.email_entry = _field_row("Email")
+        self.pid_entry = _field_row("PID")
 
         for entry in (self.first_name_entry, self.last_name_entry,
                       self.email_entry, self.pid_entry):
@@ -103,9 +103,9 @@ class CreateAccountReview(Screen):
 
     def _submit(self):
         first = self.first_name_entry.text().strip()
-        last  = self.last_name_entry.text().strip()
+        last = self.last_name_entry.text().strip()
         email = self.email_entry.text().strip()
-        pid   = self.pid_entry.text().strip().upper()
+        pid = self.pid_entry.text().strip().upper()
         if not all([first, last, email, pid]):
             return
         self.clear_entries()

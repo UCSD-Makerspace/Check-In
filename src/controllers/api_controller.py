@@ -5,7 +5,6 @@ import requests
 
 from config import API_BASE_URL
 
-
 SILENT_PATHS = frozenset(["/health", "/traffic-light"])
 
 

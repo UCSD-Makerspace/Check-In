@@ -12,10 +12,10 @@ from views.qr_codes import QRCodes
 from views.user_welcome import UserWelcome
 from views.transition_screen import TransitionScreen
 
-_DEV_NAME  = "Dev User"
+_DEV_NAME = "Dev User"
 _DEV_EMAIL = "devuser@ucsd.edu"
-_DEV_PID   = "A12345678"
-_DEV_RFID  = "1a2b3c4d5e6f7g"
+_DEV_PID = "A12345678"
+_DEV_RFID = "1a2b3c4d5e6f7g"
 _THANK_MSG = "Thank you for registering"
 
 
@@ -27,9 +27,11 @@ def _sim_no_account_success(nav):
         )
         QTimer.singleShot(6000, nav.back_to_main)
         return
+
     def on_done():
         nav.ctx.traffic_light.request_green()
         nav.get_frame(UserWelcome).display_name(_DEV_NAME, _THANK_MSG)
+
     nav.go_to_create_account(on_done=on_done)
 
 
@@ -55,43 +57,43 @@ def _sim_barcode_swipe(nav):
 
 TRANSITIONS = {
     CheckInRFID: [
-        ("QR Codes",                          lambda nav: nav.show_frame(QRCodes)),
-        ("No ID",                             lambda nav: nav.go_to_no_id()),
-        ("card: success",                     lambda nav: nav.get_frame(UserWelcome).display_name(_DEV_NAME)),
-        ("card: no account [→ success]",      _sim_no_account_success),
-        ("card: no account [→ waiver]",       _sim_no_account_needs_waiver),
-        ("card: no waiver",                   lambda nav: nav.go_to_sign_waiver()),
+        ("QR Codes", lambda nav: nav.show_frame(QRCodes)),
+        ("No ID", lambda nav: nav.go_to_no_id()),
+        ("card: success", lambda nav: nav.get_frame(UserWelcome).display_name(_DEV_NAME)),
+        ("card: no account [→ success]", _sim_no_account_success),
+        ("card: no account [→ waiver]", _sim_no_account_needs_waiver),
+        ("card: no waiver", lambda nav: nav.go_to_sign_waiver()),
     ],
     QRCodes: [
-        ("← Main",                            lambda nav: nav.back_to_main()),
+        ("← Main", lambda nav: nav.back_to_main()),
     ],
     CheckInManual: [
-        ("← Main",                            lambda nav: nav.back_to_main()),
-        ("PID: success",                      lambda nav: nav.get_frame(UserWelcome).display_name(_DEV_NAME)),
-        ("PID: no account [→ success]",       _sim_no_account_success),
-        ("PID: no account [→ waiver]",        _sim_no_account_needs_waiver),
-        ("PID: no waiver",                    lambda nav: nav.go_to_sign_waiver()),
+        ("← Main", lambda nav: nav.back_to_main()),
+        ("PID: success", lambda nav: nav.get_frame(UserWelcome).display_name(_DEV_NAME)),
+        ("PID: no account [→ success]", _sim_no_account_success),
+        ("PID: no account [→ waiver]", _sim_no_account_needs_waiver),
+        ("PID: no waiver", lambda nav: nav.go_to_sign_waiver()),
     ],
     CreateAccountBarcode: [
-        ("sim barcode swipe",                 _sim_barcode_swipe),
-        ("manual fill",                       lambda nav: nav.go_to_create_account_manual()),
-        ("← Main",                            lambda nav: nav.back_to_main()),
+        ("sim barcode swipe", _sim_barcode_swipe),
+        ("manual fill", lambda nav: nav.go_to_create_account_manual()),
+        ("← Main", lambda nav: nav.back_to_main()),
     ],
     CreateAccountManual: [
-        ("→ review (pid lookup)",             lambda nav: nav.ctx.account.go_to_review_from_pid(_DEV_PID)),
-        ("→ no-pid screen",                   lambda nav: nav.go_to_create_account_no_pid()),
-        ("← Main",                            lambda nav: nav.back_to_main()),
+        ("→ review (pid lookup)", lambda nav: nav.ctx.account.go_to_review_from_pid(_DEV_PID)),
+        ("→ no-pid screen", lambda nav: nav.go_to_create_account_no_pid()),
+        ("← Main", lambda nav: nav.back_to_main()),
     ],
     CreateAccountNoPid: [
-        ("submit",                            lambda nav: nav.pop()),
-        ("← Main",                            lambda nav: nav.back_to_main()),
+        ("submit", lambda nav: nav.pop()),
+        ("← Main", lambda nav: nav.back_to_main()),
     ],
     CreateAccountReview: [
-        ("submit",                            lambda nav: nav.pop()),
-        ("← Main",                            lambda nav: nav.back_to_main()),
+        ("submit", lambda nav: nav.pop()),
+        ("← Main", lambda nav: nav.back_to_main()),
     ],
     SignWaiver: [
-        ("← Main",                            lambda nav: nav.back_to_main()),
+        ("← Main", lambda nav: nav.back_to_main()),
     ],
 }
 
@@ -157,6 +159,6 @@ class DevOverlay(QWidget):
     def _reposition(self):
         s = self._stacked
         self.move(
-            s.x() + s.width()  - self.width()  - 10,
+            s.x() + s.width() - self.width() - 10,
             s.y() + s.height() - self.height() - 10,
         )

@@ -29,7 +29,7 @@ class BarcodeScanner:
         if not line:
             return None
         barcode = line.decode("ascii", errors="ignore").strip()
-        barcode = barcode.strip("ABCDabcd") # TODO: not sure if there is a better way to handle this
+        barcode = barcode.strip("ABCDabcd")  # TODO: not sure if there is a better way to handle this
         return barcode if barcode else None
 
     def is_valid(self, barcode):

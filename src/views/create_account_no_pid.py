@@ -47,8 +47,8 @@ class CreateAccountNoPid(Screen):
             return entry
 
         self.first_name_entry = _field_row("First Name")
-        self.last_name_entry  = _field_row("Last Name")
-        self.email_entry      = _field_row("Email")
+        self.last_name_entry = _field_row("Last Name")
+        self.email_entry = _field_row("Email")
 
         for entry in (self.first_name_entry, self.last_name_entry, self.email_entry):
             entry.returnPressed.connect(self._submit)
@@ -84,7 +84,7 @@ class CreateAccountNoPid(Screen):
 
     def _submit(self):
         first = self.first_name_entry.text().strip()
-        last  = self.last_name_entry.text().strip()
+        last = self.last_name_entry.text().strip()
         email = self.email_entry.text().strip()
         if not all([first, last, email]):
             return
