@@ -17,17 +17,17 @@ class Reader(Thread):
         self._pn532 = None
         self._pending_tag = None
         if not usb_id or not exists(usb_id):
-            logging.error("Card reader not found at %s, exiting", usb_id)
+            logging.error("card reader not found at %s, exiting", usb_id)
             sys.exit(1)
         for attempt in range(1, 6):
             try:
                 self._init_pn532()
-                logging.info("Card reader init finished")
+                logging.info("card reader init finished")
                 break
             except Exception as e:
-                logging.warning("Card reader init attempt %d/5 failed: %s", attempt, e)
+                logging.warning("card reader init attempt %d/5 failed: %s", attempt, e)
                 if attempt == 5:
-                    logging.error("Card reader failed to initialize after 5 attempts, exiting")
+                    logging.error("card reader failed to initialize after 5 attempts, exiting")
                     sys.exit(1)
                 time.sleep(attempt * 0.5)
 
@@ -36,7 +36,7 @@ class Reader(Thread):
             try:
                 self._pn532._uart.close()
             except Exception as e:
-                logging.warning("Failed to close card reader serial port: %s", e)
+                logging.warning("failed to close card reader serial port: %s", e)
             self._pn532 = None
         uart = serial.Serial(self._usb_id, baudrate=115200, timeout=0.1)
         try:
@@ -55,7 +55,7 @@ class Reader(Thread):
             self._init_pn532()
             return True
         except Exception as e:
-            logging.warning("Card reader reconnect attempt failed: %s", e)
+            logging.warning("card reader reconnect attempt failed: %s", e)
             self._pn532 = None
             return False
 
@@ -75,7 +75,7 @@ class Reader(Thread):
     def grab_rfid(self):
         tag = self._pending_tag
         self._pending_tag = None
-        logging.info("Parsed tag: " + str(tag))
+        logging.info("parsed tag: " + str(tag))
         return str(tag)
 
     def check_rfid(self, tag):

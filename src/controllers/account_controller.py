@@ -12,7 +12,7 @@ class AccountController:
 
     def go_to_review_from_barcode(self, barcode):
         self.ctx.nav.show_status("Looking up student...")
-        logging.info(f"Looking up student by barcode: {barcode}")
+        logging.info(f"looking up student by barcode: {barcode}")
         Thread(target=self._lookup_barcode_worker, args=(barcode,), daemon=True).start()
 
     def _lookup_barcode_worker(self, barcode):
@@ -34,7 +34,7 @@ class AccountController:
 
     def go_to_review_from_pid(self, pid):
         self.ctx.nav.show_status("Looking up student...")
-        logging.info(f"Looking up student by PID: {pid}")
+        logging.info(f"looking up student by PID: {pid}")
         Thread(target=self._lookup_pid_worker, args=(pid,), daemon=True).start()
 
     def _lookup_pid_worker(self, pid):
@@ -62,7 +62,7 @@ class AccountController:
 
     def _create(self, *, barcode=None, pid=None, first_name=None, last_name=None, email=None):
         self.ctx.nav.show_status("Account creation in progress!")
-        logging.info(f"Creating account: pid={pid} barcode={barcode}")
+        logging.info(f"creating account: pid={pid} barcode={barcode}")
         Thread(
             target=self._create_worker,
             kwargs=dict(barcode=barcode, pid=pid, first_name=first_name, last_name=last_name, email=email),
@@ -86,5 +86,5 @@ class AccountController:
             self.ctx.nav.show_status("ERROR! Could not create account, please try manually.")
             QTimer.singleShot(3000, self.ctx.nav.hide_status)
             return
-        logging.info("Account creation succeeded")
+        logging.info("account creation succeeded")
         self.ctx.nav.pop()

@@ -16,34 +16,34 @@ class BarcodeScannerController:
         thread.start()
 
     def _run(self, scanner):
-        logging.info("Now reading barcodes")
+        logging.info("now reading barcodes")
         scanner_error = False
         try:
             while True:
                 if scanner_error:
                     time.sleep(0.5)
                     if scanner.reconnect():
-                        logging.info("Barcode scanner reconnected")
+                        logging.info("barcode scanner reconnected")
                         scanner_error = False
                     continue
 
                 try:
                     barcode = scanner.read_barcode()
                 except OSError as e:
-                    logging.error("Barcode scanner disconnected: %s", e)
+                    logging.error("barcode scanner disconnected: %s", e)
                     scanner_error = True
                     continue
 
                 if barcode is None:
                     continue
 
-                logging.debug("Raw barcode received: %r", barcode)
+                logging.debug("raw barcode received: %r", barcode)
 
                 if not scanner.is_valid(barcode):
-                    logging.warning("Invalid barcode rejected: %r", barcode)
+                    logging.warning("invalid barcode rejected: %r", barcode)
                     continue
 
-                logging.info("Barcode scanned: %r", barcode)
+                logging.info("barcode scanned: %r", barcode)
                 curr_frame = self.ctx.nav.get_curr_frame()
 
                 if curr_frame == CheckInManual:
@@ -55,6 +55,6 @@ class BarcodeScannerController:
                         lambda b=barcode: self.ctx.account.go_to_review_from_barcode(b)
                     )
                 else:
-                    logging.debug("Barcode scanned on unhandled screen: %s", curr_frame)
+                    logging.debug("barcode scanned on unhandled screen: %s", curr_frame)
         except Exception as e:
-            logging.exception("Barcode scanner thread crashed: %s", e)
+            logging.exception("barcode scanner thread crashed: %s", e)

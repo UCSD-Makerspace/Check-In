@@ -12,7 +12,7 @@ class BarcodeScanner:
     def _connect(self):
         self._ser = serial.Serial(self._usb_id, baudrate=9600, timeout=0.1)
         self._ser.reset_input_buffer()
-        logging.info("Barcode scanner connected at %s", self._usb_id)
+        logging.info("barcode scanner connected at %s", self._usb_id)
 
     def reconnect(self):
         if not exists(self._usb_id):

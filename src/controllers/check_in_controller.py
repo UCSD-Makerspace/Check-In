@@ -33,7 +33,7 @@ class CheckInController:
             return
 
         if status == "no_account":
-            logging.info(f"No account found for {identifier}")
+            logging.info(f"no account found for {identifier}")
             self.ctx.traffic_light.request_red()
             if not self.ctx.has_barcode_scanner:
                 self.ctx.nav.get_frame(TransitionScreen).display(
@@ -49,11 +49,11 @@ class CheckInController:
             return
 
         if status == "no_waiver":
-            logging.info(f"No waiver for {identifier}")
+            logging.info(f"no waiver for {identifier}")
             self.ctx.traffic_light.request_yellow()
             self.ctx.nav.go_to_sign_waiver()
             return
 
-        logging.info(f"Check-in successful: {result['name']}")
+        logging.info(f"check-in successful: {result['name']}")
         self.ctx.traffic_light.request_green()
         self.ctx.nav.get_frame(UserWelcome).display_name(result["name"], welcome_message)

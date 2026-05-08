@@ -33,9 +33,9 @@ class ApiController:
                     return
             except Exception:
                 pass
-            logging.warning(f"API not reachable (attempt {attempt}/{retries}), retrying in {delay_seconds}s...")
+            logging.warning(f"API not reachable (attempt {attempt}/{retries}), retrying in {delay_seconds}s")
             time.sleep(delay_seconds)
-        logging.critical(f"API at {API_BASE_URL} unreachable after {retries} attempts. Exiting.")
+        logging.critical(f"API at {API_BASE_URL} unreachable after {retries} attempts, exiting")
         sys.exit(1)
 
     @staticmethod
@@ -45,7 +45,7 @@ class ApiController:
             resp.raise_for_status()
             return resp.json()
         except Exception as e:
-            logging.error(f"Error during check-in for uuid {uuid}: {e}")
+            logging.error(f"error during check-in for uuid {uuid}: {e}")
             return {"status": "api_error"}
 
     @staticmethod
@@ -55,7 +55,7 @@ class ApiController:
             resp.raise_for_status()
             return resp.json()
         except Exception as e:
-            logging.error(f"Error during check-in for pid {pid}: {e}")
+            logging.error(f"error during check-in for pid {pid}: {e}")
             return {"status": "api_error"}
 
     @staticmethod
@@ -63,7 +63,7 @@ class ApiController:
         try:
             ApiController._req("POST", "/traffic-light", json={"color": color}, timeout=5)
         except Exception as e:
-            logging.error(f"Error setting traffic light: {e}")
+            logging.error(f"error setting traffic light: {e}")
 
     @staticmethod
     def get_traffic_light():
@@ -71,7 +71,7 @@ class ApiController:
             resp = ApiController._req("GET", "/traffic-light", timeout=5)
             return resp.json().get("color", "off")
         except Exception as e:
-            logging.error(f"Error getting traffic light: {e}")
+            logging.error(f"error getting traffic light: {e}")
             return "off"
 
     @staticmethod
@@ -83,7 +83,7 @@ class ApiController:
             resp.raise_for_status()
             return resp.json()
         except Exception as e:
-            logging.error(f"Error looking up student by pid {pid}: {e}")
+            logging.error(f"error looking up student by pid {pid}: {e}")
             return None
 
     @staticmethod
@@ -95,7 +95,7 @@ class ApiController:
             resp.raise_for_status()
             return resp.json()
         except Exception as e:
-            logging.error(f"Error looking up student by barcode: {e}")
+            logging.error(f"error looking up student by barcode: {e}")
             return None
 
     @staticmethod
@@ -116,5 +116,5 @@ class ApiController:
             resp.raise_for_status()
             return resp.json()
         except Exception as e:
-            logging.error(f"Error creating account: {e}")
+            logging.error(f"error creating account: {e}")
             return None

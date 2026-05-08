@@ -114,4 +114,4 @@ class CreateAccountReview(Screen):
                 first_name=first, last_name=last, email=email, pid=pid
             )
         except Exception:
-            logging.warning("Error occurred trying to create a user account", exc_info=True)
+            logging.warning("error occurred trying to create a user account", exc_info=True)

@@ -81,8 +81,8 @@ if __name__ == "__main__":
         barcode_controller = BarcodeScannerController(ctx)
         barcode_controller.start(barcode_scanner)
     else:
-        logging.warning("No barcode scanner found, barcode scanning disabled")
+        logging.warning("no barcode scanner found, barcode scanning disabled")
 
-    logging.info("Made it to app start")
+    logging.info("made it to app start")
     window.start()
     sys.exit(0)

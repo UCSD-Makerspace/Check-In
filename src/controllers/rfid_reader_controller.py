@@ -23,7 +23,7 @@ class RfidReaderController:
             poller.start()
 
     def _run(self, reader):
-        logging.info("Now reading ID cards")
+        logging.info("now reading ID cards")
         last_tag = 0
         last_time = 0
         scanner_error = False
@@ -31,7 +31,7 @@ class RfidReaderController:
             if scanner_error:
                 time.sleep(1.0)
                 if reader.reconnect():
-                    logging.info("Card reader reconnected")
+                    logging.info("card reader reconnected")
                     scanner_error = False
                 continue
 
@@ -39,16 +39,16 @@ class RfidReaderController:
                 in_waiting = reader.get_ser_in_waiting()
             except OSError as e:
                 if not exists(reader._usb_id):
-                    logging.error("Card reader disconnected, disabling until reconnection: %s", e)
+                    logging.error("card reader disconnected, disabling until reconnection: %s", e)
                     scanner_error = True
                 else:
-                    logging.debug("Card reader transient error, retrying: %s", e)
+                    logging.debug("card reader transient error, retrying: %s", e)
                     time.sleep(0.2)
                 continue
 
             if in_waiting >= 14:
                 if not self._is_connected():
-                    logging.info("ERROR wifi is not connected")
+                    logging.info("wifi is not connected")
                     if not self._no_wifi_shown:
                         self._no_wifi_shown = True
                         self.ctx.dispatcher.call.emit(self._show_wifi_error)
@@ -63,7 +63,7 @@ class RfidReaderController:
                     continue
 
                 if tag == last_tag and not reader.can_scan_again(last_time):
-                    logging.debug("Suppressing repeat scan")
+                    logging.debug("suppressing repeat scan")
                     continue
 
                 s_reason = reader.check_rfid(tag)
@@ -72,7 +72,7 @@ class RfidReaderController:
                     logging.debug(s_reason)
                     continue
                 else:
-                    logging.debug("RFID Check Succeeded")
+                    logging.debug("RFID check succeeded")
 
                 self.ctx.rfid = tag
                 self.ctx.check_in.handle_by_uuid(tag)
