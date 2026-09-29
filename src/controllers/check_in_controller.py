@@ -11,6 +11,7 @@ from misc.global_config import config
 from misc.global_context import context
 from hardware.traffic_light import TrafficLightState
 from ui.views.create_account_barcode import CreateAccountBarcode
+from ui.views.create_account_review import CreateAccountReview
 from ui.views.sign_waiver import SignWaiver
 from ui.views.user_welcome import UserWelcome
 
@@ -52,7 +53,7 @@ class CheckInController:
                 logging.info(f"no account found for {identifier}")
                 context().traffic_light_controller.request_state_async(TrafficLightState.YELLOW)
 
-                if not config().HAS_BARCODE_SCANNER:
+                if not config().ALLOWS_REGISTRATION:
                     context().navigation_controller.navigate_via_transition(
                         "Looks like you don't have an account. Use the other kiosk to set one up!",
                         delay_ms=5000,
@@ -70,7 +71,8 @@ class CheckInController:
 
                 context().session.check_in_method = method
                 context().session.check_in_identifier = identifier
-                context().navigation_controller.navigate(CreateAccountBarcode)
+                # context().navigation_controller.navigate(CreateAccountBarcode)
+                context().navigation_controller.navigate(CreateAccountReview)
                 return
 
             if isinstance(result, CheckInNoWaiver):

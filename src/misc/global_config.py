@@ -39,6 +39,7 @@ class GlobalConfig:
     KIOSK_NAME: str = _from_env("KIOSK_NAME", required=True)
     HAS_BARCODE_SCANNER: bool = _from_env("HAS_BARCODE_SCANNER", required=True).lower() == "true"
     HAS_TRAFFIC_LIGHT: bool = _from_env("HAS_TRAFFIC_LIGHT", required=True).lower() == "true"
+    ALLOWS_REGISTRATION: bool = _from_env("ALLOWS_REGISTRATION", required=True).lower() == "true"
     CHECK_IN_API_URL: str = _from_env("CHECK_IN_API_URL", required=True)
     DISCORD_WEBHOOK_URL: str = _from_env("DISCORD_WEBHOOK_URL", required=False)
     DEV_MODE: bool = _from_env("DEV_MODE", required=False).lower() == "true"
