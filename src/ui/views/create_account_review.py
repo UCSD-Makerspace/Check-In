@@ -3,15 +3,22 @@ from __future__ import annotations
 from threading import Thread
 from typing import TYPE_CHECKING
 
+from PyQt6.QtCore import QRegularExpression, Qt
+from PyQt6.QtGui import QRegularExpressionValidator
 from PyQt6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
+from misc.api_models import UCSD_EMAIL_DOMAIN as EMAIL_DOMAIN
 from misc.global_context import context
 from ui.base import Screen
 from ui.components.styled_button import StyledButton
+from ui.components.label import field_label
 from ui.components.styled_entry import field_row
+from ui.theme import ERROR
 
 if TYPE_CHECKING:
     from controllers.navigation_controller import NavigationController
+
+EMAIL_MISMATCH_TEXT = "Emails don't match"
 
 
 class CreateAccountReview(Screen):
@@ -22,7 +29,22 @@ class CreateAccountReview(Screen):
 
         self.first_name_entry = field_row(self.content, "First Name")
         self.last_name_entry = field_row(self.content, "Last Name")
-        self.email_entry = field_row(self.content, "Email")
+        self.email_entry = field_row(self.content, "School Email")
+
+        self.confirm_email_container = QWidget()
+        confirm_layout = QVBoxLayout(self.confirm_email_container)
+        confirm_layout.setContentsMargins(0, 0, 0, 0)
+        confirm_layout.setSpacing(0)
+        self.confirm_email_entry = field_row(confirm_layout, "Confirm School Email")
+        # text is toggled rather than the label hidden so the layout doesn't jump
+        self.email_mismatch_label = field_label(EMAIL_MISMATCH_TEXT)
+        self.email_mismatch_label.setStyleSheet(f"color: {ERROR}")
+        self.email_mismatch_label.setText("")
+        confirm_layout.addWidget(self.email_mismatch_label, alignment=Qt.AlignmentFlag.AlignHCenter)
+        self.content.addWidget(self.confirm_email_container)
+
+        # since the email is being prepended there should never be a "@" typed in. emails also shouldn't contain spaces
+        self._username_validator = QRegularExpressionValidator(QRegularExpression(r"[^@\s]*"), self)
 
         self.pid_container = QWidget()
         pid_layout = QVBoxLayout(self.pid_container)
@@ -31,10 +53,12 @@ class CreateAccountReview(Screen):
         self.pid_entry = field_row(pid_layout, "PID")
         self.content.addWidget(self.pid_container)
 
-        for entry in (self.first_name_entry, self.last_name_entry,
-                      self.email_entry, self.pid_entry):
+        self._is_manual = True
+
+        for entry in self._entries():
             entry.returnPressed.connect(self._submit)
             entry.textChanged.connect(self._update_btn_state)
+        self.confirm_email_entry.editingFinished.connect(self._update_btn_state)
 
         self.content.addStretch(1)
 
@@ -48,45 +72,92 @@ class CreateAccountReview(Screen):
         btn_row.addStretch()
         self.content.addLayout(btn_row)
 
-    def _update_btn_state(self) -> None:
+    def _entries(self):
+        return (self.first_name_entry, self.last_name_entry, self.email_entry,
+                self.confirm_email_entry, self.pid_entry)
+
+    def _required_entries(self):
         entries = [self.first_name_entry, self.last_name_entry, self.email_entry]
-        if self.pid_container.isVisible():
+        if self._is_manual:
+            entries.append(self.confirm_email_entry)
+        else:
             entries.append(self.pid_entry)
-        self.register_btn.setEnabled(all(e.text().strip() for e in entries))
+        return entries
+
+    def _emails_mismatch(self) -> bool:
+        email = self._username(self.email_entry.text())
+        confirm = self._username(self.confirm_email_entry.text())
+        if not confirm:
+            return False
+        if self.confirm_email_entry.hasFocus():
+            # still typing: only flag once it can no longer match
+            return not email.startswith(confirm)
+        return confirm != email
+
+    def _update_btn_state(self) -> None:
+        filled = all(e.text().strip() for e in self._required_entries())
+        if not self._is_manual:
+            self.register_btn.setEnabled(filled)
+            return
+
+        mismatch = self._emails_mismatch()
+        self.confirm_email_entry.set_error(mismatch)
+        self.email_mismatch_label.setText(EMAIL_MISMATCH_TEXT if mismatch else "")
+        emails_equal = self._username(self.email_entry.text()) == self._username(self.confirm_email_entry.text())
+        self.register_btn.setEnabled(filled and emails_equal)
 
     def on_show(self) -> None:
         session = context().session
+        self._is_manual = not session.pid
+
+        for entry in (self.email_entry, self.confirm_email_entry):
+            entry.setValidator(self._username_validator if self._is_manual else None)
+            entry.set_suffix(EMAIL_DOMAIN if self._is_manual else None)
+
         self.first_name_entry.setText(session.first_name)
         self.last_name_entry.setText(session.last_name)
         self.email_entry.setText(session.email)
-        has_pid = bool(session.pid)
-        self.pid_container.setVisible(has_pid)
-        if has_pid:
+        self.confirm_email_container.setVisible(self._is_manual)
+        self.pid_container.setVisible(not self._is_manual)
+        if not self._is_manual:
             self.pid_entry.setText(session.pid.upper())
             self.pid_entry.set_readonly(True)
         self._update_btn_state()
         self.first_name_entry.setFocus()
 
     def on_hide(self) -> None:
-        for entry in (self.first_name_entry, self.last_name_entry,
-                      self.email_entry, self.pid_entry):
+        for entry in self._entries():
             entry.clearFocus()
         self.clear_entries()
 
     def clear_entries(self) -> None:
-        for entry in (self.first_name_entry, self.last_name_entry,
-                      self.email_entry, self.pid_entry):
+        for entry in self._entries():
             entry.clear()
         self.pid_entry.set_readonly(False)
 
+    @staticmethod
+    def _username(text: str) -> str:
+        return text.strip().lower()
+
     def _submit(self) -> None:
+        if not all(e.text().strip() for e in self._required_entries()):
+            return
+
         first = self.first_name_entry.text().strip()
         last = self.last_name_entry.text().strip()
-        email = self.email_entry.text().strip()
-        has_pid = self.pid_container.isVisible()
-        pid = self.pid_entry.text().strip().upper() if has_pid else None
-        if not all([first, last, email] + ([pid] if has_pid else [])):
-            return
+
+        if self._is_manual:
+            username = self._username(self.email_entry.text())
+            if not username:
+                return
+            if username != self._username(self.confirm_email_entry.text()):
+                return
+            email = username + EMAIL_DOMAIN
+            pid = None
+        else:
+            email = self.email_entry.text().strip()
+            pid = self.pid_entry.text().strip().upper()
+
         self.clear_entries()
 
         def worker() -> None:
