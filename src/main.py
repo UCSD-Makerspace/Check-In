@@ -71,18 +71,18 @@ if __name__ == "__main__":
     except Exception as exception:
         if app is None or context() is None or context().health_controller is None:
             # if this has occurred the system has failed so completely it will be unable to alert that it has failed
-            logging.error(f"rip: {exception}")
+            logging.exception(f"rip: {exception}")
 
         elif context().main_window is None:
             # if this occurred the system failed before the UI loaded
             context().health_controller.get_system(CriticalSystemType.SYSTEM_BOOT).mark_unhealthy()
-            logging.error(f"UI Failed to load: {exception}")
+            logging.exception(f"UI Failed to load: {exception}")
 
         else:
             # if this occurred something else failed to initialize, and we should retry after a while
             context().main_window.show_error("System Boot Failure", str(exception), retry_in=60, on_retry=lambda: sys.exit(1))
             context().health_controller.get_system(CriticalSystemType.SYSTEM_BOOT).mark_unhealthy()
-            logging.error(f"System Boot Failure: {exception}")
+            logging.exception(f"System Boot Failure: {exception}")
             app.exec() # need to start the pyqt ui loop otherwise nothing will render
 
         sys.exit(1)
