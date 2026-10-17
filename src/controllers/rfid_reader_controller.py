@@ -15,7 +15,7 @@ from ui.views.home_screen import HomeScreen
 
 
 class RFIDReaderController:
-    _MAX_CONSECUTIVE_ERRORS = 10
+    _MAX_CONSECUTIVE_ERRORS = 5
 
     def __init__(self) -> None:
         logging.info("opening RFID reader serial port")
@@ -67,13 +67,15 @@ class RFIDReaderController:
                     consecutive_errors += 1
                     if consecutive_errors >= self._MAX_CONSECUTIVE_ERRORS:
                         raise
-                    logging.warning(
-                        "transient RFID read error (%d/%d): %s",
-                        consecutive_errors, self._MAX_CONSECUTIVE_ERRORS, e,
-                    )
-                    context().health_controller.get_system(CriticalSystemType.RFID_READER).notify_log(
-                        f"transient read error ({consecutive_errors}/{self._MAX_CONSECUTIVE_ERRORS}): {e}"
-                    )
+                    # they happen quite frequently but never again after flushing
+                    if consecutive_errors != 1:
+                        logging.warning(
+                            "transient RFID read error (%d/%d): %s",
+                            consecutive_errors, self._MAX_CONSECUTIVE_ERRORS, e,
+                        )
+                        context().health_controller.get_system(CriticalSystemType.RFID_READER).notify_log(
+                            f"transient read error ({consecutive_errors}/{self._MAX_CONSECUTIVE_ERRORS}): {e}"
+                        )
                     reader.flush()
                     time.sleep(0.05)
                     continue
