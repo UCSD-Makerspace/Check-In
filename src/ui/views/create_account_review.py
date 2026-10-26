@@ -12,7 +12,7 @@ from misc.global_context import context
 from ui.base import Screen
 from ui.components.styled_button import StyledButton
 from ui.components.label import field_label
-from ui.components.styled_entry import field_row
+from ui.components.styled_entry import StyledEntry, field_row
 from ui.theme import ERROR
 
 if TYPE_CHECKING:
@@ -56,8 +56,10 @@ class CreateAccountReview(Screen):
         self._is_manual = True
 
         for entry in self._entries():
-            entry.returnPressed.connect(self._submit)
+            entry.returnPressed.connect(lambda e=entry: self._advance(e))
             entry.textChanged.connect(self._update_btn_state)
+            entry.textChanged.connect(self._update_tap_hints)
+            entry.focus_changed.connect(self._update_tap_hints)
         self.confirm_email_entry.editingFinished.connect(self._update_btn_state)
 
         self.content.addStretch(1)
@@ -72,17 +74,47 @@ class CreateAccountReview(Screen):
         btn_row.addStretch()
         self.content.addLayout(btn_row)
 
-    def _entries(self):
+    def _entries(self) -> tuple[StyledEntry, ...]:
         return (self.first_name_entry, self.last_name_entry, self.email_entry,
                 self.confirm_email_entry, self.pid_entry)
 
-    def _required_entries(self):
+    def _required_entries(self) -> list[StyledEntry]:
         entries = [self.first_name_entry, self.last_name_entry, self.email_entry]
         if self._is_manual:
             entries.append(self.confirm_email_entry)
         else:
             entries.append(self.pid_entry)
         return entries
+
+    def _editable_entries(self) -> list[StyledEntry]:
+        return [e for e in self._required_entries() if not e.isReadOnly()]
+
+    def _advance(self, current: StyledEntry) -> None:
+        editable = self._editable_entries()
+        if current not in editable or current is editable[-1]:
+            self._submit()
+            return
+        editable[editable.index(current) + 1].setFocus()
+
+    def _update_tap_hints(self) -> None:
+        editable = self._editable_entries()
+
+        focused_index = -1
+        for i, entry in enumerate(editable):
+            if entry.hasFocus():
+                focused_index = i
+                break
+
+        upcoming = None
+        for i, entry in enumerate(editable):
+            if i <= focused_index:
+                continue
+            if not entry.text().strip():
+                upcoming = entry
+                break
+
+        for entry in self._entries():
+            entry.set_tap_hint_enabled(entry is upcoming)
 
     def _emails_mismatch(self) -> bool:
         email = self._username(self.email_entry.text())
@@ -124,6 +156,7 @@ class CreateAccountReview(Screen):
             self.pid_entry.set_readonly(True)
         self._update_btn_state()
         self.first_name_entry.setFocus()
+        self._update_tap_hints()
 
     def on_hide(self) -> None:
         for entry in self._entries():
