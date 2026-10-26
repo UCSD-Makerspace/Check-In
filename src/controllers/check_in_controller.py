@@ -36,10 +36,11 @@ class CheckInController:
                     result: CheckInResponse = CheckInNoAccount()
                 else:
                     get_account_response.raise_for_status()
-                    email = StudentResponse.model_validate(get_account_response.json()).student.email
-                    check_in_response = context().api_controller.request("POST", "/check-in", json={"email": email})
+                    student = StudentResponse.model_validate(get_account_response.json()).student
+                    check_in_response = context().api_controller.request("POST", "/check-in", json={"email": student.email})
                     check_in_response.raise_for_status()
                     result = check_in_response_validator.validate_python(check_in_response.json())
+                    context().session.set_student(student)
             except Exception as e:
                 logging.error(f"error during check-in for {identifier}: {e}")
                 context().traffic_light_controller.request_state_async(TrafficLightState.RED)
@@ -78,11 +79,7 @@ class CheckInController:
             if isinstance(result, CheckInNoWaiver):
                 logging.info(f"no waiver for {identifier}")
                 context().traffic_light_controller.request_state_async(TrafficLightState.YELLOW)
-                context().navigation_controller.navigate_via_transition(
-                    "Looks like you haven't signed the waiver yet, let's fix that!",
-                    delay_ms=3000,
-                    next_action=lambda: context().navigation_controller.navigate(SignWaiver),
-                )
+                context().navigation_controller.navigate(SignWaiver)
                 return
 
             assert isinstance(result, CheckInOk)

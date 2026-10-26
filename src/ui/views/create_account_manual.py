@@ -28,13 +28,13 @@ class CreateAccountManual(Screen):
         self.content.addStretch(2)
 
         btn_row = QHBoxLayout()
-        self.register_btn = StyledButton("Register")
-        self.register_btn.setFixedWidth(349)
-        self.register_btn.setEnabled(False)
-        self.register_btn.clicked.connect(self._go_to_review)
+        self.continue_btn = StyledButton("Continue")
+        self.continue_btn.setFixedWidth(349)
+        self.continue_btn.setEnabled(False)
+        self.continue_btn.clicked.connect(self._go_to_review)
         self.pid_entry.textChanged.connect(self._update_btn_state)
         btn_row.addStretch()
-        btn_row.addWidget(self.register_btn)
+        btn_row.addWidget(self.continue_btn)
         btn_row.addStretch()
         self.content.addLayout(btn_row)
 
@@ -51,7 +51,7 @@ class CreateAccountManual(Screen):
         self.content.addLayout(no_pid_row)
 
     def _update_btn_state(self) -> None:
-        self.register_btn.setEnabled(bool(self.pid_entry.text().strip()))
+        self.continue_btn.setEnabled(bool(self.pid_entry.text().strip()))
 
     def on_show(self) -> None:
         self.pid_entry.setFocus()

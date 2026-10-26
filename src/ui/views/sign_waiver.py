@@ -7,6 +7,7 @@ from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt
 
 from misc.asset import Asset
+from misc.global_context import context
 from ui.base import Screen
 from ui.components.styled_button import StyledButton
 from ui.components.label import styled_label
@@ -19,20 +20,33 @@ class SignWaiver(Screen):
     def _build(self, controller: NavigationController) -> None:
         content = QHBoxLayout()
         content.setContentsMargins(50, 0, 50, 0)
-        content.setSpacing(20)
+        content.setSpacing(50)
 
         left = QVBoxLayout()
         left.setSpacing(0)
 
         left.addStretch(5)
 
+        heading = styled_label("Please Wait!", font_size=48, bold=True, align=Qt.AlignmentFlag.AlignRight, width=500)
+        left.addWidget(heading, alignment=Qt.AlignmentFlag.AlignHCenter)
+
+        left.addSpacing(8)
+
         instruction = styled_label(
-            "Please scan the QR code on the right and sign the waiver",
+            "You haven't signed the waiver yet. Please sign it using the QR code on the right",
             font_size=36,
+            align=Qt.AlignmentFlag.AlignRight,
             width=500
         )
-        instruction.setAlignment(Qt.AlignmentFlag.AlignRight)
         left.addWidget(instruction, alignment=Qt.AlignmentFlag.AlignHCenter)
+
+        left.addSpacing(24)
+
+        email_caption = styled_label("Sign using this email:", font_size=18, align=Qt.AlignmentFlag.AlignRight, width=500)
+        left.addWidget(email_caption, alignment=Qt.AlignmentFlag.AlignHCenter)
+
+        self._email_label = styled_label("", font_size=18, bold=True, align=Qt.AlignmentFlag.AlignRight, width=500)
+        left.addWidget(self._email_label, alignment=Qt.AlignmentFlag.AlignHCenter)
 
         left.addStretch(7)
 
@@ -57,7 +71,15 @@ class SignWaiver(Screen):
 
         right.addStretch()
 
-        content.addLayout(left, stretch=1)
-        content.addLayout(right, stretch=1)
+        content.addStretch()
+        content.addLayout(left)
+        content.addLayout(right)
+        content.addStretch()
 
         self.content.addLayout(content)
+
+    def on_show(self) -> None:
+        self._email_label.setText(context().session.email)
+
+    def on_hide(self) -> None:
+        self._email_label.setText("")

@@ -63,12 +63,12 @@ class CreateAccountReview(Screen):
         self.content.addStretch(1)
 
         btn_row = QHBoxLayout()
-        self.register_btn = StyledButton("Register")
-        self.register_btn.setFixedWidth(349)
-        self.register_btn.setEnabled(False)
-        self.register_btn.clicked.connect(self._submit)
+        self.continue_btn = StyledButton("Continue")
+        self.continue_btn.setFixedWidth(349)
+        self.continue_btn.setEnabled(False)
+        self.continue_btn.clicked.connect(self._submit)
         btn_row.addStretch()
-        btn_row.addWidget(self.register_btn)
+        btn_row.addWidget(self.continue_btn)
         btn_row.addStretch()
         self.content.addLayout(btn_row)
 
@@ -97,14 +97,14 @@ class CreateAccountReview(Screen):
     def _update_btn_state(self) -> None:
         filled = all(e.text().strip() for e in self._required_entries())
         if not self._is_manual:
-            self.register_btn.setEnabled(filled)
+            self.continue_btn.setEnabled(filled)
             return
 
         mismatch = self._emails_mismatch()
         self.confirm_email_entry.set_error(mismatch)
         self.email_mismatch_label.setText(EMAIL_MISMATCH_TEXT if mismatch else "")
         emails_equal = self._username(self.email_entry.text()) == self._username(self.confirm_email_entry.text())
-        self.register_btn.setEnabled(filled and emails_equal)
+        self.continue_btn.setEnabled(filled and emails_equal)
 
     def on_show(self) -> None:
         session = context().session
