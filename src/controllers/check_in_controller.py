@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from threading import Thread
 from typing import Literal
+from urllib.parse import quote
 
 from pyqttoast import ToastPreset
 
@@ -22,12 +23,12 @@ class CheckInController:
 
     def check_in(
             self,
-            method: Literal["rfid", "pid"],
+            method: Literal["rfid", "pid", "email"],
             identifier: str,
             *,
             welcome_message: str = "Welcome back"
     ) -> None:
-        accounts_path = f"/accounts/{method}/{identifier}"
+        accounts_path = f"/accounts/{method}/{quote(identifier, safe='')}"
 
         def worker() -> None:
             try:

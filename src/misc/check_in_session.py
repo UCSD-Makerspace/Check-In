@@ -11,7 +11,7 @@ from misc.global_context import context
 class CheckInSession:
     def __init__(self) -> None:
         self.rfid: str = ""
-        self.check_in_method: Literal["rfid", "pid"] = "rfid"
+        self.check_in_method: Literal["rfid", "pid", "email"] = "rfid"
         self.check_in_identifier: str = ""
         self.pid: str = ""
         self.first_name: str = ""
